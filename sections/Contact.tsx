@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useStaggeredAnimation } from '@/hooks/useStaggeredAnimation';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -8,6 +9,8 @@ export default function Contact() {
     email: '',
     message: '',
   });
+
+  const { ref, isVisible, getItemStyle } = useStaggeredAnimation(2);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -20,16 +23,17 @@ export default function Contact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    // Reset form
     setFormData({ name: '', email: '', message: '' });
   };
 
   return (
-    <section id="contact" className="py-20 px-6 max-w-6xl mx-auto border-t border-gray-200 dark:border-gray-800">
-      <h2 className="text-4xl font-bold mb-12 text-center">Get In Touch</h2>
+    <section ref={ref} id="contact" className="py-20 px-6 max-w-6xl mx-auto border-t border-gray-200 dark:border-gray-800">
+      <div style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(40px)', transition: 'all 0.6s ease-out' }}>
+        <h2 className="text-4xl font-bold mb-12 text-center">Get In Touch</h2>
+      </div>
 
       <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
-        <div>
+        <div style={getItemStyle(0)}>
           <h3 className="text-2xl font-semibold mb-6">Let's Connect</h3>
 
           <p className="text-gray-600 dark:text-gray-400 mb-8">
@@ -65,7 +69,7 @@ export default function Contact() {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} style={getItemStyle(1)} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium mb-2">
               Name

@@ -1,3 +1,7 @@
+'use client';
+
+import { useStaggeredAnimation } from '@/hooks/useStaggeredAnimation';
+
 export default function Experience() {
   const experiences = [
     {
@@ -20,14 +24,19 @@ export default function Experience() {
     },
   ];
 
+  const { ref, isVisible, getItemStyle } = useStaggeredAnimation(experiences.length);
+
   return (
-    <section id="experience" className="py-20 px-6 max-w-6xl mx-auto border-t border-gray-200 dark:border-gray-800">
-      <h2 className="text-4xl font-bold mb-12 text-center">Experience</h2>
+    <section ref={ref} id="experience" className="py-20 px-6 max-w-6xl mx-auto border-t border-gray-200 dark:border-gray-800">
+      <div style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(40px)', transition: 'all 0.6s ease-out' }}>
+        <h2 className="text-4xl font-bold mb-12 text-center">Experience</h2>
+      </div>
 
       <div className="space-y-8">
         {experiences.map((exp, index) => (
           <div
             key={index}
+            style={getItemStyle(index)}
             className="p-6 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-blue-600 dark:hover:border-blue-400 transition-all"
           >
             <div className="flex justify-between items-start mb-3">

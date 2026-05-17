@@ -1,3 +1,7 @@
+'use client';
+
+import { useStaggeredAnimation } from '@/hooks/useStaggeredAnimation';
+
 export default function Projects() {
   const projects = [
     {
@@ -26,15 +30,20 @@ export default function Projects() {
     },
   ];
 
+  const { ref, isVisible, getItemStyle } = useStaggeredAnimation(projects.length);
+
   return (
-    <section id="projects" className="py-20 px-6 max-w-6xl mx-auto border-t border-gray-200 dark:border-gray-800">
-      <h2 className="text-4xl font-bold mb-12 text-center">Featured Projects</h2>
+    <section ref={ref} id="projects" className="py-20 px-6 max-w-6xl mx-auto border-t border-gray-200 dark:border-gray-800">
+      <div style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(40px)', transition: 'all 0.6s ease-out' }}>
+        <h2 className="text-4xl font-bold mb-12 text-center">Featured Projects</h2>
+      </div>
 
       <div className="grid md:grid-cols-2 gap-8">
         {projects.map((project, index) => (
           <a
             key={index}
             href={project.link}
+            style={getItemStyle(index)}
             className="group p-6 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-blue-600 dark:hover:border-blue-400 hover:shadow-lg transition-all"
           >
             <h3 className="text-xl font-semibold mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">

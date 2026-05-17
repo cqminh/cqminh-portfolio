@@ -1,10 +1,10 @@
 'use client';
 
-import Hero from '@/components/Hero';
-import About from '@/components/About';
-import Projects from '@/components/Projects';
-import Experience from '@/components/Experience';
-import Contact from '@/components/Contact';
+import Hero from '@/sections/Hero';
+import About from '@/sections/About';
+import Projects from '@/sections/Projects';
+import Experience from '@/sections/Experience';
+import Contact from '@/sections/Contact';
 import Navbar from '@/components/Navbar';
 
 export default function Home() {
