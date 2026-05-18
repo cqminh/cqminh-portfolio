@@ -7,6 +7,17 @@ export default function LoadingScreen() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    if (isLoading) {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      window.scrollTo(0, 0);
+    } else {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
         // Pause at 80-85%

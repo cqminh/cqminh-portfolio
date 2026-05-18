@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Logo from './Logo';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,18 +39,7 @@ export default function Navbar() {
       }}
     >
       {/* Logo / Brand */}
-      <div className="flex-shrink-0">
-        <h1
-          className="font-bold transition-all"
-          style={{
-            fontSize: isScrolled ? '1.125rem' : '1.5rem',
-            color: isScrolled ? '#ffffff' : '#ffffff',
-            transition: 'all 1s cubic-bezier(0.34, 1.56, 0.64, 1)',
-          }}
-        >
-          Portfolio
-        </h1>
-      </div>
+      <Logo variant="full" isScrolled={isScrolled} />
 
       {/* Resume Button - Right */}
       <div className="flex-shrink-0">
