@@ -1,4 +1,4 @@
-export const MOCK_IMAGE_URL = {
-  IMAGE_1: 'https://via.placeholder.com/150',
-  IMAGE_2: 'https://via.placeholder.com/200',
-}
+export const PORTRAIT_IMAGES = [
+  '/picture_1.png',
+  '/picture_2.png',
+]

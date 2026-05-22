@@ -1,8 +1,58 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
+/* ============================================
+   LIGHT MODE (default)
+   ============================================ */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --card-bg: #f9fafb;
+  --card-bg-hover: #f3f4f6;
+  --card-border: #e5e7eb;
+  --card-border-hover: #2563eb;
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --text-inverse: #ffffff;
+
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-light: #dbeafe;
+  --accent-text: #1d4ed8;
+
+  --border: #e5e7eb;
+  --input-bg: #f9fafb;
+  --input-border: #d1d5db;
+  --input-border-focus: #2563eb;
+
+  --nav-bg: rgba(255, 255, 255, 0.45);
+  --nav-bg-transparent: rgba(255, 255, 255, 0);
+  --nav-border: rgba(0, 0, 0, 0.1);
+
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-lg: rgba(0, 0, 0, 0.15);
+
+  --hero-gradient-from: #f0f9ff;
+  --hero-gradient-via: #e0f2fe;
+  --hero-gradient-to: #bae6fd;
+  --hero-glow-1: rgba(14, 165, 233, 0.25);
+  --hero-glow-2: rgba(99, 102, 241, 0.25);
+  --hero-glow-3: rgba(236, 72, 153, 0.18);
+
+  --tag-bg: #dbeafe;
+  --tag-text: #1d4ed8;
+
+  --error: #ef4444;
+  --success: #22c55e;
+
+  --scrollbar-track: rgba(200, 200, 200, 0.2);
+  --scrollbar-thumb: rgba(100, 100, 100, 0.6);
+  --scrollbar-thumb-hover: rgba(100, 100, 100, 0.9);
+
+  color-scheme: light;
 }
 
 @theme inline {
@@ -12,11 +62,58 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================
+   DARK MODE
+   ============================================ */
+html.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+
+  --card-bg: #111827;
+  --card-bg-hover: #1f2937;
+  --card-border: #374151;
+  --card-border-hover: #3b82f6;
+
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --text-inverse: #0a0a0a;
+
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-light: #1e3a8a;
+  --accent-text: #93c5fd;
+
+  --border: #374151;
+  --input-bg: #111827;
+  --input-border: #4b5563;
+  --input-border-focus: #3b82f6;
+
+  --nav-bg: rgba(17, 24, 39, 0.45);
+  --nav-bg-transparent: rgba(17, 24, 39, 0);
+  --nav-border: rgba(255, 255, 255, 0.1);
+
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --shadow-lg: rgba(0, 0, 0, 0.4);
+
+  --hero-gradient-from: #0f172a;
+  --hero-gradient-via: #1e293b;
+  --hero-gradient-to: #0c4a6e;
+  --hero-glow-1: rgba(56, 189, 248, 0.15);
+  --hero-glow-2: rgba(168, 85, 247, 0.15);
+  --hero-glow-3: rgba(236, 72, 153, 0.1);
+
+  --tag-bg: #1e3a8a;
+  --tag-text: #93c5fd;
+
+  --scrollbar-track: rgba(75, 85, 99, 0.2);
+  --scrollbar-thumb: rgba(156, 163, 175, 0.6);
+  --scrollbar-thumb-hover: rgba(156, 163, 175, 0.9);
+
+  --error: #ef4444;
+  --success: #22c55e;
+
+  color-scheme: dark;
 }
 
 html {
@@ -35,7 +132,7 @@ html::-webkit-scrollbar {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
@@ -53,14 +150,12 @@ body::-webkit-scrollbar {
     width: 100%;
     left: 0;
     border-radius: 0;
-    background-color: rgba(255, 255, 255, 0);
   }
   to {
     top: 1rem;
     width: 80%;
     left: 50%;
     border-radius: 9999px;
-    background-color: rgba(255, 255, 255, 0.3);
   }
 }
 
@@ -70,14 +165,12 @@ body::-webkit-scrollbar {
     width: 80%;
     left: 50%;
     border-radius: 9999px;
-    background-color: rgba(255, 255, 255, 0.3);
   }
   to {
     top: 0;
     width: 100%;
     left: 0;
     border-radius: 0;
-    background-color: rgba(255, 255, 255, 0);
   }
 }
 
@@ -87,4 +180,17 @@ body::-webkit-scrollbar {
 
 .navbar-unscroll {
   animation: islandToNavbar 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Particles: white in dark mode, blue in light mode */
+:root {
+  --particles-filter: hue-rotate(200deg) brightness(0.45) saturate(1.2);
+}
+
+html.dark {
+  --particles-filter: none;
+}
+
+.particles-wrapper {
+  filter: var(--particles-filter);
 }

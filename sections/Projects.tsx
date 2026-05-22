@@ -33,9 +33,9 @@ export default function Projects() {
   const { ref, isVisible, getItemStyle } = useStaggeredAnimation(projects.length);
 
   return (
-    <section ref={ref} id="projects" className="py-20 px-6 max-w-6xl mx-auto border-t border-gray-200 dark:border-gray-800">
+    <section ref={ref} id="projects" className="py-20 px-6 max-w-6xl mx-auto border-t border-[var(--border)]">
       <div style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(40px)', transition: 'all 0.6s ease-out' }}>
-        <h2 className="text-4xl font-bold mb-12 text-center">Featured Projects</h2>
+        <h2 className="text-4xl font-bold mb-12 text-center text-[var(--text-primary)]">Featured Projects</h2>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
@@ -44,13 +44,13 @@ export default function Projects() {
             key={index}
             href={project.link}
             style={getItemStyle(index)}
-            className="group p-6 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-blue-600 dark:hover:border-blue-400 hover:shadow-lg transition-all"
+            className="group p-6 bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] hover:border-[var(--card-border-hover)] hover:shadow-lg transition-all"
           >
-            <h3 className="text-xl font-semibold mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            <h3 className="text-xl font-semibold mb-3 group-hover:text-[var(--accent)] transition-colors text-[var(--text-primary)]">
               {project.title}
             </h3>
 
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <p className="text-[var(--text-secondary)] mb-4">
               {project.description}
             </p>
 
@@ -58,7 +58,8 @@ export default function Projects() {
               {project.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full"
+                  className="px-3 py-1 text-sm rounded-full"
+                  style={{ backgroundColor: 'var(--tag-bg)', color: 'var(--tag-text)' }}
                 >
                   {tag}
                 </span>

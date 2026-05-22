@@ -27,9 +27,9 @@ export default function Experience() {
   const { ref, isVisible, getItemStyle } = useStaggeredAnimation(experiences.length);
 
   return (
-    <section ref={ref} id="experience" className="py-20 px-6 max-w-6xl mx-auto border-t border-gray-200 dark:border-gray-800">
+    <section ref={ref} id="experience" className="py-20 px-6 max-w-6xl mx-auto border-t border-[var(--border)]">
       <div style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(40px)', transition: 'all 0.6s ease-out' }}>
-        <h2 className="text-4xl font-bold mb-12 text-center">Experience</h2>
+        <h2 className="text-4xl font-bold mb-12 text-center text-[var(--text-primary)]">Experience</h2>
       </div>
 
       <div className="space-y-8">
@@ -37,23 +37,23 @@ export default function Experience() {
           <div
             key={index}
             style={getItemStyle(index)}
-            className="p-6 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-blue-600 dark:hover:border-blue-400 transition-all"
+            className="p-6 bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] hover:border-[var(--card-border-hover)] transition-all"
           >
             <div className="flex justify-between items-start mb-3">
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                <h3 className="text-xl font-semibold text-[var(--text-primary)]">
                   {exp.title}
                 </h3>
-                <p className="text-blue-600 dark:text-blue-400 font-medium">
+                <p className="text-[var(--accent)] font-medium">
                   {exp.company}
                 </p>
               </div>
-              <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+              <span className="text-sm text-[var(--text-muted)] font-medium">
                 {exp.period}
               </span>
             </div>
 
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-[var(--text-secondary)]">
               {exp.description}
             </p>
           </div>

@@ -14,14 +14,14 @@ export default function Logo({ variant = 'full', isScrolled = false }: LogoProps
 
   if (variant === 'icon') {
     return (
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 relative" style={{ width: iconSize, height: iconSize }}>
         <Image
           src="/logo.png"
           alt="Logo"
-          width={iconSize}
-          height={iconSize}
+          fill
           priority
           className="rounded-full"
+          sizes={`${iconSize}px`}
         />
       </div>
     );
@@ -29,31 +29,32 @@ export default function Logo({ variant = 'full', isScrolled = false }: LogoProps
 
   return (
     <div className={`flex items-center ${containerGap} flex-shrink-0`}>
-      <Image
-        src="/logo.png"
-        alt="Logo"
-        width={iconSize}
-        height={iconSize}
-        priority
-        className="rounded-full"
-      />
+      <div className="relative flex-shrink-0" style={{ width: iconSize, height: iconSize }}>
+        <Image
+          src="/logo.png"
+          alt="Logo"
+          fill
+          priority
+          className="rounded-full object-cover"
+          sizes={`${iconSize}px`}
+        />
+      </div>
       <div
-        className="hidden sm:block"
+        className="hidden sm:block relative"
         style={{
           width: nameWidth,
-          height: 'auto',
+          height: '40px',
           transition: 'all 1s cubic-bezier(0.34, 1.56, 0.64, 1)',
           overflow: 'hidden',
         }}
       >
-        <img
+        <Image
           src="/name.png"
           alt="Châu Quang Minh"
-          style={{
-            width: '100%',
-            height: 'auto',
-            display: 'block',
-          }}
+          fill
+          priority
+          className="object-contain"
+          sizes="120px"
         />
       </div>
     </div>

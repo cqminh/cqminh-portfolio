@@ -1,62 +1,102 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Particles, { ParticlesProvider } from '@tsparticles/react';
+import { loadSlim } from '@tsparticles/slim';
+import { Engine } from '@tsparticles/engine';
+import { PORTRAIT_IMAGES } from '@/mock/constants';
+import { particlesConfig } from '@/config/particles';
+
 export default function Hero() {
+  const [portraitSrc, setPortraitSrc] = useState<string>(PORTRAIT_IMAGES[0]);
+
+  useEffect(() => {
+    const randomImage = PORTRAIT_IMAGES[Math.floor(Math.random() * PORTRAIT_IMAGES.length)];
+    setPortraitSrc(randomImage);
+  }, []);
+
+  const particlesInit = async (engine: Engine) => {
+    await loadSlim(engine);
+  };
+
+  const refreshImage = () => {
+    const randomImage = PORTRAIT_IMAGES[Math.floor(Math.random() * PORTRAIT_IMAGES.length)];
+    setPortraitSrc(randomImage);
+  };
+
   return (
     <section
       id="hero"
-      className="relative w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white overflow-hidden"
+      className="relative w-full min-h-screen flex items-center justify-center text-[var(--text-primary)]"
+      style={{
+        clipPath: 'inset(0)',
+        overflow: 'hidden',
+        background: 'linear-gradient(to bottom right, var(--hero-gradient-from), var(--hero-gradient-via), var(--hero-gradient-to))',
+      }}
     >
+      <div className="absolute inset-0 z-0 w-full h-full overflow-hidden pointer-events-none" style={{ clipPath: 'inset(0)' }}>
+        <div className="absolute inset-0 w-full h-full particles-wrapper">
+          <ParticlesProvider init={particlesInit}>
+            <Particles id="tsparticles" options={particlesConfig} />
+          </ParticlesProvider>
+        </div>
+      </div>
+
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 -left-4 w-72 h-72 bg-blue-600/20 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute bottom-0 -right-4 w-72 h-72 bg-purple-600/20 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-pink-600/10 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animation: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}></div>
+        <div className="absolute top-0 -left-4 w-72 h-72 rounded-full filter blur-3xl opacity-30 animate-pulse" style={{ backgroundColor: 'var(--hero-glow-1)' }}></div>
+        <div className="absolute bottom-0 -right-4 w-72 h-72 rounded-full filter blur-3xl opacity-30 animate-pulse" style={{ backgroundColor: 'var(--hero-glow-2)' }}></div>
+        <div className="absolute top-1/2 left-1/2 w-96 h-96 rounded-full filter blur-3xl opacity-30 animate-pulse" style={{ animation: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite', backgroundColor: 'var(--hero-glow-3)' }}></div>
       </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-4xl">
-        <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out' }}>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
-            Hi, I'm <span className="text-blue-400">Châu Quang Minh</span>
-          </h1>
+      <div className="relative z-10 flex items-start px-6 max-w-7xl w-full min-h-screen gap-12">
+        {/* Left side: Portrait */}
+        <div className="w-2/5 flex flex-col justify-end h-screen pt-20">
+          <div style={{ opacity: 1, transform: 'translateX(-20px)', transition: 'all 0.8s ease-out' }}>
+            <div style={{ width: '380px', maxWidth: '100%' }}>
+              {portraitSrc && (
+                <img
+                  src={portraitSrc}
+                  alt="Châu Quang Minh"
+                  className="object-cover w-full h-auto block"
+                />
+              )}
+            </div>
+          </div>
         </div>
 
-        <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out 0.2s' }}>
-          <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
-            Full Stack Developer | Creative Problem Solver
-          </p>
-        </div>
+        {/* Right side: Text */}
+        <div className="w-3/5 flex flex-col justify-center h-screen">
+          <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out' }}>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              Hi, I'm <span className="text-blue-400">Châu Quang Minh</span>
+            </h1>
+          </div>
 
-        <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out 0.4s' }}>
-          <p className="text-lg text-gray-400 mb-12 max-w-2xl leading-relaxed">
-            I build beautiful, performant web applications that solve real problems.
-            Passionate about clean code, user experience, and continuous learning.
-          </p>
-        </div>
+          <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out 0.2s' }}>
+            <p className="text-xl md:text-2xl text-[var(--text-secondary)] mb-8 leading-relaxed">
+              Full Stack Developer | Creative Problem Solver
+            </p>
+          </div>
 
-        <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out 0.6s' }} className="flex flex-col sm:flex-row gap-4">
-          <button className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg">
-            View My Work
-          </button>
-          <button className="px-8 py-4 border-2 border-blue-400 text-blue-400 hover:bg-blue-400/10 rounded-lg font-semibold transition-all">
-            Get In Touch
-          </button>
+          <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out 0.4s' }}>
+            <p className="text-lg text-[var(--text-muted)] mb-12 max-w-2xl leading-relaxed">
+              I build beautiful, performant web applications that solve real problems.
+              Passionate about clean code, user experience, and continuous learning.
+            </p>
+          </div>
+
+          <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out 0.6s' }} className="flex flex-col sm:flex-row gap-4">
+            <button className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg">
+              View My Work
+            </button>
+            <button className="px-8 py-4 border-2 border-blue-400 text-blue-400 hover:bg-blue-400/10 rounded-lg font-semibold transition-all">
+              Get In Touch
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <svg
-          className="w-6 h-6 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 14l-7 7m0 0l-7-7m7 7V3"
-          />
-        </svg>
-      </div>
     </section>
   );
 }

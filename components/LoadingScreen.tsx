@@ -1,10 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 export default function LoadingScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const progressRef = useRef(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (isLoading) {
@@ -15,37 +18,65 @@ export default function LoadingScreen() {
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
     }
+
+    return () => {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    };
   }, [isLoading]);
 
+  const finishLoading = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    timeoutRef.current = setTimeout(() => {
+      setIsLoading(false);
+    }, 300);
+  }, []);
+
   useEffect(() => {
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       setProgress((prev) => {
+        let next = prev;
         // Pause at 80-85%
         if (prev >= 80 && prev < 85) {
-          return prev + 0.3; // Slow down
+          next = prev + 0.3;
         }
         // After 85%, move faster to 100%
-        if (prev >= 85 && prev < 100) {
-          return prev + 1.5;
+        else if (prev >= 85 && prev < 100) {
+          next = prev + 1.5;
         }
         // 0-80%, normal speed
-        if (prev < 80) {
-          return prev + 1;
+        else if (prev < 80) {
+          next = prev + 1;
+        } else {
+          next = 100;
         }
-        return 100;
+
+        progressRef.current = next;
+
+        if (next >= 100 && intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+          finishLoading();
+        }
+
+        return next;
       });
     }, 50);
 
-    // When progress reaches 100%, finish loading
-    if (progress >= 100) {
-      clearInterval(interval);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 300);
-    }
-
-    return () => clearInterval(interval);
-  }, [progress]);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, [finishLoading]);
 
   if (!isLoading) return null;
 

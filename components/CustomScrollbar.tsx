@@ -1,50 +1,70 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 export default function CustomScrollbar() {
   const scrollbarRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimatingIn, setIsAnimatingIn] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!thumbRef.current || !scrollbarRef.current) return;
+  const handleScroll = useCallback(() => {
+    if (!thumbRef.current || !scrollbarRef.current) return;
 
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (scrollHeight === 0) return;
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (scrollHeight === 0) return;
 
-      const isAtTop = window.scrollY === 0;
-      const wasVisible = isVisible;
+    const isAtTop = window.scrollY === 0;
 
-      if (isAtTop && wasVisible) {
+    setIsVisible((prev) => {
+      if (isAtTop && prev) {
         setIsAnimatingIn(false);
-        setIsVisible(false);
-      } else if (!isAtTop && !wasVisible) {
-        setIsVisible(true);
-        setIsAnimatingIn(true);
+        return false;
       }
+      if (!isAtTop && !prev) {
+        setIsAnimatingIn(true);
+        return true;
+      }
+      return prev;
+    });
 
-      const scrollPercent = window.scrollY / scrollHeight;
-      const thumbHeight = scrollbarRef.current.clientHeight;
-      const maxThumbTravel = thumbHeight - thumbRef.current.clientHeight;
+    const scrollPercent = window.scrollY / scrollHeight;
+    const thumbHeight = scrollbarRef.current.clientHeight;
+    const maxThumbTravel = thumbHeight - thumbRef.current.clientHeight;
 
-      thumbRef.current.style.top = `${scrollPercent * maxThumbTravel}px`;
+    thumbRef.current.style.top = `${scrollPercent * maxThumbTravel}px`;
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
     };
+  }, [handleScroll]);
+
+  useEffect(() => {
+    const thumb = thumbRef.current;
+    if (!thumb) return;
 
     const handleMouseDown = (e: MouseEvent) => {
+      isDraggingRef.current = true;
       setIsDragging(true);
       e.preventDefault();
     };
 
     const handleMouseUp = () => {
-      setIsDragging(false);
+      if (isDraggingRef.current) {
+        isDraggingRef.current = false;
+        setIsDragging(false);
+      }
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging || !scrollbarRef.current || !thumbRef.current) return;
+      if (!isDraggingRef.current || !scrollbarRef.current || !thumbRef.current) return;
 
       const scrollbar = scrollbarRef.current;
       const rect = scrollbar.getBoundingClientRect();
@@ -59,20 +79,16 @@ export default function CustomScrollbar() {
       window.scrollTo(0, scrollPercent * scrollHeight);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    thumbRef.current?.addEventListener("mousedown", handleMouseDown);
+    thumb.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mouseup", handleMouseUp);
     window.addEventListener("mousemove", handleMouseMove);
 
-    handleScroll();
-
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      thumbRef.current?.removeEventListener("mousedown", handleMouseDown);
+      thumb.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [isDragging, isVisible]);
+  }, []);
 
   return (
     <div
@@ -85,7 +101,7 @@ export default function CustomScrollbar() {
         transform: "translateY(-50%)",
         width: "6px",
         height: "50vh",
-        backgroundColor: "rgba(200, 200, 200, 0.2)",
+        backgroundColor: "var(--scrollbar-track)",
         borderRadius: "3px",
         pointerEvents: isVisible ? "auto" : "none",
         zIndex: 40,
@@ -103,19 +119,19 @@ export default function CustomScrollbar() {
           position: "absolute",
           width: "100%",
           height: "60px",
-          backgroundColor: "rgba(100, 100, 100, 0.6)",
+          backgroundColor: "var(--scrollbar-thumb)",
           borderRadius: "3px",
           cursor: "grab",
           transition: isDragging ? "none" : "background-color 0.2s",
         }}
         onMouseEnter={(e) => {
           (e.currentTarget as HTMLDivElement).style.backgroundColor =
-            "rgba(100, 100, 100, 0.9)";
+            "var(--scrollbar-thumb-hover)";
         }}
         onMouseLeave={(e) => {
           if (!isDragging) {
             (e.currentTarget as HTMLDivElement).style.backgroundColor =
-              "rgba(100, 100, 100, 0.6)";
+              "var(--scrollbar-thumb)";
           }
         }}
       />

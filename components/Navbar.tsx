@@ -30,10 +30,10 @@ export default function Navbar() {
         left: isScrolled ? '50%' : '0',
         transform: isScrolled ? 'translateX(-50%)' : 'translateX(0)',
         borderRadius: isScrolled ? '9999px' : '0',
-        backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 255, 0)',
+        backgroundColor: isScrolled ? 'var(--nav-bg)' : 'var(--nav-bg-transparent)',
         backdropFilter: isScrolled ? 'blur(12px)' : 'none',
-        border: isScrolled ? '1px solid rgba(255, 255, 255, 0.2)' : 'none',
-        boxShadow: isScrolled ? '0 10px 30px rgba(0, 0, 0, 0.2)' : 'none',
+        border: isScrolled ? '1px solid var(--nav-border)' : 'none',
+        boxShadow: isScrolled ? '0 10px 30px var(--shadow-lg)' : 'none',
         padding: isScrolled ? '0.75rem 1.5rem' : '1rem 1.5rem',
         transition: 'all 1s cubic-bezier(0.34, 1.56, 0.64, 1)',
       }}
@@ -48,9 +48,9 @@ export default function Navbar() {
           style={{
             padding: isScrolled ? '0.375rem 1.25rem' : '0.5rem 1.5rem',
             fontSize: isScrolled ? '0.875rem' : '1rem',
-            backgroundColor: isScrolled ? '#2563eb' : 'transparent',
-            color: '#ffffff',
-            border: isScrolled ? 'none' : '2px solid white',
+            backgroundColor: isScrolled ? 'var(--accent)' : 'transparent',
+            color: isScrolled ? 'var(--text-inverse)' : 'var(--text-primary)',
+            border: isScrolled ? 'none' : '2px solid var(--text-primary)',
             borderRadius: isScrolled ? '9999px' : '0.5rem',
             transition: 'all 1s cubic-bezier(0.34, 1.56, 0.64, 1)',
           }}
