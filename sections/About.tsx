@@ -1,48 +1,33 @@
 'use client';
 
 import { useStaggeredAnimation } from '@/hooks/useStaggeredAnimation';
+import { siteContent } from '@/content/site-content';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function About() {
-  const { ref, isVisible, getItemStyle } = useStaggeredAnimation(8);
-
-  const skills = [
-    'JavaScript/TypeScript',
-    'React & Next.js',
-    'Node.js & Express',
-    'Database Design',
-    'Tailwind CSS',
-    'Git & DevOps',
-    'REST APIs',
-    'Responsive Design',
-  ];
+  const { language } = useLanguage();
+  const content = siteContent.about;
+  const { ref, isVisible, getItemStyle } = useStaggeredAnimation(content.skills.length);
 
   return (
     <section ref={ref} id="about" className="py-20 px-6 max-w-6xl mx-auto border-t border-[var(--border)]">
       <div style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(40px)', transition: 'all 0.6s ease-out' }}>
-        <h2 className="text-4xl font-bold mb-12 text-center text-[var(--text-primary)]">About Me</h2>
+        <h2 className="text-4xl font-bold mb-12 text-center text-[var(--text-primary)]">{content.heading[language]}</h2>
       </div>
 
       <div className="grid md:grid-cols-2 gap-12">
         <div style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(40px)', transition: 'all 0.6s ease-out 0.1s' }}>
-          <p className="text-lg text-[var(--text-secondary)] mb-6">
-            I'm a passionate full-stack developer with a love for creating elegant solutions to complex problems.
-            With expertise in modern web technologies, I've helped businesses transform their digital presence.
-          </p>
-
-          <p className="text-lg text-[var(--text-secondary)] mb-6">
-            When I'm not coding, you'll find me exploring new technologies, contributing to open source,
-            or sharing knowledge with the developer community.
-          </p>
-
-          <p className="text-lg text-[var(--text-secondary)]">
-            My goal is to build products that are not only functional but also delightful to use.
-          </p>
+          {content.paragraphs.map((paragraph, index) => (
+            <p key={index} className="text-lg text-[var(--text-secondary)] mb-6 last:mb-0">
+              {paragraph[language]}
+            </p>
+          ))}
         </div>
 
         <div style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(40px)', transition: 'all 0.6s ease-out 0.2s' }}>
-          <h3 className="text-2xl font-semibold mb-6 text-[var(--text-primary)]">Skills & Technologies</h3>
+          <h3 className="text-2xl font-semibold mb-6 text-[var(--text-primary)]">{content.skillsHeading[language]}</h3>
           <div className="grid grid-cols-2 gap-4">
-            {skills.map((skill, index) => (
+            {content.skills.map((skill, index) => (
               <div
                 key={skill}
                 style={getItemStyle(index)}

@@ -5,6 +5,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import CustomScrollbar from "@/components/CustomScrollbar";
 import BackToTop from "@/components/BackToTop";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { LanguageProvider } from "@/components/LanguageProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,6 +63,12 @@ export default function RootLayout({
                   // localStorage may not be available in some environments
                   document.documentElement.classList.remove('dark');
                 }
+                try {
+                  const savedLanguage = localStorage.getItem('language');
+                  document.documentElement.lang = savedLanguage || 'en';
+                } catch (e) {
+                  // localStorage may not be available in some environments
+                }
               })();
             `,
           }}
@@ -69,10 +76,12 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <LoadingScreen />
-          <CustomScrollbar />
-          <BackToTop />
-          {children}
+          <LanguageProvider>
+            <LoadingScreen />
+            <CustomScrollbar />
+            <BackToTop />
+            {children}
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,18 +1,33 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Sun, Moon, SunMoon } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
-
-type Language = 'en' | 'vi';
+import { useLanguage } from './LanguageProvider';
 
 export default function FloatingSettingsButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
   const [isAnimatingIn, setIsAnimatingIn] = useState(false);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
-  const [language, setLanguage] = useState<Language>('en');
   const { theme, setTheme } = useTheme();
+  const { language, setLanguage } = useLanguage();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        if (isOpen) {
+          setIsOpen(false);
+          setIsAnimatingIn(false);
+          setIsAnimatingOut(true);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
 
   const toggleOpen = () => {
     if (isOpen) {
@@ -37,7 +52,7 @@ export default function FloatingSettingsButton() {
   }, [isAnimatingOut]);
 
   return (
-    <div className="fixed bottom-6 left-6 z-50">
+    <div ref={containerRef} className="fixed bottom-6 left-6 z-50">
       <button
         onClick={toggleOpen}
         className="relative w-10 h-10 rounded-full bg-[rgba(255,255,255,0.2)] dark:bg-[rgba(17,24,39,0.2)] backdrop-blur-[12px] hover:bg-[rgba(255,255,255,0.3)] dark:hover:bg-[rgba(17,24,39,0.3)] border border-[var(--nav-border)] transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"

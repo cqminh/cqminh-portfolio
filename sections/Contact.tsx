@@ -2,8 +2,12 @@
 
 import { useState } from 'react';
 import { useStaggeredAnimation } from '@/hooks/useStaggeredAnimation';
+import { siteContent } from '@/content/site-content';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function Contact() {
+  const { language } = useLanguage();
+  const content = siteContent.contact;
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -11,7 +15,7 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [emailError, setEmailError] = useState('');
+  const [emailError, setEmailError] = useState(false);
 
   const { ref, isVisible, getItemStyle } = useStaggeredAnimation(2);
 
@@ -27,7 +31,7 @@ export default function Contact() {
       [name]: value,
     }));
     if (name === 'email') {
-      setEmailError('');
+      setEmailError(false);
     }
     if (submitStatus !== 'idle') {
       setSubmitStatus('idle');
@@ -38,7 +42,7 @@ export default function Contact() {
     e.preventDefault();
 
     if (!validateEmail(formData.email)) {
-      setEmailError('Please enter a valid email address');
+      setEmailError(true);
       return;
     }
 
@@ -60,39 +64,38 @@ export default function Contact() {
   return (
     <section ref={ref} id="contact" className="py-20 px-6 max-w-6xl mx-auto border-t border-[var(--border)]">
       <div style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(40px)', transition: 'all 0.6s ease-out' }}>
-        <h2 className="text-4xl font-bold mb-12 text-center text-[var(--text-primary)]">Get In Touch</h2>
+        <h2 className="text-4xl font-bold mb-12 text-center text-[var(--text-primary)]">{content.heading[language]}</h2>
       </div>
 
       <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
         <div style={getItemStyle(0)}>
-          <h3 className="text-2xl font-semibold mb-6 text-[var(--text-primary)]">Let's Connect</h3>
+          <h3 className="text-2xl font-semibold mb-6 text-[var(--text-primary)]">{content.connectHeading[language]}</h3>
 
           <p className="text-[var(--text-secondary)] mb-8">
-            I'm always interested in hearing about new projects and opportunities.
-            Feel free to reach out if you have any questions or just want to say hello!
+            {content.intro[language]}
           </p>
 
           <div className="space-y-4">
             <div>
-              <p className="font-semibold text-[var(--text-primary)] mb-2">Email</p>
+              <p className="font-semibold text-[var(--text-primary)] mb-2">{content.emailLabel[language]}</p>
               <a
-                href="mailto:hello@example.com"
+                href={`mailto:${content.email}`}
                 className="text-[var(--accent)] hover:underline"
               >
-                hello@example.com
+                {content.email}
               </a>
             </div>
 
             <div>
-              <p className="font-semibold text-[var(--text-primary)] mb-2">Social Media</p>
+              <p className="font-semibold text-[var(--text-primary)] mb-2">{content.socialLabel[language]}</p>
               <div className="flex gap-4">
-                {['GitHub', 'LinkedIn', 'Twitter'].map((social) => (
+                {content.socialLinks.map((social) => (
                   <a
-                    key={social}
-                    href="#"
+                    key={social.label}
+                    href={social.href}
                     className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
                   >
-                    {social}
+                    {social.label}
                   </a>
                 ))}
               </div>
@@ -103,7 +106,7 @@ export default function Contact() {
         <form onSubmit={handleSubmit} style={getItemStyle(1)} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium mb-2 text-[var(--text-primary)]">
-              Name
+              {content.form.nameLabel[language]}
             </label>
             <input
               type="text"
@@ -113,13 +116,13 @@ export default function Contact() {
               onChange={handleChange}
               required
               className="w-full px-4 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--input-border-focus)] transition-all text-[var(--text-primary)] placeholder:text-[var(--text-muted)]"
-              placeholder="Your name"
+              placeholder={content.form.namePlaceholder[language]}
             />
           </div>
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-2 text-[var(--text-primary)]">
-              Email
+              {content.form.emailLabel[language]}
             </label>
             <input
               type="email"
@@ -133,16 +136,16 @@ export default function Contact() {
                   ? 'border-red-500 focus:ring-red-500'
                   : 'border-[var(--input-border)] focus:ring-[var(--input-border-focus)]'
               }`}
-              placeholder="your.email@example.com"
+              placeholder={content.form.emailPlaceholder[language]}
             />
             {emailError && (
-              <p className="text-red-500 text-sm mt-1">{emailError}</p>
+              <p className="text-red-500 text-sm mt-1">{content.form.emailInvalid[language]}</p>
             )}
           </div>
 
           <div>
             <label htmlFor="message" className="block text-sm font-medium mb-2 text-[var(--text-primary)]">
-              Message
+              {content.form.messageLabel[language]}
             </label>
             <textarea
               id="message"
@@ -152,7 +155,7 @@ export default function Contact() {
               required
               rows={5}
               className="w-full px-4 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--input-border-focus)] transition-all resize-none text-[var(--text-primary)] placeholder:text-[var(--text-muted)]"
-              placeholder="Your message here..."
+              placeholder={content.form.messagePlaceholder[language]}
             />
           </div>
 
@@ -161,18 +164,18 @@ export default function Contact() {
             disabled={isSubmitting}
             className="w-full px-6 py-3 bg-[var(--accent)] hover:bg-[var(--accent-hover)] disabled:opacity-50 disabled:cursor-not-allowed text-[var(--text-inverse)] rounded-lg font-medium transition-colors"
           >
-            {isSubmitting ? 'Sending...' : 'Send Message'}
+            {isSubmitting ? content.form.submittingLabel[language] : content.form.submitLabel[language]}
           </button>
 
           {submitStatus === 'success' && (
             <p className="text-green-600 text-sm text-center">
-              Message sent successfully!
+              {content.form.successMessage[language]}
             </p>
           )}
 
           {submitStatus === 'error' && (
             <p className="text-red-600 text-sm text-center">
-              Failed to send message. Please try again.
+              {content.form.errorMessage[language]}
             </p>
           )}
         </form>

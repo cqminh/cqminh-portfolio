@@ -2,8 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Logo from './Logo';
+import { siteContent } from '@/content/site-content';
+import { useLanguage } from './LanguageProvider';
 
 export default function Navbar() {
+  const { language } = useLanguage();
+  const content = siteContent.navbar;
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -56,7 +60,7 @@ export default function Navbar() {
           }}
           className="font-medium hover:opacity-80"
         >
-          Resume
+          {content.resumeLabel[language]}
         </a>
       </div>
     </nav>

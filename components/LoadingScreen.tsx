@@ -11,17 +11,31 @@ export default function LoadingScreen() {
 
   useEffect(() => {
     if (isLoading) {
+      const scrollY = window.scrollY;
       document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
-      window.scrollTo(0, 0);
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
     } else {
+      const scrollY = document.body.style.top;
       document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY ? -parseInt(scrollY, 10) : 0);
     }
 
     return () => {
       document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
     };
   }, [isLoading]);
 
@@ -81,14 +95,14 @@ export default function LoadingScreen() {
   if (!isLoading) return null;
 
   return (
-    <div className="fixed inset-0 bg-black z-[9999] flex flex-col items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 bg-[var(--background)] z-[9999] flex flex-col items-center justify-center overflow-hidden">
       {/* Logo Container */}
       <div className="relative w-32 h-32 mb-8">
         {/* Glow effect */}
         <div
           className="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity duration-500"
           style={{
-            background: `radial-gradient(circle, #3b82f6, transparent)`,
+            background: `radial-gradient(circle, var(--accent), transparent)`,
             opacity: progress > 10 ? (progress - 10) / 90 : 0,
           }}
         />
@@ -133,13 +147,13 @@ export default function LoadingScreen() {
           {/* Animated Fill Gradient */}
           <defs>
             <linearGradient id="fillGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" style={{ stopColor: '#9ca3af', stopOpacity: 1 }} />
+              <stop offset="0%" style={{ stopColor: 'var(--card-border)', stopOpacity: 1 }} />
               <stop
                 offset={`${progress}%`}
-                style={{ stopColor: '#3b82f6', stopOpacity: 1 }}
+                style={{ stopColor: 'var(--accent)', stopOpacity: 1 }}
               />
-              <stop offset={`${progress}%`} style={{ stopColor: '#9ca3af', stopOpacity: 1 }} />
-              <stop offset="100%" style={{ stopColor: '#9ca3af', stopOpacity: 1 }} />
+              <stop offset={`${progress}%`} style={{ stopColor: 'var(--card-border)', stopOpacity: 1 }} />
+              <stop offset="100%" style={{ stopColor: 'var(--card-border)', stopOpacity: 1 }} />
             </linearGradient>
           </defs>
 
@@ -160,7 +174,7 @@ export default function LoadingScreen() {
 
       {/* Loading Text */}
       <p
-        className="text-white text-sm tracking-widest uppercase"
+        className="text-[var(--text-primary)] text-sm tracking-widest uppercase"
         style={{
           opacity: progress < 80 ? 1 : 0.5,
           transition: 'opacity 0.3s ease-out',
@@ -170,15 +184,15 @@ export default function LoadingScreen() {
       </p>
 
       {/* Progress Bar */}
-      <div className="w-48 h-1 bg-gray-700 rounded-full mt-6 overflow-hidden">
+      <div className="w-48 h-1 bg-[var(--border)] rounded-full mt-6 overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-100"
+          className="h-full bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)] transition-all duration-100"
           style={{ width: `${progress}%` }}
         />
       </div>
 
       {/* Progress Text */}
-      <p className="text-gray-500 text-xs mt-3">{Math.round(progress)}%</p>
+      <p className="text-[var(--text-muted)] text-xs mt-3">{Math.round(progress)}%</p>
     </div>
   );
 }

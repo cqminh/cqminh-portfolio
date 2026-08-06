@@ -7,8 +7,12 @@ import { loadSlim } from '@tsparticles/slim';
 import { Engine } from '@tsparticles/engine';
 import { PORTRAIT_IMAGES } from '@/mock/constants';
 import { particlesConfig } from '@/config/particles';
+import { siteContent } from '@/content/site-content';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function Hero() {
+  const { language } = useLanguage();
+  const content = siteContent.hero;
   const [portraitSrc, setPortraitSrc] = useState<string>(PORTRAIT_IMAGES[0]);
 
   useEffect(() => {
@@ -57,7 +61,7 @@ export default function Hero() {
               {portraitSrc && (
                 <img
                   src={portraitSrc}
-                  alt="Châu Quang Minh"
+                  alt={content.name}
                   className="object-cover w-full h-auto block"
                 />
               )}
@@ -68,30 +72,35 @@ export default function Hero() {
         {/* Right side: Text */}
         <div className="w-3/5 flex flex-col justify-center h-screen">
           <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out' }}>
+            <p className="text-base md:text-lg text-[var(--text-secondary)] tracking-wide mb-2 font-bold">
+              {content.greeting[language]}
+            </p>
+          </div>
+
+          <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out' }}>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              Hi, I'm <span className="text-blue-400">Châu Quang Minh</span>
+              <span className="text-blue-400">{content.name}</span>
             </h1>
           </div>
 
           <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out 0.2s' }}>
             <p className="text-xl md:text-2xl text-[var(--text-secondary)] mb-8 leading-relaxed">
-              Full Stack Developer | Creative Problem Solver
+              {content.title[language]}
             </p>
           </div>
 
           <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out 0.4s' }}>
             <p className="text-lg text-[var(--text-muted)] mb-12 max-w-2xl leading-relaxed">
-              I build beautiful, performant web applications that solve real problems.
-              Passionate about clean code, user experience, and continuous learning.
+              {content.description[language]}
             </p>
           </div>
 
           <div style={{ opacity: 1, transform: 'translateY(0px)', transition: 'all 0.8s ease-out 0.6s' }} className="flex flex-col sm:flex-row gap-4">
             <button className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg">
-              View My Work
+              {content.ctaPrimary[language]}
             </button>
             <button className="px-8 py-4 border-2 border-blue-400 text-blue-400 hover:bg-blue-400/10 rounded-lg font-semibold transition-all">
-              Get In Touch
+              {content.ctaSecondary[language]}
             </button>
           </div>
         </div>
