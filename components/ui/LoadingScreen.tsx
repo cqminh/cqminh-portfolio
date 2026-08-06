@@ -149,7 +149,7 @@ export default function LoadingScreen() {
             alt="Logo"
             fill
             priority
-            className="rounded-full object-cover"
+            className="object-contain"
             sizes="96px"
           />
         </div>

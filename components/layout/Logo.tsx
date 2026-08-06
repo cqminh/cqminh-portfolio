@@ -20,7 +20,7 @@ export default function Logo({ variant = 'full', isScrolled = false }: LogoProps
           alt="Logo"
           fill
           priority
-          className="rounded-full"
+          className="object-contain"
           sizes={`${iconSize}px`}
         />
       </div>
@@ -35,7 +35,7 @@ export default function Logo({ variant = 'full', isScrolled = false }: LogoProps
           alt="Logo"
           fill
           priority
-          className="rounded-full object-cover"
+          className="object-contain"
           sizes={`${iconSize}px`}
         />
       </div>
