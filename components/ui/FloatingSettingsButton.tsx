@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Sun, Moon, SunMoon } from 'lucide-react';
 import { useTheme } from '../providers/ThemeProvider';
 import { useLanguage } from '../providers/LanguageProvider';
+import GlassButton from './GlassButton';
 
 export default function FloatingSettingsButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,13 +54,7 @@ export default function FloatingSettingsButton() {
 
   return (
     <div ref={containerRef} className="fixed bottom-6 left-6 z-50">
-      <button
-        onClick={toggleOpen}
-        className="relative w-10 h-10 rounded-full bg-[rgba(255,255,255,0.2)] dark:bg-[rgba(17,24,39,0.2)] backdrop-blur-[12px] hover:bg-[rgba(255,255,255,0.3)] dark:hover:bg-[rgba(17,24,39,0.3)] border border-[var(--nav-border)] transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
-        style={{
-          boxShadow: '0 8px 16px var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -2px 4px rgba(0, 0, 0, 0.05)'
-        }}
-      >
+      <GlassButton onClick={toggleOpen}>
         <svg
           className="w-5 h-5 text-[var(--text-primary)] transition-transform duration-300 group-hover:rotate-90"
           fill="none"
@@ -79,7 +74,7 @@ export default function FloatingSettingsButton() {
             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
           />
         </svg>
-      </button>
+      </GlassButton>
 
       {shouldRender && (
         <div

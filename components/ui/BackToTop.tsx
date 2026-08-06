@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { ArrowUp } from 'lucide-react';
+import GlassButton from './GlassButton';
 
 export default function BackToTop() {
   const [shouldRender, setShouldRender] = useState(false);
@@ -46,11 +47,10 @@ export default function BackToTop() {
   if (!shouldRender) return null;
 
   return (
-    <button
+    <GlassButton
       onClick={scrollToTop}
-      className="fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full bg-[rgba(255,255,255,0.2)] dark:bg-[rgba(17,24,39,0.2)] backdrop-blur-[12px] hover:bg-[rgba(255,255,255,0.3)] dark:hover:bg-[rgba(17,24,39,0.3)] border border-[var(--nav-border)] transition-all duration-300 transform hover:scale-110 flex items-center justify-center group overflow-hidden"
+      className="fixed bottom-6 right-6 z-50 overflow-hidden"
       style={{
-        boxShadow: '0 8px 16px var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -2px 4px rgba(0, 0, 0, 0.05)',
         animation: isAnimatingIn
           ? 'slideInBackToTop 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
           : isAnimatingOut
@@ -89,6 +89,6 @@ export default function BackToTop() {
           }
         }
       `}</style>
-    </button>
+    </GlassButton>
   );
 }
