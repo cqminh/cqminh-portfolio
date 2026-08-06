@@ -230,3 +230,101 @@ html.dark {
 .loading-text-blink {
   animation: loadingTextBlink 1.4s ease-in-out infinite;
 }
+
+/* Resume button: solid button with a slowly flowing gradient + glitter sparkles */
+:root {
+  --btn-resume-grad-1: #2563eb;
+  --btn-resume-grad-2: #7c3aed;
+  --btn-resume-grad-3: #0ea5e9;
+}
+
+html.dark {
+  --btn-resume-grad-1: #3b82f6;
+  --btn-resume-grad-2: #a855f7;
+  --btn-resume-grad-3: #38bdf8;
+}
+
+@keyframes resumeGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.btn-resume {
+  background-color: var(--btn-resume-grad-1);
+}
+
+.btn-resume::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    var(--btn-resume-grad-1),
+    var(--btn-resume-grad-2),
+    var(--btn-resume-grad-3),
+    var(--btn-resume-grad-1)
+  );
+  background-size: 300% 300%;
+  animation: resumeGradientFlow 6s ease-in-out infinite;
+  animation-play-state: paused;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.btn-resume:hover::before {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+.btn-resume:hover {
+  box-shadow: 0 10px 26px rgba(var(--accent-rgb), 0.5);
+}
+
+@keyframes sparkleTwinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(45deg);
+  }
+}
+
+.btn-resume .spark {
+  position: absolute;
+  z-index: 1;
+  width: 5px;
+  height: 5px;
+  background: #ffffff;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  opacity: 0;
+  transform: scale(0);
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.btn-resume:hover .spark {
+  animation: sparkleTwinkle 2.6s ease-in-out infinite;
+}
