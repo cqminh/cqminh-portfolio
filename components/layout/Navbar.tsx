@@ -52,17 +52,26 @@ export default function Navbar() {
           style={{
             padding: isScrolled ? '0.375rem 1.25rem' : '0.5rem 1.5rem',
             fontSize: isScrolled ? '0.875rem' : '1rem',
-            backgroundColor: isScrolled ? 'var(--accent)' : 'var(--nav-bg)',
-            backdropFilter: isScrolled ? 'none' : 'blur(12px)',
+            backgroundColor: isScrolled ? 'rgba(var(--accent-rgb), 0.55)' : 'var(--nav-bg)',
+            backdropFilter: 'blur(12px)',
             color: isScrolled ? 'var(--text-inverse)' : 'var(--text-primary)',
             border: `2px solid ${isScrolled ? 'var(--accent)' : 'var(--nav-border)'}`,
             borderRadius: isScrolled ? '9999px' : '0.5rem',
+            boxShadow: '0 8px 16px var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
             transition:
-              'background-color 1s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 1s cubic-bezier(0.34, 1.56, 0.64, 1), color 1s cubic-bezier(0.34, 1.56, 0.64, 1), padding 1s cubic-bezier(0.34, 1.56, 0.64, 1), font-size 1s cubic-bezier(0.34, 1.56, 0.64, 1), backdrop-filter 0.4s ease, border-radius 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+              'background-color 1s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 1s cubic-bezier(0.34, 1.56, 0.64, 1), color 1s cubic-bezier(0.34, 1.56, 0.64, 1), padding 1s cubic-bezier(0.34, 1.56, 0.64, 1), font-size 1s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease',
           }}
-          className="font-medium hover:opacity-80"
+          className="group relative inline-flex items-center justify-center overflow-hidden font-medium hover:scale-105 hover:shadow-xl active:brightness-125"
         >
-          {content.resumeLabel[language]}
+          <span className="relative z-10">{content.resumeLabel[language]}</span>
+          {/* Shine sweep on hover */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -translate-x-full transition-transform duration-700 ease-out group-hover:translate-x-full"
+            style={{
+              background: 'linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.45) 50%, transparent 60%)',
+            }}
+          />
         </a>
       </div>
     </nav>
