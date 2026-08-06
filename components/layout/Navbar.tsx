@@ -52,11 +52,13 @@ export default function Navbar() {
           style={{
             padding: isScrolled ? '0.375rem 1.25rem' : '0.5rem 1.5rem',
             fontSize: isScrolled ? '0.875rem' : '1rem',
-            backgroundColor: isScrolled ? 'var(--accent)' : 'transparent',
+            backgroundColor: isScrolled ? 'var(--accent)' : 'var(--nav-bg)',
+            backdropFilter: isScrolled ? 'none' : 'blur(12px)',
             color: isScrolled ? 'var(--text-inverse)' : 'var(--text-primary)',
-            border: isScrolled ? 'none' : '2px solid var(--text-primary)',
+            border: `2px solid ${isScrolled ? 'var(--accent)' : 'var(--nav-border)'}`,
             borderRadius: isScrolled ? '9999px' : '0.5rem',
-            transition: 'all 1s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            transition:
+              'background-color 1s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 1s cubic-bezier(0.34, 1.56, 0.64, 1), color 1s cubic-bezier(0.34, 1.56, 0.64, 1), padding 1s cubic-bezier(0.34, 1.56, 0.64, 1), font-size 1s cubic-bezier(0.34, 1.56, 0.64, 1), backdrop-filter 0.4s ease, border-radius 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
           className="font-medium hover:opacity-80"
         >
