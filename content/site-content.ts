@@ -1,6 +1,15 @@
 import { SiteContent } from '@/types/content';
 
 export const siteContent: SiteContent = {
+  loadingScreen: {
+    // Staged by progress: [0] 0-50%, [1] 50-85%, [2] 85-100%
+    messages: [
+      { en: 'Building APK...', vi: 'Đang build APK...' },
+      { en: 'Testing 47 screens...', vi: 'Test 47 màn hình...' },
+      { en: 'Faster than App Store review', vi: 'Nhanh hơn duyệt App Store' },
+    ],
+  },
+
   navbar: {
     resumeLabel: { en: 'Resume', vi: 'CV' },
   },

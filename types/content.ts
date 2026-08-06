@@ -81,6 +81,10 @@ export interface ContactContent {
   form: ContactFormContent;
 }
 
+export interface LoadingScreenContent {
+  messages: Localized[];
+}
+
 export interface SiteContent {
   navbar: NavbarContent;
   hero: HeroContent;
@@ -88,4 +92,5 @@ export interface SiteContent {
   projects: ProjectsContent;
   experience: ExperienceContent;
   contact: ContactContent;
+  loadingScreen: LoadingScreenContent;
 }

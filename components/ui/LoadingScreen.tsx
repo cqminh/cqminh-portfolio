@@ -1,13 +1,20 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
+import { useLanguage } from '@/components/providers/LanguageProvider';
+import { siteContent } from '@/content/site-content';
 
 export default function LoadingScreen() {
+  const { language } = useLanguage();
+  const messages = siteContent.loadingScreen.messages;
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const progressRef = useRef(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timeoutRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
     if (isLoading) {
@@ -44,26 +51,33 @@ export default function LoadingScreen() {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-    timeoutRef.current = setTimeout(() => {
-      setIsLoading(false);
-    }, 300);
+    setIsComplete(true);
+
+    const flashTimeout = setTimeout(() => {
+      setIsClosing(true);
+      const closeTimeout = setTimeout(() => {
+        setIsLoading(false);
+      }, 400);
+      timeoutRefs.current.push(closeTimeout);
+    }, 450);
+    timeoutRefs.current.push(flashTimeout);
   }, []);
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {
       setProgress((prev) => {
         let next = prev;
-        // Pause at 80-85%
-        if (prev >= 80 && prev < 85) {
-          next = prev + 0.3;
+        // 0-83%, fast
+        if (prev < 83) {
+          next = prev + 2;
         }
-        // After 85%, move faster to 100%
-        else if (prev >= 85 && prev < 100) {
-          next = prev + 1.5;
+        // 83-92%, congested/slow
+        else if (prev < 92) {
+          next = prev + 0.15;
         }
-        // 0-80%, normal speed
-        else if (prev < 80) {
-          next = prev + 1;
+        // 92-100%, fast again
+        else if (prev < 100) {
+          next = prev + 2;
         } else {
           next = 100;
         }
@@ -85,102 +99,65 @@ export default function LoadingScreen() {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
+      timeoutRefs.current.forEach(clearTimeout);
+      timeoutRefs.current = [];
     };
   }, [finishLoading]);
 
   if (!isLoading) return null;
 
+  const grayscale = Math.max(0, 100 - progress);
+  const messageIndex = progress < 50 ? 0 : progress < 85 ? 1 : 2;
+
   return (
-    <div className="fixed inset-0 bg-[var(--background)] z-[9999] flex flex-col items-center justify-center overflow-hidden">
+    <div
+      className="fixed inset-0 bg-[var(--background)] z-[9999] flex flex-col items-center justify-center overflow-hidden"
+      style={{
+        opacity: isClosing ? 0 : 1,
+        transition: 'opacity 0.4s ease-out',
+      }}
+    >
       {/* Logo Container */}
-      <div className="relative w-32 h-32 mb-8">
-        {/* Glow effect */}
+      <div className="relative w-32 h-32 mb-8 flex items-center justify-center">
+        {/* Ambient glow, grows with progress */}
         <div
-          className="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity duration-500"
+          className="absolute inset-0 rounded-full blur-2xl"
           style={{
-            background: `radial-gradient(circle, var(--accent), transparent)`,
-            opacity: progress > 10 ? (progress - 10) / 90 : 0,
+            background: 'radial-gradient(circle, var(--accent), transparent 70%)',
+            opacity: (progress / 100) * 0.7,
           }}
         />
 
-        {/* Logo SVG */}
-        <svg
-          viewBox="0 0 200 200"
-          className="w-full h-full"
+        {/* Completion flash */}
+        {isComplete && (
+          <div
+            className="absolute inset-0 rounded-full loading-flash pointer-events-none"
+            style={{ background: 'radial-gradient(circle, var(--accent), transparent 70%)' }}
+          />
+        )}
+
+        {/* Logo: grayscale at 0%, full color at 100% */}
+        <div
+          className="relative w-24 h-24"
           style={{
-            filter: progress < 10 ? 'grayscale(100%)' : `grayscale(${Math.max(0, 100 - (progress - 10) * 10)})`,
-            transition: 'filter 0.3s ease-out',
+            filter: `grayscale(${grayscale}%) ${isComplete ? 'brightness(1.4)' : ''}`,
+            transition: isComplete ? 'filter 0.4s ease-out' : undefined,
           }}
         >
-          {/* SVG Circle Design */}
-          <circle
-            cx="100"
-            cy="100"
-            r="80"
-            fill="none"
-            stroke="url(#fillGradient)"
-            strokeWidth="3"
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            fill
+            priority
+            className="rounded-full object-cover"
+            sizes="96px"
           />
-          <circle
-            cx="100"
-            cy="100"
-            r="60"
-            fill="url(#fillGradient)"
-            opacity="0.3"
-          />
-          <text
-            x="100"
-            y="110"
-            fontSize="48"
-            fontWeight="bold"
-            textAnchor="middle"
-            fill="url(#fillGradient)"
-            fontFamily="Arial, sans-serif"
-          >
-            P
-          </text>
-
-          {/* Animated Fill Gradient */}
-          <defs>
-            <linearGradient id="fillGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" style={{ stopColor: 'var(--card-border)', stopOpacity: 1 }} />
-              <stop
-                offset={`${progress}%`}
-                style={{ stopColor: 'var(--accent)', stopOpacity: 1 }}
-              />
-              <stop offset={`${progress}%`} style={{ stopColor: 'var(--card-border)', stopOpacity: 1 }} />
-              <stop offset="100%" style={{ stopColor: 'var(--card-border)', stopOpacity: 1 }} />
-            </linearGradient>
-          </defs>
-
-          {/* Animated circle mask for fill effect */}
-          <circle
-            cx="100"
-            cy="100"
-            r="70"
-            fill="white"
-            opacity="0"
-            style={{
-              maskImage: `linear-gradient(to top, black ${progress}%, transparent ${progress}%)`,
-              WebkitMaskImage: `linear-gradient(to top, black ${progress}%, transparent ${progress}%)`,
-            }}
-          />
-        </svg>
+        </div>
       </div>
 
       {/* Loading Text */}
-      <p
-        className="text-[var(--text-primary)] text-sm tracking-widest uppercase"
-        style={{
-          opacity: progress < 80 ? 1 : 0.5,
-          transition: 'opacity 0.3s ease-out',
-        }}
-      >
-        Loading Portfolio
+      <p className="text-[var(--text-primary)] text-sm tracking-widest uppercase loading-text-blink">
+        {messages[messageIndex][language]}
       </p>
 
       {/* Progress Bar */}
