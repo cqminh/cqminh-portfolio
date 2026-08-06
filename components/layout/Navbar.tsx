@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Logo from './Logo';
 import { siteContent } from '@/content/site-content';
-import { useLanguage } from './LanguageProvider';
+import { useLanguage } from '../providers/LanguageProvider';
 
 export default function Navbar() {
   const { language } = useLanguage();

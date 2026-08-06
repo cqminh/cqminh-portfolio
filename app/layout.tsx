@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import LoadingScreen from "@/components/LoadingScreen";
-import CustomScrollbar from "@/components/CustomScrollbar";
-import BackToTop from "@/components/BackToTop";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { LanguageProvider } from "@/components/LanguageProvider";
+import LoadingScreen from "@/components/ui/LoadingScreen";
+import CustomScrollbar from "@/components/ui/CustomScrollbar";
+import BackToTop from "@/components/ui/BackToTop";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { LanguageProvider } from "@/components/providers/LanguageProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

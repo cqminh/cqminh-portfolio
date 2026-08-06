@@ -5,10 +5,10 @@ import Image from 'next/image';
 import Particles, { ParticlesProvider } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
 import { Engine } from '@tsparticles/engine';
-import { PORTRAIT_IMAGES } from '@/mock/constants';
+import { PORTRAIT_IMAGES } from '@/content/assets';
 import { particlesConfig } from '@/config/particles';
 import { siteContent } from '@/content/site-content';
-import { useLanguage } from '@/components/LanguageProvider';
+import { useLanguage } from '@/components/providers/LanguageProvider';
 
 export default function Hero() {
   const { language } = useLanguage();

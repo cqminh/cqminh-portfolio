@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Sun, Moon, SunMoon } from 'lucide-react';
-import { useTheme } from './ThemeProvider';
-import { useLanguage } from './LanguageProvider';
+import { useTheme } from '../providers/ThemeProvider';
+import { useLanguage } from '../providers/LanguageProvider';
 
 export default function FloatingSettingsButton() {
   const [isOpen, setIsOpen] = useState(false);

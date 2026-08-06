@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useStaggeredAnimation } from '@/hooks/useStaggeredAnimation';
 import { siteContent } from '@/content/site-content';
-import { useLanguage } from '@/components/LanguageProvider';
+import { useLanguage } from '@/components/providers/LanguageProvider';
 
 export default function Contact() {
   const { language } = useLanguage();
