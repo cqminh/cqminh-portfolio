@@ -1,28 +1,33 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { Sun, Moon, SunMoon } from 'lucide-react';
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
+import { Sun, Moon, SunMoon, X } from 'lucide-react';
 import { useTheme } from '../providers/ThemeProvider';
 import { useLanguage } from '../providers/LanguageProvider';
 import GlassButton from './GlassButton';
 
+// Vertical spacing between stacked buttons (button height + gap), in px.
+const STACK_OFFSET = 56;
+
+const THEME_CYCLE = ['auto', 'light', 'dark'] as const;
+
 export default function FloatingSettingsButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
-  const [isAnimatingIn, setIsAnimatingIn] = useState(false);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const { theme, setTheme } = useTheme();
   const { language, setLanguage } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const close = () => {
+    setIsOpen(false);
+    setIsAnimatingOut(true);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        if (isOpen) {
-          setIsOpen(false);
-          setIsAnimatingIn(false);
-          setIsAnimatingOut(true);
-        }
+        if (isOpen) close();
       }
     };
 
@@ -32,25 +37,28 @@ export default function FloatingSettingsButton() {
 
   const toggleOpen = () => {
     if (isOpen) {
-      setIsOpen(false);
-      setIsAnimatingIn(false);
-      setIsAnimatingOut(true);
+      close();
     } else {
       setShouldRender(true);
       setIsOpen(true);
-      setIsAnimatingIn(true);
       setIsAnimatingOut(false);
     }
   };
 
   useEffect(() => {
     if (isAnimatingOut) {
-      const timer = setTimeout(() => {
-        setShouldRender(false);
-      }, 300);
+      const timer = setTimeout(() => setShouldRender(false), 300);
       return () => clearTimeout(timer);
     }
   }, [isAnimatingOut]);
+
+  const cycleTheme = () => {
+    const next = THEME_CYCLE[(THEME_CYCLE.indexOf(theme) + 1) % THEME_CYCLE.length];
+    setTheme(next);
+  };
+
+  const themeIcon =
+    theme === 'auto' ? <SunMoon className="w-4 h-4" /> : theme === 'light' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />;
 
   return (
     <div ref={containerRef} className="fixed bottom-6 left-6 z-50">
@@ -77,94 +85,105 @@ export default function FloatingSettingsButton() {
       </GlassButton>
 
       {shouldRender && (
-        <div
-          className="absolute bottom-12 left-0 bg-[var(--card-bg)]/60 backdrop-blur-[12px] rounded-xl shadow-2xl p-3 border border-[var(--card-border)]"
-          style={{
-            animation: isAnimatingIn
-              ? 'expandFromButton 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
-              : isAnimatingOut
-              ? 'collapseToButton 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
-              : 'none',
-            transformOrigin: 'bottom left',
-            transformBox: 'fill-box',
-            width: '220px'
-          }}
-        >
-          <nav className="flex flex-col gap-3">
-            {/* Language */}
-            <div>
-              <label className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider px-2">Language</label>
-              <button
-                onClick={() => setLanguage(language === 'en' ? 'vi' : 'en')}
-                className="w-full mt-2 px-3 py-2 bg-[var(--card-bg)] hover:bg-[var(--card-bg-hover)] text-[var(--text-primary)] rounded-lg transition-all duration-150 font-medium text-sm border border-[var(--card-border)]"
-              >
-                {language === 'en' ? 'English' : 'Tiếng Việt'}
-              </button>
-            </div>
+        <>
+          {/* Theme toggle — closest to the settings button */}
+          <div
+            className="absolute bottom-0 left-0"
+            style={{
+              '--offset': `${STACK_OFFSET}px`,
+              animation: isAnimatingOut
+                ? 'stackBounceOut 0.3s ease-in forwards'
+                : 'stackBounceIn 0.35s ease-out forwards',
+              animationDelay: isAnimatingOut ? '60ms' : '0ms',
+            } as CSSProperties}
+          >
+            <GlassButton onClick={cycleTheme} title={`Theme: ${theme}`}>
+              <span className="text-[var(--text-primary)]">{themeIcon}</span>
+            </GlassButton>
+          </div>
 
-            {/* Theme */}
-            <div>
-              <label className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider px-2">Theme</label>
-              <div className="flex gap-2 mt-2">
-                <button
-                  onClick={() => setTheme('auto')}
-                  className={`flex-1 px-3 py-2 rounded-lg transition-all duration-150 font-medium text-sm flex items-center justify-center ${
-                    theme === 'auto'
-                      ? 'bg-[var(--accent)] text-[var(--text-inverse)]'
-                      : 'bg-[var(--card-bg)] text-[var(--text-primary)] hover:bg-[var(--card-bg-hover)] border border-[var(--card-border)]'
-                  }`}
-                  title="Auto"
-                >
-                  <SunMoon className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  onClick={() => setTheme('light')}
-                  className={`flex-1 px-3 py-2 rounded-lg transition-all duration-150 font-medium text-sm flex items-center justify-center ${
-                    theme === 'light'
-                      ? 'bg-[var(--accent)] text-[var(--text-inverse)]'
-                      : 'bg-[var(--card-bg)] text-[var(--text-primary)] hover:bg-[var(--card-bg-hover)] border border-[var(--card-border)]'
-                  }`}
-                  title="Light"
-                >
-                  <Sun className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  onClick={() => setTheme('dark')}
-                  className={`flex-1 px-3 py-2 rounded-lg transition-all duration-150 font-medium text-sm flex items-center justify-center ${
-                    theme === 'dark'
-                      ? 'bg-[var(--accent)] text-[var(--text-inverse)]'
-                      : 'bg-[var(--card-bg)] text-[var(--text-primary)] hover:bg-[var(--card-bg-hover)] border border-[var(--card-border)]'
-                  }`}
-                  title="Dark"
-                >
-                  <Moon className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          </nav>
-        </div>
+          {/* Language toggle — middle */}
+          <div
+            className="absolute bottom-0 left-0"
+            style={{
+              '--offset': `${STACK_OFFSET * 2}px`,
+              animation: isAnimatingOut
+                ? 'stackBounceOut 0.3s ease-in forwards'
+                : 'stackBounceIn 0.35s ease-out forwards',
+              animationDelay: isAnimatingOut ? '30ms' : '60ms',
+            } as CSSProperties}
+          >
+            <GlassButton
+              onClick={() => setLanguage(language === 'en' ? 'vi' : 'en')}
+              title="Language"
+            >
+              <span className="text-[11px] font-bold tracking-tight text-[var(--text-primary)]">
+                {language === 'en' ? 'EN' : 'VI'}
+              </span>
+            </GlassButton>
+          </div>
+
+          {/* Close — topmost */}
+          <div
+            className="absolute bottom-0 left-0"
+            style={{
+              '--offset': `${STACK_OFFSET * 3}px`,
+              animation: isAnimatingOut
+                ? 'stackBounceOut 0.3s ease-in forwards'
+                : 'stackBounceIn 0.35s ease-out forwards',
+              animationDelay: isAnimatingOut ? '0ms' : '120ms',
+            } as CSSProperties}
+          >
+            <GlassButton
+              onClick={close}
+              title="Close"
+              className="close-btn"
+              style={{ borderColor: 'rgba(239,68,68,0.35)' }}
+            >
+              <X className="w-4 h-4 text-[var(--error)]" />
+            </GlassButton>
+          </div>
+        </>
       )}
 
       <style jsx>{`
-        @keyframes expandFromButton {
-          from {
+        .close-btn {
+          background: rgba(239, 68, 68, 0.15);
+        }
+        .close-btn:hover {
+          background: rgba(239, 68, 68, 0.28);
+        }
+        .close-btn:active {
+          background: rgba(239, 68, 68, 0.45);
+        }
+
+        @keyframes stackBounceIn {
+          0% {
+            transform: translateY(0) scale(0.3);
             opacity: 0;
-            transform: scale(0.3) translateY(10px);
           }
-          to {
+          65% {
+            transform: translateY(calc(-1 * var(--offset) - 12px)) scale(1.08);
             opacity: 1;
-            transform: scale(1) translateY(0);
+          }
+          100% {
+            transform: translateY(calc(-1 * var(--offset))) scale(1);
+            opacity: 1;
           }
         }
 
-        @keyframes collapseToButton {
-          from {
+        @keyframes stackBounceOut {
+          0% {
+            transform: translateY(calc(-1 * var(--offset))) scale(1);
             opacity: 1;
-            transform: scale(1) translateY(0);
           }
-          to {
+          35% {
+            transform: translateY(calc(-1 * var(--offset) - 10px)) scale(1.05);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(0) scale(0.3);
             opacity: 0;
-            transform: scale(0.3) translateY(10px);
           }
         }
       `}</style>
