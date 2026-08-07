@@ -10,12 +10,13 @@ export interface NavbarContent {
 }
 
 export interface HeroContent {
-  greeting: Localized;
-  name: string;
-  title: Localized;
-  description: Localized;
-  ctaPrimary: Localized;
-  ctaSecondary: Localized;
+  // Job titles come from the backend as plain strings with no translation;
+  // 2+ entries rotate in the UI instead of being localized per-language.
+  titles: string[];
+  // Backend field: hero_slider_image. Plain image URLs, no translation.
+  // Count is not fixed — the slider adapts to however many come back
+  // (including 0 or 1).
+  sliderImages: string[];
 }
 
 export interface AboutContent {

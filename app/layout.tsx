@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Courier_Prime, Nunito } from "next/font/google";
 import "./globals.css";
 import LoadingScreen from "@/components/ui/LoadingScreen";
 import CustomScrollbar from "@/components/ui/CustomScrollbar";
 import BackToTop from "@/components/ui/BackToTop";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
+import { LoadingProvider } from "@/components/providers/LoadingProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,6 +16,17 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const courierPrime = Courier_Prime({
+  variable: "--font-courier-prime",
+  weight: ["400", "700"],
+  subsets: ["latin"],
+});
+
+const nunito = Nunito({
+  variable: "--font-nunito-loaded",
+  subsets: ["vietnamese"],
 });
 
 export const metadata: Metadata = {
@@ -39,7 +51,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${courierPrime.variable} ${nunito.variable} h-full antialiased`}
     >
       <head>
         <script
@@ -77,10 +89,12 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <LanguageProvider>
-            <LoadingScreen />
-            <CustomScrollbar />
-            <BackToTop />
-            {children}
+            <LoadingProvider>
+              <LoadingScreen />
+              <CustomScrollbar />
+              <BackToTop />
+              {children}
+            </LoadingProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>

@@ -15,18 +15,8 @@ export const siteContent: SiteContent = {
   },
 
   hero: {
-    greeting: { en: "Hi, I'm", vi: 'Xin chào, tôi là' },
-    name: 'Châu Quang Minh',
-    title: {
-      en: 'Full Stack Developer | Creative Problem Solver',
-      vi: 'Full Stack Developer | Người giải quyết vấn đề sáng tạo',
-    },
-    description: {
-      en: 'I build beautiful, performant web applications that solve real problems. Passionate about clean code, user experience, and continuous learning.',
-      vi: 'Tôi xây dựng những ứng dụng web đẹp, hiệu năng cao để giải quyết các vấn đề thực tế. Đam mê code sạch, trải nghiệm người dùng và học hỏi không ngừng.',
-    },
-    ctaPrimary: { en: 'View My Work', vi: 'Xem dự án của tôi' },
-    ctaSecondary: { en: 'Get In Touch', vi: 'Liên hệ với tôi' },
+    titles: ['Mobile Developer', 'Flutter Developer', 'React Native Developer'],
+    sliderImages: ['/picture_1.png', '/picture_2.png', '/picture_3.jpg', '/picture_4.jpg', '/picture_5.jpg'],
   },
 
   about: {

@@ -42,6 +42,7 @@
   --hero-glow-1: rgba(14, 165, 233, 0.25);
   --hero-glow-2: rgba(99, 102, 241, 0.25);
   --hero-glow-3: rgba(236, 72, 153, 0.18);
+  --hero-text-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
 
   --tag-bg: #dbeafe;
   --tag-text: #1d4ed8;
@@ -61,6 +62,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-courier: var(--font-courier-prime);
+  --font-nunito: var(--font-nunito-loaded);
 }
 
 /* ============================================
@@ -104,6 +107,7 @@ html.dark {
   --hero-glow-1: rgba(56, 189, 248, 0.15);
   --hero-glow-2: rgba(168, 85, 247, 0.15);
   --hero-glow-3: rgba(236, 72, 153, 0.1);
+  --hero-text-shadow: 0 0 30px var(--hero-glow-1), 0 0 70px var(--hero-glow-2);
 
   --tag-bg: #1e3a8a;
   --tag-text: #93c5fd;
@@ -258,6 +262,96 @@ html.dark {
 
 .btn-resume {
   background-color: var(--btn-resume-grad-1);
+}
+
+/* Hero "Minh" heading: same flowing-gradient motion as the resume button, applied to text */
+.hero-minh-gradient {
+  background: linear-gradient(115deg, #60a5fa, #a78bfa, #f472b6, #60a5fa);
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: resumeGradientFlow 6s ease-in-out infinite;
+}
+
+/* Hero "Minh" heading: hover slit — a horizontal band is cut through the
+   letters (revealing whatever sits behind them), swept in left-to-right.
+   Layer 1 restricts the cut to a fixed vertical band. Layer 2 is a hard-edge
+   gradient twice the element's width; sliding it via mask-position sweeps
+   the cut's leading edge across. mask-composite: add unions the two layers,
+   so a pixel is only cut once it's inside BOTH the band and the swept area. */
+.hero-minh-slit {
+  /* Italic strokes (M's left leg, H's right serif) visually overhang the
+     glyphs' advance box; mask-image clips strictly to that box, so without
+     this buffer the outer letters get sliced off. Padding grows the box,
+     negative margin cancels the layout shift it would otherwise cause. */
+  display: inline-block;
+  padding: 0 0.08em;
+  margin: 0 -0.08em;
+  mask-image:
+    linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 calc(50% - 0.1em),
+      transparent calc(50% - 0.1em),
+      transparent calc(50% + 0.1em),
+      #000 calc(50% + 0.1em),
+      #000 100%
+    ),
+    linear-gradient(to right, transparent 0% 50%, #000 50% 100%);
+  mask-size: 100% 100%, 200% 100%;
+  mask-repeat: no-repeat, no-repeat;
+  mask-position: 0 0, 100% 0;
+  mask-composite: add, add;
+  /* Closing: wait for "marcus" (0.5s) to finish hiding before sweeping shut. */
+  transition: mask-position 0.5s ease 0.5s;
+}
+
+.hero-minh-wrap:hover .hero-minh-slit {
+  mask-position: 0 0, 0% 0;
+  /* Opening: sweep immediately; "marcus" is delayed until this finishes. */
+  transition-delay: 0s;
+}
+
+/* Hero portrait slider: right-anchored on larger screens, centered and
+   raised further off the bottom edge on phones — a fixed right offset
+   there either overlaps the hero text or sits too close to the edge, and
+   the same bottom offset that works on desktop reads as flush against the
+   bottom on a phone's shorter viewport. */
+.hero-portrait-slider {
+  bottom: clamp(1.5rem, 6vh, 3rem);
+  right: clamp(1.5rem, 4vw, 3rem);
+}
+
+@media (max-width: 640px) {
+  .hero-portrait-slider {
+    bottom: clamp(5rem, 18vh, 8rem);
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes letterExitUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes letterEnterUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .btn-resume::before {

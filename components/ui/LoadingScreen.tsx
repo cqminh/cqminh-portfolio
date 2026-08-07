@@ -3,16 +3,25 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/components/providers/LanguageProvider';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { siteContent } from '@/content/site-content';
 
 export default function LoadingScreen() {
   const { language } = useLanguage();
+  const { finishLoading: notifyLoadingComplete } = useLoading();
   const messages = siteContent.loadingScreen.messages;
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const progressRef = useRef(0);
+  // finishLoading below is deliberately kept dependency-free (its identity
+  // must stay stable so the interval effect doesn't restart) — this ref
+  // lets it still call whatever the current context function is.
+  const notifyLoadingCompleteRef = useRef(notifyLoadingComplete);
+  useEffect(() => {
+    notifyLoadingCompleteRef.current = notifyLoadingComplete;
+  }, [notifyLoadingComplete]);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timeoutRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -57,6 +66,7 @@ export default function LoadingScreen() {
       setIsClosing(true);
       const closeTimeout = setTimeout(() => {
         setIsLoading(false);
+        notifyLoadingCompleteRef.current();
       }, 400);
       timeoutRefs.current.push(closeTimeout);
     }, 450);
