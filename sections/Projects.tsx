@@ -3,6 +3,7 @@
 import { useStaggeredAnimation } from '@/hooks/useStaggeredAnimation';
 import { siteContent } from '@/content/site-content';
 import { useLanguage } from '@/components/providers/LanguageProvider';
+import SectionTag from '@/components/ui/SectionTag';
 
 export default function Projects() {
   const { language } = useLanguage();
@@ -10,7 +11,8 @@ export default function Projects() {
   const { ref, isVisible, getItemStyle } = useStaggeredAnimation(content.items.length);
 
   return (
-    <section ref={ref} id="projects" className="py-20 px-6 max-w-6xl mx-auto border-t border-[var(--border)]">
+    <section ref={ref} id="projects" className="relative py-20 px-6 max-w-6xl mx-auto border-t border-[var(--border)]">
+      <SectionTag name={{ en: 'Projects', vi: 'DuAn' }} />
       <div style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(40px)', transition: 'all 0.6s ease-out' }}>
         <h2 className="text-4xl font-bold mb-12 text-center text-[var(--text-primary)]">{content.heading[language]}</h2>
       </div>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Courier_Prime, Nunito } from "next/font/google";
+import { Geist, Geist_Mono, Courier_Prime, Nunito, Fuzzy_Bubbles } from "next/font/google";
 import "./globals.css";
 import LoadingScreen from "@/components/ui/LoadingScreen";
 import CustomScrollbar from "@/components/ui/CustomScrollbar";
@@ -29,6 +29,12 @@ const nunito = Nunito({
   subsets: ["vietnamese"],
 });
 
+const fuzzyBubbles = Fuzzy_Bubbles({
+  variable: "--font-fuzzy-bubbles",
+  weight: "400",
+  subsets: ["latin", "vietnamese"],
+});
+
 export const metadata: Metadata = {
   title: "Châu Quang Minh - Portfolio",
   description: "Full Stack Developer Portfolio",
@@ -51,7 +57,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${courierPrime.variable} ${nunito.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${courierPrime.variable} ${nunito.variable} ${fuzzyBubbles.variable} h-full antialiased`}
     >
       <head>
         <script

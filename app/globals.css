@@ -64,6 +64,7 @@
   --font-mono: var(--font-geist-mono);
   --font-courier: var(--font-courier-prime);
   --font-nunito: var(--font-nunito-loaded);
+  --font-fuzzy-bubbles: var(--font-fuzzy-bubbles);
 }
 
 /* ============================================
@@ -147,6 +148,18 @@ body::-webkit-scrollbar {
   width: 0 !important;
   height: 0 !important;
   display: none !important;
+}
+
+/* For any other scrollable container that wants a native (swipe/drag)
+   scroll experience without a visible scrollbar — e.g. the phone mockup's
+   paginated folder panel. */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* Navbar animations */
@@ -422,3 +435,20 @@ html.dark {
 .btn-resume:hover .spark {
   animation: sparkleTwinkle 2.6s ease-in-out infinite;
 }
+
+.terminal-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 1px;
+  background: currentColor;
+  vertical-align: text-bottom;
+  animation: terminalCursorBlink 1s steps(1) infinite;
+}
+
+@keyframes terminalCursorBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
