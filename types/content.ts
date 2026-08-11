@@ -86,7 +86,6 @@ export interface ProjectItem {
 
 export interface ProjectsContent {
   viewProjectLabel: Localized;
-  items: ProjectItem[];
 }
 
 // Fixed set of card accent presets for the Experience stack — deliberately
@@ -166,6 +165,13 @@ export interface AboutEditableContent {
   intro: Localized[];
   // Rendered as a 4-per-row app grid on the phone mockup's screen.
   phoneApps: PhoneAppItem[];
+}
+
+// The project grid's cards — admin-managed via the DB. `contactImage` is a
+// plain URL (admin pastes a Cloudinary link); empty string falls back to no
+// featured image rather than a broken one. List length isn't fixed.
+export interface ProjectsEditableContent {
+  items: ProjectItem[];
 }
 
 // External link to the CV/resume file (e.g. a Google Drive share link) —

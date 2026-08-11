@@ -1,8 +1,8 @@
 "use server";
 
 import { verifySession } from "@/lib/dal";
-import { saveAboutContent, saveHeroContent, saveLoadingScreenContent, saveResumeContent } from "@/lib/site-content";
-import type { Localized, PhoneAppChild, PhoneAppItem } from "@/types/content";
+import { saveAboutContent, saveHeroContent, saveLoadingScreenContent, saveProjectsContent, saveResumeContent } from "@/lib/site-content";
+import type { Localized, PhoneAppChild, PhoneAppItem, ProjectItem } from "@/types/content";
 
 export interface SaveLoadingScreenState {
   ok: boolean;
@@ -146,5 +146,48 @@ export async function saveAboutAction(_prevState: SaveAboutState, formData: Form
     : [];
 
   await saveAboutContent({ intro, phoneApps });
+  return { ok: true };
+}
+
+export interface SaveProjectsState {
+  ok: boolean;
+  error?: string;
+}
+
+function parseProjectItem(value: unknown): ProjectItem | null {
+  const v = (value ?? {}) as Record<string, unknown>;
+  const name = parseLocalized(v.name);
+  if (!name.en || !name.vi) return null;
+
+  const language = Array.isArray(v.language) ? v.language.map(str).filter(Boolean) : [];
+  const githubLink = str(v.githubLink);
+  const projectLink = str(v.projectLink);
+
+  return {
+    id: str(v.id) || crypto.randomUUID(),
+    name,
+    time: parseLocalized(v.time),
+    description: parseLocalized(v.description),
+    position: parseLocalized(v.position),
+    language,
+    contactImage: str(v.contactImage),
+    ...(githubLink && { githubLink }),
+    ...(projectLink && { projectLink }),
+  };
+}
+
+export async function saveProjectsAction(_prevState: SaveProjectsState, formData: FormData): Promise<SaveProjectsState> {
+  await verifySession();
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(String(formData.get("projects-data") ?? ""));
+  } catch {
+    return { ok: false, error: "invalid" };
+  }
+
+  const items = Array.isArray(parsed) ? parsed.map(parseProjectItem).filter((item): item is ProjectItem => item !== null) : [];
+
+  await saveProjectsContent({ items });
   return { ok: true };
 }

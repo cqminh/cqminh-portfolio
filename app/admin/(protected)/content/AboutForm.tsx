@@ -1,9 +1,10 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { Eye, EyeOff, Plus, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { saveAboutAction, type SaveAboutState } from "./actions";
 import { SaveButton } from "@/components/admin/SaveButton";
+import { UrlPreviewButton, UrlPreviewImage } from "@/components/admin/UrlPreview";
 import { useJustSaved } from "@/hooks/useJustSaved";
 import type { Localized, PhoneAppItem } from "@/types/content";
 
@@ -90,27 +91,6 @@ const inputClass = "min-w-0 flex-1 rounded-lg border border-[var(--card-border)]
 const keyInputClass = "w-32 shrink-0 rounded-lg border border-[var(--card-border)] bg-[var(--background)] px-2 py-2 text-xs font-mono text-[var(--text-primary)]";
 const removeBtnClass = "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-[var(--card-bg-hover)] hover:text-red-500";
 const addBtnClass = "flex w-fit items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-[var(--accent-text)] transition-colors hover:bg-[var(--card-bg-hover)]";
-
-function IconPreviewButton({ icon, open, onToggle }: { icon: string; open: boolean; onToggle: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      disabled={!icon}
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-[var(--card-bg-hover)] disabled:cursor-not-allowed disabled:opacity-40"
-      aria-label={open ? "Hide preview" : "Show preview"}
-    >
-      {open ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-    </button>
-  );
-}
-
-function IconPreviewImage({ icon }: { icon: string }) {
-  return (
-    // eslint-disable-next-line @next/next/no-img-element -- arbitrary external URL, admin-only preview
-    <img src={icon} alt="" className="h-16 w-16 rounded-[22%] border border-[var(--card-border)] object-cover" />
-  );
-}
 
 export function AboutForm({ intro, phoneApps }: { intro: Localized[]; phoneApps: PhoneAppItem[] }) {
   const [state, formAction, pending] = useActionState(saveAboutAction, initialState);
@@ -236,7 +216,7 @@ export function AboutForm({ intro, phoneApps }: { intro: Localized[]; phoneApps:
                     placeholder="Icon URL (optional — Cloudinary link)"
                     className={inputClass}
                   />
-                  <IconPreviewButton icon={row.icon} open={previewKeys.has(row.key)} onToggle={() => togglePreview(row.key)} />
+                  <UrlPreviewButton url={row.icon} open={previewKeys.has(row.key)} onToggle={() => togglePreview(row.key)} />
                   <input
                     value={row.href}
                     onChange={(e) => updateItem(row.key, { href: e.target.value })}
@@ -246,7 +226,7 @@ export function AboutForm({ intro, phoneApps }: { intro: Localized[]; phoneApps:
                 </div>
                 {previewKeys.has(row.key) && row.icon && (
                   <div className="mt-2">
-                    <IconPreviewImage icon={row.icon} />
+                    <UrlPreviewImage url={row.icon} className="h-16 w-16 rounded-[22%] border border-[var(--card-border)] object-cover" />
                   </div>
                 )}
               </div>
@@ -310,9 +290,11 @@ export function AboutForm({ intro, phoneApps }: { intro: Localized[]; phoneApps:
                           placeholder="Icon URL (optional — Cloudinary link)"
                           className={inputClass}
                         />
-                        <IconPreviewButton icon={child.icon} open={previewKeys.has(child.key)} onToggle={() => togglePreview(child.key)} />
+                        <UrlPreviewButton url={child.icon} open={previewKeys.has(child.key)} onToggle={() => togglePreview(child.key)} />
                       </div>
-                      {previewKeys.has(child.key) && child.icon && <IconPreviewImage icon={child.icon} />}
+                      {previewKeys.has(child.key) && child.icon && (
+                        <UrlPreviewImage url={child.icon} className="h-16 w-16 rounded-[22%] border border-[var(--card-border)] object-cover" />
+                      )}
                     </div>
                   ))}
                   <button type="button" onClick={() => addChild(row.key)} className={addBtnClass}>

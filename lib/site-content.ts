@@ -1,6 +1,6 @@
 import { unstable_cache, updateTag } from "next/cache";
 import { sql } from "@/lib/db";
-import type { AboutEditableContent, HeroContent, LoadingScreenContent, ResumeContent } from "@/types/content";
+import type { AboutEditableContent, HeroContent, LoadingScreenContent, ProjectsEditableContent, ResumeContent } from "@/types/content";
 
 function createContentSection<T>(section: string, fallback: T) {
   const tag = `site-content:${section}`;
@@ -138,3 +138,106 @@ const DEFAULT_ABOUT: AboutEditableContent = {
 const aboutSection = createContentSection<AboutEditableContent>("about", DEFAULT_ABOUT);
 export const getAboutContent = aboutSection.get;
 export const saveAboutContent = aboutSection.save;
+
+// Used only before an admin ever saves anything (empty DB row) — the same
+// seven placeholder projects Projects previously shipped with as static content.
+const DEFAULT_PROJECTS: ProjectsEditableContent = {
+  items: [
+    {
+      id: "project-one",
+      name: { en: "Project One", vi: "Dự án Một" },
+      time: { en: "2023 - Present", vi: "2023 - Hiện tại" },
+      description: {
+        en: "A full-stack web application built with Next.js and PostgreSQL",
+        vi: "Ứng dụng web full-stack được xây dựng với Next.js và PostgreSQL",
+      },
+      position: { en: "Full Stack Developer", vi: "Lập trình viên Full Stack" },
+      language: ["nextjs", "react", "typescript", "postgresql"],
+      contactImage: "/picture_1.png",
+      githubLink: "#",
+      projectLink: "#",
+    },
+    {
+      id: "project-two",
+      name: { en: "Project Two", vi: "Dự án Hai" },
+      time: { en: "2022 - 2023", vi: "2022 - 2023" },
+      description: {
+        en: "Real-time collaboration tool with WebSocket integration",
+        vi: "Công cụ cộng tác thời gian thực tích hợp WebSocket",
+      },
+      position: { en: "Backend Developer", vi: "Lập trình viên Backend" },
+      language: ["nodejs", "websocket", "react", "mongodb"],
+      contactImage: "",
+      githubLink: "#",
+    },
+    {
+      id: "project-three",
+      name: { en: "Project Three", vi: "Dự án Ba" },
+      time: { en: "2022", vi: "2022" },
+      description: {
+        en: "Mobile-responsive dashboard for data visualization",
+        vi: "Dashboard trực quan hóa dữ liệu, tối ưu cho di động",
+      },
+      position: { en: "Frontend Developer", vi: "Lập trình viên Frontend" },
+      language: ["react", "chartjs", "tailwind", "rest-api"],
+      contactImage: "/picture_3.jpg",
+      projectLink: "#",
+    },
+    {
+      id: "project-four",
+      name: { en: "Project Four", vi: "Dự án Bốn" },
+      time: { en: "2021 - 2022", vi: "2021 - 2022" },
+      description: {
+        en: "E-commerce platform with payment integration",
+        vi: "Nền tảng thương mại điện tử tích hợp thanh toán",
+      },
+      position: { en: "Full Stack Developer", vi: "Lập trình viên Full Stack" },
+      language: ["nextjs", "stripe", "express", "mysql"],
+      contactImage: "/picture_5.jpg",
+    },
+    {
+      id: "project-five",
+      name: { en: "Project Five", vi: "Dự án Năm" },
+      time: { en: "2021", vi: "2021" },
+      description: {
+        en: "Cross-platform mobile app for habit tracking",
+        vi: "Ứng dụng di động đa nền tảng theo dõi thói quen",
+      },
+      position: { en: "Mobile Developer", vi: "Lập trình viên Mobile" },
+      language: ["flutter", "rest-api"],
+      contactImage: "/picture_2.png",
+      githubLink: "#",
+    },
+    {
+      id: "project-six",
+      name: { en: "Project Six", vi: "Dự án Sáu" },
+      time: { en: "2020 - 2021", vi: "2020 - 2021" },
+      description: {
+        en: "Internal admin dashboard for inventory management",
+        vi: "Dashboard quản trị nội bộ cho quản lý kho hàng",
+      },
+      position: { en: "Frontend Developer", vi: "Lập trình viên Frontend" },
+      language: ["react", "typescript", "tailwind"],
+      contactImage: "",
+      projectLink: "#",
+    },
+    {
+      id: "project-seven",
+      name: { en: "Project Seven", vi: "Dự án Bảy" },
+      time: { en: "2020", vi: "2020" },
+      description: {
+        en: "Portfolio site generator with markdown-based content",
+        vi: "Công cụ tạo trang portfolio với nội dung dạng markdown",
+      },
+      position: { en: "Full Stack Developer", vi: "Lập trình viên Full Stack" },
+      language: ["nextjs", "javascript"],
+      contactImage: "/picture_4.jpg",
+      githubLink: "#",
+      projectLink: "#",
+    },
+  ],
+};
+
+const projectsSection = createContentSection<ProjectsEditableContent>("projects", DEFAULT_PROJECTS);
+export const getProjectsContent = projectsSection.get;
+export const saveProjectsContent = projectsSection.save;

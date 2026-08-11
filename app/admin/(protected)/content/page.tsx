@@ -1,23 +1,26 @@
-import { getAboutContent, getHeroContent, getLoadingScreenContent, getResumeContent } from "@/lib/site-content";
+import { getAboutContent, getHeroContent, getLoadingScreenContent, getProjectsContent, getResumeContent } from "@/lib/site-content";
 import { AboutForm } from "./AboutForm";
 import { ContentNav } from "./ContentNav";
 import { HeroForm } from "./HeroForm";
 import { LoadingScreenForm } from "./LoadingScreenForm";
+import { ProjectsForm } from "./ProjectsForm";
 import { ResumeUrlForm } from "./ResumeUrlForm";
 
 const NAV_ITEMS = [
   { id: "hero", label: "Hero" },
   { id: "about", label: "About" },
+  { id: "projects", label: "Projects" },
   { id: "loading-screen", label: "Loading screen" },
   { id: "resume", label: "Resume" },
 ];
 
 export default async function AdminContentPage() {
-  const [{ messages }, { url: resumeUrl }, { titles, sliderImages }, { intro, phoneApps }] = await Promise.all([
+  const [{ messages }, { url: resumeUrl }, { titles, sliderImages }, { intro, phoneApps }, { items: projectItems }] = await Promise.all([
     getLoadingScreenContent(),
     getResumeContent(),
     getHeroContent(),
     getAboutContent(),
+    getProjectsContent(),
   ]);
 
   return (
@@ -42,6 +45,15 @@ export default async function AdminContentPage() {
         </p>
 
         <AboutForm intro={intro} phoneApps={phoneApps} />
+      </section>
+
+      <section id="projects" className="scroll-mt-20 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">
+        <h2 className="mb-1 text-sm font-medium text-[var(--text-secondary)]">Projects</h2>
+        <p className="mb-4 text-xs text-[var(--text-muted)]">
+          Cards shown in the project grid. Any number of projects is fine — technologies are picked from the shared badge catalog.
+        </p>
+
+        <ProjectsForm items={projectItems} />
       </section>
 
       <section id="loading-screen" className="scroll-mt-20 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">

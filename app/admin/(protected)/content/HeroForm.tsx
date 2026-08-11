@@ -1,9 +1,10 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { Eye, EyeOff, Plus, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { saveHeroAction, type SaveHeroState } from "./actions";
 import { SaveButton } from "@/components/admin/SaveButton";
+import { UrlPreviewButton, UrlPreviewImage } from "@/components/admin/UrlPreview";
 import { useJustSaved } from "@/hooks/useJustSaved";
 
 const initialState: SaveHeroState = { ok: false };
@@ -87,15 +88,7 @@ export function HeroForm({ titles, images }: { titles: string[]; images: string[
                     placeholder="https://res.cloudinary.com/..."
                     className="flex-1 rounded-lg border border-[var(--card-border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--text-primary)]"
                   />
-                  <button
-                    type="button"
-                    onClick={() => togglePreview(row.id)}
-                    disabled={!row.value}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-[var(--card-bg-hover)] disabled:cursor-not-allowed disabled:opacity-40"
-                    aria-label={showPreview ? "Hide preview" : "Show preview"}
-                  >
-                    {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
+                  <UrlPreviewButton url={row.value} open={showPreview} onToggle={() => togglePreview(row.id)} />
                   <button
                     type="button"
                     onClick={() => setImageRows((rows) => rows.filter((r) => r.id !== row.id))}
@@ -105,14 +98,7 @@ export function HeroForm({ titles, images }: { titles: string[]; images: string[
                     <X className="h-4 w-4" />
                   </button>
                 </div>
-                {showPreview && row.value && (
-                  // eslint-disable-next-line @next/next/no-img-element -- arbitrary external URL, no remotePatterns setup needed for an admin-only preview
-                  <img
-                    src={row.value}
-                    alt=""
-                    className="h-40 w-32 rounded-lg border border-[var(--card-border)] object-cover"
-                  />
-                )}
+                {showPreview && row.value && <UrlPreviewImage url={row.value} className="h-40 w-32 rounded-lg border border-[var(--card-border)] object-cover" />}
               </div>
             );
           })}

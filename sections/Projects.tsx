@@ -3,6 +3,7 @@
 import { ExternalLink } from 'lucide-react';
 import { siteContent } from '@/content/site-content';
 import { useLanguage } from '@/components/providers/LanguageProvider';
+import type { ProjectItem } from '@/types/content';
 
 const technologyById = new Map(siteContent.technologies.map((tech) => [tech.id, tech]));
 
@@ -35,12 +36,15 @@ interface ProjectsProps {
   // the whole grid has to fit in one viewport frame since there's no
   // extra scroll room for it, just this progress value.
   progress: number;
+  // Admin-managed via the DB (see lib/site-content.ts) — not part of the
+  // static content object below.
+  items: ProjectItem[];
 }
 
-export default function Projects({ progress }: ProjectsProps) {
+export default function Projects({ progress, items }: ProjectsProps) {
   const { language } = useLanguage();
   const content = siteContent.projects;
-  const itemCount = content.items.length;
+  const itemCount = items.length;
   const step = itemCount > 1 ? (1 - STAGGER_WINDOW) / (itemCount - 1) : 0;
 
   const getItemStyle = (index: number) => {
@@ -53,7 +57,7 @@ export default function Projects({ progress }: ProjectsProps) {
 
   return (
     <div className="grid md:grid-cols-2 2xl:grid-cols-3 gap-8 max-w-6xl 2xl:max-w-7xl mx-auto">
-      {content.items.map((project, index) => (
+      {items.map((project, index) => (
         <div
           key={project.id}
           style={getItemStyle(index)}
