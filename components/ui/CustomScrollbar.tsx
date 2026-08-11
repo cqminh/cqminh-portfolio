@@ -79,13 +79,16 @@ export default function CustomScrollbar() {
       const scrollPercent = clampedY / maxTravel;
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
 
-      // Explicit 'auto': globals.css sets `html { scroll-behavior: smooth }`
-      // for normal navigation, but that makes every scrollTo() call here
-      // animate to its target — with mousemove firing many times a second,
-      // each call interrupts the previous animation before it settles, so
-      // the thumb/page visibly lags behind the cursor and only catches up
-      // once the drag stops. A drag needs to track the cursor 1:1, instantly.
-      window.scrollTo({ top: scrollPercent * scrollHeight, left: 0, behavior: 'auto' });
+      // 'instant', not 'auto': globals.css sets `html { scroll-behavior:
+      // smooth }` for normal navigation, and per spec 'auto' defers to that
+      // CSS value rather than overriding it — so with 'auto' every
+      // mousemove-driven call here still animates, and since a new call
+      // interrupts the previous animation before it can finish, the page
+      // never visibly moves until the calls stop (mouseup) and the last one
+      // finally gets to run. 'instant' is the one value that actually
+      // bypasses scroll-behavior and jumps immediately, which is what a
+      // drag needs — tracking the cursor 1:1, not animating toward it.
+      window.scrollTo({ top: scrollPercent * scrollHeight, left: 0, behavior: 'instant' });
     };
 
     window.addEventListener("mouseup", handleMouseUp);
