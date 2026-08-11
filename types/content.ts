@@ -136,34 +136,23 @@ export interface ExperienceContent {
   items: ExperienceItem[];
 }
 
-export interface SocialLink {
-  label: string;
-  href: string;
-}
-
-export interface ContactFormContent {
-  nameLabel: Localized;
-  namePlaceholder: Localized;
-  emailLabel: Localized;
-  emailPlaceholder: Localized;
-  emailInvalid: Localized;
-  messageLabel: Localized;
-  messagePlaceholder: Localized;
-  submitLabel: Localized;
-  submittingLabel: Localized;
-  successMessage: Localized;
-  errorMessage: Localized;
-}
-
 export interface ContactContent {
   heading: Localized;
   connectHeading: Localized;
+  // Same convention as ProjectItem.contactImage / ExperienceItem.image —
+  // empty string falls back to the local /logo.png instead of a broken
+  // <img>, so the card still has an avatar before the backend supplies one.
+  avatar: string;
   intro: Localized;
+  flipHint: Localized;
+  backHint: Localized;
   emailLabel: Localized;
   email: string;
+  // Social icons shown on the card's back are not listed here — they're
+  // filtered straight out of `AboutContent.phoneApps` (see
+  // CONTACT_SOCIAL_IDS in sections/Contact.tsx) so the two sections never
+  // drift out of sync with two separately edited link lists.
   socialLabel: Localized;
-  socialLinks: SocialLink[];
-  form: ContactFormContent;
 }
 
 export interface LoadingScreenContent {
