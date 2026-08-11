@@ -19,12 +19,6 @@ export interface HeroContent {
   sliderImages: string[];
 }
 
-export interface QuoteItem {
-  id: string;
-  content: Localized;
-  author: string;
-}
-
 // A group's preview icon — decorative only, never individually clickable.
 // `icon: ''` renders a lettered placeholder tile until a real image is set.
 export interface PhoneAppChild {
@@ -72,19 +66,40 @@ export interface AboutContent {
   // there's no dialer to hand a `tel:` link to, so it copies the number to
   // the clipboard instead and confirms with this label.
   phoneNumberCopiedLabel: Localized;
-  quotes: QuoteItem[];
+}
+
+// A tech-stack badge, picked from `SiteContent.technologies` rather than
+// typed by hand per project — keeps badge color/label consistent everywhere
+// the same tech shows up.
+export interface Technology {
+  id: string;
+  name: string;
+  // Hex color, e.g. '#61DAFB'. Rendered as a tinted badge (low-opacity
+  // background + full-color text/border) so it stays readable in both themes.
+  color: string;
 }
 
 export interface ProjectItem {
   id: string;
-  title: Localized;
+  name: Localized;
+  // Free-form range string per language rather than start/end dates —
+  // some projects are still ongoing, so it needs to hold values like
+  // "2023 - Present" / "2023 - Hiện tại".
+  time: Localized;
   description: Localized;
-  tags: string[];
-  link: string;
+  position: Localized;
+  // Technology.id references into SiteContent.technologies — not free text.
+  language: string[];
+  // The project's standout image (hero shot or partner/client photo) —
+  // used as the card's featured thumbnail.
+  contactImage: string;
+  // Both optional — the UI only shows a link button for whichever is set.
+  githubLink?: string;
+  projectLink?: string;
 }
 
 export interface ProjectsContent {
-  heading: Localized;
+  viewProjectLabel: Localized;
   items: ProjectItem[];
 }
 
@@ -139,6 +154,7 @@ export interface SiteContent {
   navbar: NavbarContent;
   hero: HeroContent;
   about: AboutContent;
+  technologies: Technology[];
   projects: ProjectsContent;
   experience: ExperienceContent;
   contact: ContactContent;

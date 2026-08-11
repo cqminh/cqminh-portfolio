@@ -6,6 +6,10 @@
    ============================================ */
 :root {
   --background: #ffffff;
+  /* Noticeably blue-tinted, not just a shade of grey — matches the
+     Hero's --hero-gradient-* sky-blue palette so it reads as a deliberate
+     section wash rather than a flat color swap. */
+  --background-projects: #e3edfd;
   --foreground: #171717;
 
   --card-bg: #f9fafb;
@@ -72,6 +76,10 @@
    ============================================ */
 html.dark {
   --background: #0a0a0a;
+  /* Same idea as the light tint above — a visible navy shift, not just a
+     slightly-lighter grey, staying below --card-bg's luminance so cards
+     still pop on top of it. */
+  --background-projects: #0b1424;
   --foreground: #ededed;
 
   --card-bg: #111827;

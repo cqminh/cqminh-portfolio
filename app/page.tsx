@@ -1,9 +1,7 @@
 'use client';
 
 import Hero from '@/sections/Hero';
-import About from '@/sections/About';
-import Projects from '@/sections/Projects';
-import Experience from '@/sections/Experience';
+import MainSections from '@/sections/MainSections';
 import Contact from '@/sections/Contact';
 import Navbar from '@/components/layout/Navbar';
 import FloatingSettingsButton from '@/components/ui/FloatingSettingsButton';
@@ -14,9 +12,7 @@ export default function Home() {
       <Navbar />
       <FloatingSettingsButton />
       <Hero />
-      <About />
-      <Projects />
-      <Experience />
+      <MainSections />
       <Contact />
     </div>
   );

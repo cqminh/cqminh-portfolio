@@ -13,11 +13,17 @@ interface SectionTagProps {
   // the tag with its own scroll-progress reveal (e.g. About's phone visual)
   // instead of typing in on its own schedule.
   active?: boolean;
+  // Scroll-scrubbed mode: displayed length is derived straight from this
+  // value (0 -> 1) on every render, no timers involved. Takes precedence
+  // over both other modes. Used for a section's pinned exit, where the tag
+  // must clear in lockstep with scroll position rather than animate on a
+  // fixed schedule — so a nav jump mid-section never leaves it mid-animation.
+  progressOverride?: number;
 }
 
 const TYPE_SPEED_MS = 45;
 
-export default function SectionTag({ name, topClassName = 'top-6', active }: SectionTagProps) {
+export default function SectionTag({ name, topClassName = 'top-6', active, progressOverride }: SectionTagProps) {
   const { language } = useLanguage();
   const fullText = `<${name[language]} />`;
 
@@ -29,17 +35,18 @@ export default function SectionTag({ name, topClassName = 'top-6', active }: Sec
 
   // Language switched: keep the tag fully shown if it already was, otherwise stay empty.
   useEffect(() => {
+    if (progressOverride !== undefined) return;
     setDisplayedLength((prev) => {
       const wasFull = prev >= prevTextRef.current.length;
       prevTextRef.current = fullText;
       return wasFull ? fullText.length : 0;
     });
-  }, [fullText]);
+  }, [fullText, progressOverride]);
 
   // Externally controlled mode: type in/out as `active` flips, in lockstep
   // with whatever scroll-progress value the caller is already driving.
   useEffect(() => {
-    if (active === undefined) return;
+    if (progressOverride !== undefined || active === undefined) return;
 
     const typingIn = active;
     const id = setInterval(() => {
@@ -51,11 +58,11 @@ export default function SectionTag({ name, topClassName = 'top-6', active }: Sec
     }, TYPE_SPEED_MS);
 
     return () => clearInterval(id);
-  }, [active, fullText]);
+  }, [active, fullText, progressOverride]);
 
   // Default mode: type in/out as the tag itself crosses the viewport center.
   useEffect(() => {
-    if (active !== undefined) return;
+    if (progressOverride !== undefined || active !== undefined) return;
 
     const element = spanRef.current;
     if (!element) return;
@@ -86,7 +93,10 @@ export default function SectionTag({ name, topClassName = 'top-6', active }: Sec
       observer.disconnect();
       if (observerTimerRef.current) clearInterval(observerTimerRef.current);
     };
-  }, [fullText, directionRef, active]);
+  }, [fullText, directionRef, active, progressOverride]);
+
+  const renderedLength =
+    progressOverride !== undefined ? Math.round(fullText.length * Math.max(0, Math.min(1, progressOverride))) : displayedLength;
 
   return (
     <span
@@ -94,7 +104,7 @@ export default function SectionTag({ name, topClassName = 'top-6', active }: Sec
       className={`absolute ${topClassName} left-6 font-courier text-xs sm:text-sm tracking-wide select-none pointer-events-none`}
       style={{ color: 'var(--success)' }}
     >
-      {fullText.slice(0, displayedLength)}
+      {fullText.slice(0, renderedLength)}
       <span className="terminal-cursor" />
     </span>
   );
