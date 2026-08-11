@@ -28,14 +28,9 @@ export const siteContent: SiteContent = {
     heading: { en: 'Get In Touch', vi: 'Liên hệ' },
     connectHeading: { en: "Let's Connect", vi: 'Kết nối với tôi' },
     avatar: '',
-    intro: {
-      en: "I'm always interested in hearing about new projects and opportunities. Feel free to reach out if you have any questions or just want to say hello!",
-      vi: 'Tôi luôn hào hứng lắng nghe về các dự án và cơ hội mới. Đừng ngần ngại liên hệ nếu bạn có câu hỏi hoặc chỉ đơn giản muốn chào hỏi!',
-    },
     flipHint: { en: 'Tap the card to flip', vi: 'Chạm vào thẻ để lật' },
     backHint: { en: 'Back to front', vi: 'Lật lại mặt trước' },
     emailLabel: { en: 'Email', vi: 'Email' },
-    email: 'cqminh.it@gmail.com',
     socialLabel: { en: 'Find me on', vi: 'Tìm tôi trên' },
   },
 

@@ -6,7 +6,7 @@ import { Mail, RefreshCw } from 'lucide-react';
 import { useStaggeredAnimation } from '@/hooks/useStaggeredAnimation';
 import { siteContent } from '@/content/site-content';
 import { useLanguage } from '@/components/providers/LanguageProvider';
-import type { Language, PhoneAppItem, PhoneAppLink } from '@/types/content';
+import type { Language, Localized, PhoneAppItem, PhoneAppLink } from '@/types/content';
 
 // How far the card tilts toward the cursor, in degrees, at the very edge of
 // the card — scaled down from that at the center to 0.
@@ -20,6 +20,11 @@ const MAX_TILT_DEG = 10;
 // row renders them as plain currentColor glyphs. Whichever of these ids
 // isn't present in that list simply doesn't render.
 const CONTACT_SOCIAL_IDS = new Set(['github', 'linkedin', 'facebook', 'tiktok']);
+
+// The email shown here isn't its own field — it's read straight out of
+// About's `gmail` phoneApps entry (a `mailto:` link) so there's one place to
+// update an email address instead of two that can drift apart.
+const GMAIL_APP_ID = 'gmail';
 
 // Brand marks lucide doesn't ship (trademark reasons) — plain currentColor
 // paths so they inherit the same icon color as Mail/RefreshCw above.
@@ -80,15 +85,18 @@ function SocialIconLink({ social, language }: { social: PhoneAppLink; language: 
 // Admin-managed via the DB (see lib/site-content.ts) — passed down from
 // app/page.tsx rather than read from the static content object below.
 interface ContactProps {
+  intro: Localized;
   phoneApps: PhoneAppItem[];
 }
 
-export default function Contact({ phoneApps }: ContactProps) {
+export default function Contact({ intro, phoneApps }: ContactProps) {
   const { language } = useLanguage();
   const content = siteContent.contact;
   const socialLinks = phoneApps.filter(
     (app): app is PhoneAppLink => app.type === 'app' && CONTACT_SOCIAL_IDS.has(app.id)
   );
+  const gmailApp = phoneApps.find((app): app is PhoneAppLink => app.type === 'app' && app.id === GMAIL_APP_ID);
+  const email = gmailApp?.href.replace(/^mailto:/, '') ?? '';
   const { ref, isVisible, getItemStyle } = useStaggeredAnimation();
 
   const [flipped, setFlipped] = useState(false);
@@ -183,7 +191,7 @@ export default function Contact({ phoneApps }: ContactProps) {
               </div>
               <h3 className="text-base font-semibold text-[var(--text-primary)] sm:text-2xl">Châu Quang Minh</h3>
               <p className="line-clamp-3 max-w-[240px] text-xs text-[var(--text-secondary)] sm:line-clamp-none sm:max-w-sm sm:text-sm">
-                {content.intro[language]}
+                {intro[language]}
               </p>
               <span className="mt-0.5 flex items-center gap-1.5 text-[10px] text-[var(--text-muted)] sm:mt-1 sm:text-xs">
                 <RefreshCw className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
@@ -212,16 +220,18 @@ export default function Contact({ phoneApps }: ContactProps) {
                 <RefreshCw className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
               </button>
 
-              <div>
-                <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-[var(--text-muted)] sm:mb-2">{content.emailLabel[language]}</p>
-                <a
-                  href={`mailto:${content.email}`}
-                  className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] sm:text-lg"
-                >
-                  <Mail className="h-4 w-4 sm:h-5 sm:w-5" style={{ color: 'var(--accent)' }} />
-                  {content.email}
-                </a>
-              </div>
+              {email && (
+                <div>
+                  <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-[var(--text-muted)] sm:mb-2">{content.emailLabel[language]}</p>
+                  <a
+                    href={`mailto:${email}`}
+                    className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] sm:text-lg"
+                  >
+                    <Mail className="h-4 w-4 sm:h-5 sm:w-5" style={{ color: 'var(--accent)' }} />
+                    {email}
+                  </a>
+                </div>
+              )}
 
               <div>
                 <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--text-muted)] sm:mb-3">{content.socialLabel[language]}</p>

@@ -3,6 +3,7 @@
 import { verifySession } from "@/lib/dal";
 import {
   saveAboutContent,
+  saveContactContent,
   saveExperienceContent,
   saveHeroContent,
   saveLoadingScreenContent,
@@ -279,5 +280,26 @@ export async function saveExperienceAction(_prevState: SaveExperienceState, form
   const items = Array.isArray(parsed) ? parsed.map(parseExperienceItem).filter((item): item is ExperienceItem => item !== null) : [];
 
   await saveExperienceContent({ items });
+  return { ok: true };
+}
+
+export interface SaveContactState {
+  ok: boolean;
+  error?: string;
+}
+
+export async function saveContactAction(_prevState: SaveContactState, formData: FormData): Promise<SaveContactState> {
+  await verifySession();
+
+  const intro: Localized = {
+    en: String(formData.get("contact-intro-en") ?? "").trim(),
+    vi: String(formData.get("contact-intro-vi") ?? "").trim(),
+  };
+
+  if (!intro.en || !intro.vi) {
+    return { ok: false, error: "empty" };
+  }
+
+  await saveContactContent({ intro });
   return { ok: true };
 }

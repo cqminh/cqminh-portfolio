@@ -6,6 +6,7 @@ import Navbar from '@/components/layout/Navbar';
 import FloatingSettingsButton from '@/components/ui/FloatingSettingsButton';
 import {
   getAboutContent,
+  getContactContent,
   getExperienceContent,
   getHeroContent,
   getProjectsContent,
@@ -21,6 +22,7 @@ export default async function Home() {
     { items: projectItems },
     { items: technologies },
     { items: experienceItems },
+    { intro: contactIntro },
   ] = await Promise.all([
     getResumeContent(),
     getHeroContent(),
@@ -28,6 +30,7 @@ export default async function Home() {
     getProjectsContent(),
     getTechnologiesContent(),
     getExperienceContent(),
+    getContactContent(),
   ]);
 
   return (
@@ -42,7 +45,7 @@ export default async function Home() {
         technologies={technologies}
         experienceItems={experienceItems}
       />
-      <Contact phoneApps={aboutApps} />
+      <Contact intro={contactIntro} phoneApps={aboutApps} />
       <Footer />
     </div>
   );

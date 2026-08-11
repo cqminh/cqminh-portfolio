@@ -127,15 +127,13 @@ export interface ContactContent {
   // empty string falls back to the local /logo.png instead of a broken
   // <img>, so the card still has an avatar before the backend supplies one.
   avatar: string;
-  intro: Localized;
   flipHint: Localized;
   backHint: Localized;
   emailLabel: Localized;
-  email: string;
-  // Social icons shown on the card's back are not listed here — they're
-  // filtered straight out of `AboutEditableContent.phoneApps` (see
-  // CONTACT_SOCIAL_IDS in sections/Contact.tsx) so the two sections never
-  // drift out of sync with two separately edited link lists.
+  // Not listed here — pulled straight out of the `gmail` entry in
+  // `AboutEditableContent.phoneApps` (see sections/Contact.tsx), same reason
+  // the social icons below are: one place to edit instead of two that can
+  // drift out of sync.
   socialLabel: Localized;
 }
 
@@ -185,6 +183,14 @@ export interface TechnologiesContent {
 // `image: ''` -> lettered placeholder convention as ProjectItem.contactImage.
 export interface ExperienceEditableContent {
   items: ExperienceItem[];
+}
+
+// The Contact card's intro blurb — admin-managed via the DB. Everything
+// else on the card (heading, avatar, hints, email, social links) is either
+// static copy or pulled from About, so this is the only Contact field with
+// its own DB section.
+export interface ContactEditableContent {
+  intro: Localized;
 }
 
 // External link to the CV/resume file (e.g. a Google Drive share link) —

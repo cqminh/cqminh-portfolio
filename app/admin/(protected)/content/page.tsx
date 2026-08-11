@@ -1,5 +1,6 @@
 import {
   getAboutContent,
+  getContactContent,
   getExperienceContent,
   getHeroContent,
   getLoadingScreenContent,
@@ -8,6 +9,7 @@ import {
   getTechnologiesContent,
 } from "@/lib/site-content";
 import { AboutForm } from "./AboutForm";
+import { ContactForm } from "./ContactForm";
 import { ContentNav } from "./ContentNav";
 import { ExperienceForm } from "./ExperienceForm";
 import { HeroForm } from "./HeroForm";
@@ -22,6 +24,7 @@ const NAV_ITEMS = [
   { id: "technologies", label: "Technologies" },
   { id: "projects", label: "Projects" },
   { id: "experience", label: "Experience" },
+  { id: "contact", label: "Contact" },
   { id: "loading-screen", label: "Loading screen" },
   { id: "resume", label: "Resume" },
 ];
@@ -35,6 +38,7 @@ export default async function AdminContentPage() {
     { items: projectItems },
     { items: technologies },
     { items: experienceItems },
+    { intro: contactIntro },
   ] = await Promise.all([
     getLoadingScreenContent(),
     getResumeContent(),
@@ -43,6 +47,7 @@ export default async function AdminContentPage() {
     getProjectsContent(),
     getTechnologiesContent(),
     getExperienceContent(),
+    getContactContent(),
   ]);
 
   return (
@@ -95,6 +100,15 @@ export default async function AdminContentPage() {
         </p>
 
         <ExperienceForm items={experienceItems} />
+      </section>
+
+      <section id="contact" className="scroll-mt-20 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">
+        <h2 className="mb-1 text-sm font-medium text-[var(--text-secondary)]">Contact</h2>
+        <p className="mb-4 text-xs text-[var(--text-muted)]">
+          Blurb shown on the front of the flip card. Everything else on that card (email, socials) is pulled from About above.
+        </p>
+
+        <ContactForm intro={contactIntro} />
       </section>
 
       <section id="loading-screen" className="scroll-mt-20 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">

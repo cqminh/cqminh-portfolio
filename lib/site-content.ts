@@ -2,6 +2,7 @@ import { unstable_cache, updateTag } from "next/cache";
 import { sql } from "@/lib/db";
 import type {
   AboutEditableContent,
+  ContactEditableContent,
   ExperienceEditableContent,
   HeroContent,
   LoadingScreenContent,
@@ -326,3 +327,16 @@ const DEFAULT_EXPERIENCE: ExperienceEditableContent = {
 const experienceSection = createContentSection<ExperienceEditableContent>("experience", DEFAULT_EXPERIENCE);
 export const getExperienceContent = experienceSection.get;
 export const saveExperienceContent = experienceSection.save;
+
+// Used only before an admin ever saves anything (empty DB row) — the same
+// intro blurb the Contact card previously shipped with as static content.
+const DEFAULT_CONTACT: ContactEditableContent = {
+  intro: {
+    en: "I'm always interested in hearing about new projects and opportunities. Feel free to reach out if you have any questions or just want to say hello!",
+    vi: "Tôi luôn hào hứng lắng nghe về các dự án và cơ hội mới. Đừng ngần ngại liên hệ nếu bạn có câu hỏi hoặc chỉ đơn giản muốn chào hỏi!",
+  },
+};
+
+const contactSection = createContentSection<ContactEditableContent>("contact", DEFAULT_CONTACT);
+export const getContactContent = contactSection.get;
+export const saveContactContent = contactSection.save;
