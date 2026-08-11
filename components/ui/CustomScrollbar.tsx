@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useOnScroll } from "@/hooks/useOnScroll";
 
 export default function CustomScrollbar() {
   const scrollbarRef = useRef<HTMLDivElement>(null);
@@ -39,13 +40,7 @@ export default function CustomScrollbar() {
     thumbRef.current.style.top = `${scrollPercent * maxThumbTravel}px`;
   }, []);
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [handleScroll]);
+  useOnScroll(handleScroll);
 
   useEffect(() => {
     const thumb = thumbRef.current;
@@ -108,8 +103,8 @@ export default function CustomScrollbar() {
         zIndex: 40,
         opacity: isVisible ? 1 : 0,
         animation: isAnimatingIn
-          ? "slideInScrollbar 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards"
-          : "slideOutScrollbar 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+          ? "slideInScrollbar 2s var(--ease-bounce) forwards"
+          : "slideOutScrollbar 2s var(--ease-bounce) forwards",
         transition: isDragging ? "none" : "opacity 0.3s ease",
       }}
     >

@@ -1,27 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Logo from './Logo';
 import { siteContent } from '@/content/site-content';
 import { useLanguage } from '../providers/LanguageProvider';
+import { useScrollPast } from '@/hooks/useScrollPast';
+
+const SCROLL_THRESHOLD_PX = 50;
 
 export default function Navbar() {
   const { language } = useLanguage();
   const content = siteContent.navbar;
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const isScrolled = useScrollPast(SCROLL_THRESHOLD_PX);
 
   return (
     <nav
@@ -39,7 +28,7 @@ export default function Navbar() {
         border: isScrolled ? '1px solid var(--nav-border)' : 'none',
         boxShadow: isScrolled ? '0 10px 30px var(--shadow-lg)' : 'none',
         padding: isScrolled ? '0.75rem 1.5rem' : '1rem 1.5rem',
-        transition: 'all 1s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        transition: 'all 1s var(--ease-bounce)',
       }}
     >
       {/* Logo / Brand */}
@@ -61,7 +50,7 @@ export default function Navbar() {
               ? '0 8px 20px rgba(var(--accent-rgb), 0.35)'
               : '0 8px 16px var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
             transition:
-              'background-color 1s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 1s cubic-bezier(0.34, 1.56, 0.64, 1), color 1s cubic-bezier(0.34, 1.56, 0.64, 1), padding 1s cubic-bezier(0.34, 1.56, 0.64, 1), font-size 1s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s ease, box-shadow 0.3s ease',
+              'background-color 1s var(--ease-bounce), border-color 1s var(--ease-bounce), color 1s var(--ease-bounce), padding 1s var(--ease-bounce), font-size 1s var(--ease-bounce), border-radius 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s ease, box-shadow 0.3s ease',
           }}
           className={`group relative inline-flex items-center justify-center overflow-hidden font-medium hover:scale-105 active:brightness-125 ${
             isScrolled ? 'btn-resume' : 'hover:shadow-xl'

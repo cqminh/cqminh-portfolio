@@ -209,6 +209,13 @@ body::-webkit-scrollbar {
   display: none;
 }
 
+/* Shared "springy" easing curve used by pop-in/out UI chrome (navbar pill,
+   logo resize, back-to-top, custom scrollbar) — one place to retune the
+   bounce instead of the same literal repeated at every call site. */
+:root {
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 /* Navbar animations */
 @keyframes navbarToIsland {
   from {
@@ -241,11 +248,11 @@ body::-webkit-scrollbar {
 }
 
 .navbar-scroll {
-  animation: navbarToIsland 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: navbarToIsland 1s var(--ease-bounce) forwards;
 }
 
 .navbar-unscroll {
-  animation: islandToNavbar 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: islandToNavbar 1s var(--ease-bounce) forwards;
 }
 
 /* Particles: white in dark mode, blue in light mode */

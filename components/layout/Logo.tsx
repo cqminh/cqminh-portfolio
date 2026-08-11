@@ -44,7 +44,7 @@ export default function Logo({ variant = 'full', isScrolled = false }: LogoProps
         style={{
           width: nameWidth,
           height: '40px',
-          transition: 'all 1s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          transition: 'all 1s var(--ease-bounce)',
           overflow: 'hidden',
         }}
       >

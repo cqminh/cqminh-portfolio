@@ -3,6 +3,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ArrowUp } from 'lucide-react';
 import GlassButton from './GlassButton';
+import { useOnScroll } from '@/hooks/useOnScroll';
+
+// How long the slide-out animation plays before the button actually
+// unmounts — has to match the keyframe's own duration below, otherwise it
+// either unmounts mid-slide or lingers invisible after finishing.
+const HIDE_DELAY_MS = 2000;
 
 export default function BackToTop() {
   const isInitiallyAtTop = typeof window === 'undefined' || window.scrollY === 0;
@@ -10,32 +16,23 @@ export default function BackToTop() {
   const [isAnimatingIn, setIsAnimatingIn] = useState(!isInitiallyAtTop);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
 
-  const handleScroll = useCallback(() => {
-    const isAtTop = window.scrollY === 0;
-
-    if (!isAtTop) {
-      setShouldRender(true);
-      setIsAnimatingIn(true);
-      setIsAnimatingOut(false);
-    } else {
-      setIsAnimatingIn(false);
-      setIsAnimatingOut(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [handleScroll]);
+  useOnScroll(
+    useCallback(() => {
+      const isAtTop = window.scrollY === 0;
+      if (!isAtTop) {
+        setShouldRender(true);
+        setIsAnimatingIn(true);
+        setIsAnimatingOut(false);
+      } else {
+        setIsAnimatingIn(false);
+        setIsAnimatingOut(true);
+      }
+    }, [])
+  );
 
   useEffect(() => {
     if (isAnimatingOut) {
-      const timer = setTimeout(() => {
-        setShouldRender(false);
-      }, 2000);
+      const timer = setTimeout(() => setShouldRender(false), HIDE_DELAY_MS);
       return () => clearTimeout(timer);
     }
   }, [isAnimatingOut]);
@@ -52,10 +49,8 @@ export default function BackToTop() {
       className="fixed bottom-6 right-6 z-50 overflow-hidden"
       style={{
         animation: isAnimatingIn
-          ? 'slideInBackToTop 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
-          : isAnimatingOut
-          ? 'slideOutBackToTop 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
-          : 'none',
+          ? 'slideInBackToTop 2s var(--ease-bounce) forwards'
+          : 'slideOutBackToTop 2s var(--ease-bounce) forwards',
       }}
       aria-label="Back to top"
     >
