@@ -28,7 +28,11 @@ export default function SectionTag({ name, topClassName = 'top-6', active, progr
   const fullText = `<${name[language]} />`;
 
   const spanRef = useRef<HTMLSpanElement>(null);
-  const directionRef = useScrollDirection();
+  // Direction only matters for the default (IntersectionObserver-driven)
+  // mode below — skip registering the scroll listener entirely when the
+  // caller drives typing itself via `active`/`progressOverride`, which is
+  // the only mode MainSections (the sole current caller) actually uses.
+  const directionRef = useScrollDirection(active === undefined && progressOverride === undefined);
   const observerTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const prevTextRef = useRef(fullText);
   const [displayedLength, setDisplayedLength] = useState(0);

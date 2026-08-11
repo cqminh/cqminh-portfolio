@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Particles, { ParticlesProvider } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
@@ -9,6 +9,7 @@ import { Imperial_Script, Noto_Serif } from 'next/font/google';
 import { particlesConfig } from '@/config/particles';
 import { siteContent } from '@/content/site-content';
 import { useLoading } from '@/components/providers/LoadingProvider';
+import { useOnScroll } from '@/hooks/useOnScroll';
 
 const PORTRAIT_HOLD_MS = 3000;
 const PORTRAIT_SLIDE_MS = 600;
@@ -266,15 +267,13 @@ export default function Hero() {
     return () => clearTimeout(t);
   }, [nameHasEntered]);
 
-  useEffect(() => {
-    const handleScroll = () => {
+  useOnScroll(
+    useCallback(() => {
       setNameScrollOffset(Math.min(window.scrollY * NAME_SCROLL_FACTOR, NAME_SCROLL_MAX_PX));
       setMinhScrollOffset(Math.min(window.scrollY * MINH_SCROLL_FACTOR, MINH_SCROLL_MAX_PX));
       setContentFadeOpacity(Math.max(0, 1 - window.scrollY / CONTENT_FADE_SCROLL_PX));
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    }, [])
+  );
 
   const titles = siteContent.hero.titles;
   const [titleIndex, setTitleIndex] = useState(0);

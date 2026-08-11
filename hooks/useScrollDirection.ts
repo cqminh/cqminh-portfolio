@@ -1,15 +1,23 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+import { useOnScroll } from './useOnScroll';
 
 export type ScrollDirection = 'up' | 'down';
 
-export const useScrollDirection = () => {
+// `enabled` lets a caller that only sometimes needs direction tracking (see
+// SectionTag, which only reads this in its default IntersectionObserver
+// mode) skip the tracking work entirely otherwise, instead of paying for it
+// when the result never gets read.
+export const useScrollDirection = (enabled = true) => {
   const directionRef = useRef<ScrollDirection>('down');
   const lastScrollY = useRef(0);
 
   useEffect(() => {
-    lastScrollY.current = window.scrollY;
+    if (enabled) lastScrollY.current = window.scrollY;
+  }, [enabled]);
 
-    const handleScroll = () => {
+  useOnScroll(
+    useCallback(() => {
+      if (!enabled) return;
       const currentScrollY = window.scrollY;
       if (currentScrollY > lastScrollY.current) {
         directionRef.current = 'down';
@@ -17,11 +25,8 @@ export const useScrollDirection = () => {
         directionRef.current = 'up';
       }
       lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    }, [enabled])
+  );
 
   return directionRef;
 };

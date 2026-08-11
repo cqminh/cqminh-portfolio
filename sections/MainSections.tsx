@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import SectionTag from '@/components/ui/SectionTag';
 import { Localized } from '@/types/content';
 import About from '@/sections/About';
 import Projects from '@/sections/Projects';
 import Experience from '@/sections/Experience';
+import { useOnScroll } from '@/hooks/useOnScroll';
 
 // About, Projects and Experience used to be three independently-scrolling
 // sections, each owning its own SectionTag. They're now one continuous
@@ -126,40 +127,46 @@ export default function MainSections() {
     };
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const aboutEl = aboutPinRef.current;
-      if (aboutEl) {
-        const scrollPx = -aboutEl.getBoundingClientRect().top;
-        setProgress(Math.max(0, Math.min(1, scrollPx / REVEAL_SCROLL_PX)));
-        setExitProgress(Math.max(0, Math.min(1, (scrollPx - REVEAL_SCROLL_PX - PIN_HOLD_PX) / EXIT_SCROLL_PX)));
-      }
+  const handleScroll = useCallback(() => {
+    const aboutEl = aboutPinRef.current;
+    if (aboutEl) {
+      const scrollPx = -aboutEl.getBoundingClientRect().top;
+      setProgress(Math.max(0, Math.min(1, scrollPx / REVEAL_SCROLL_PX)));
+      setExitProgress(Math.max(0, Math.min(1, (scrollPx - REVEAL_SCROLL_PX - PIN_HOLD_PX) / EXIT_SCROLL_PX)));
+    }
 
-      const projectsEl = projectsPinRef.current;
-      if (projectsEl) {
-        const scrollPx = -projectsEl.getBoundingClientRect().top;
-        setProjectsProgress(Math.max(0, Math.min(1, (scrollPx - PROJECTS_ENTRY_HOLD_PX) / PROJECTS_REVEAL_PX)));
-      }
+    const projectsEl = projectsPinRef.current;
+    if (projectsEl) {
+      const scrollPx = -projectsEl.getBoundingClientRect().top;
+      setProjectsProgress(Math.max(0, Math.min(1, (scrollPx - PROJECTS_ENTRY_HOLD_PX) / PROJECTS_REVEAL_PX)));
+    }
 
-      const projectsExitEl = projectsExitPinRef.current;
-      if (projectsExitEl) {
-        const scrollPx = -projectsExitEl.getBoundingClientRect().top;
-        setProjectsExitProgress(Math.max(0, Math.min(1, scrollPx / PROJECTS_EXIT_SCROLL_PX)));
-      }
+    const projectsExitEl = projectsExitPinRef.current;
+    if (projectsExitEl) {
+      const scrollPx = -projectsExitEl.getBoundingClientRect().top;
+      setProjectsExitProgress(Math.max(0, Math.min(1, scrollPx / PROJECTS_EXIT_SCROLL_PX)));
+    }
 
-      const experienceEl = experiencePinRef.current;
-      if (experienceEl) {
-        const rect = experienceEl.getBoundingClientRect();
-        const scrollPx = -rect.top;
-        setExperienceEntryProgress(Math.max(0, Math.min(1, scrollPx / EXPERIENCE_ENTRY_HOLD_PX)));
-        setExperienceProgress(Math.max(0, Math.min(1, (scrollPx - EXPERIENCE_ENTRY_HOLD_PX) / EXPERIENCE_REVEAL_PX)));
-        setExperienceActive(rect.top <= 0 && rect.bottom > 0);
-      }
-    };
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const experienceEl = experiencePinRef.current;
+    if (experienceEl) {
+      const rect = experienceEl.getBoundingClientRect();
+      const scrollPx = -rect.top;
+      setExperienceEntryProgress(Math.max(0, Math.min(1, scrollPx / EXPERIENCE_ENTRY_HOLD_PX)));
+      setExperienceProgress(Math.max(0, Math.min(1, (scrollPx - EXPERIENCE_ENTRY_HOLD_PX) / EXPERIENCE_REVEAL_PX)));
+      setExperienceActive(rect.top <= 0 && rect.bottom > 0);
+    }
   }, []);
+
+  // Shared scroll source (see useOnScroll) doesn't invoke the callback on
+  // subscribe, so this section still needs its own initial computation on
+  // mount — otherwise progress stays at its default 0 until the first
+  // scroll event, even if the page loads already mid-scroll (e.g. an
+  // anchor-link navigation or a scroll-position restore).
+  useEffect(() => {
+    handleScroll();
+  }, [handleScroll]);
+
+  useOnScroll(handleScroll);
 
   // Exit crossfade splits into two halves: first About's tag erases and its
   // content fades out (eraseProgress), then the Projects tag types back in

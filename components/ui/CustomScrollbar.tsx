@@ -6,7 +6,6 @@ import { useOnScroll } from "@/hooks/useOnScroll";
 export default function CustomScrollbar() {
   const scrollbarRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
-  const isDraggingRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isVisible, setIsVisible] = useState(
     () => typeof window !== 'undefined' && window.scrollY !== 0
@@ -42,25 +41,33 @@ export default function CustomScrollbar() {
 
   useOnScroll(handleScroll);
 
+  // Starting a drag only needs a listener on the thumb itself — cheap,
+  // stays attached for the component's whole lifetime.
   useEffect(() => {
     const thumb = thumbRef.current;
     if (!thumb) return;
 
     const handleMouseDown = (e: MouseEvent) => {
-      isDraggingRef.current = true;
       setIsDragging(true);
       e.preventDefault();
     };
 
-    const handleMouseUp = () => {
-      if (isDraggingRef.current) {
-        isDraggingRef.current = false;
-        setIsDragging(false);
-      }
-    };
+    thumb.addEventListener("mousedown", handleMouseDown);
+    return () => thumb.removeEventListener("mousedown", handleMouseDown);
+  }, []);
+
+  // mousemove fires far more often than scroll (every pixel of cursor
+  // motion, anywhere on the page) — these listeners only need to exist for
+  // the brief window an actual drag is in progress, not for the component's
+  // entire mounted lifetime, so they're scoped to `isDragging` here instead
+  // of living in the mousedown effect above with an internal ref-guard.
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseUp = () => setIsDragging(false);
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isDraggingRef.current || !scrollbarRef.current || !thumbRef.current) return;
+      if (!scrollbarRef.current || !thumbRef.current) return;
 
       const scrollbar = scrollbarRef.current;
       const rect = scrollbar.getBoundingClientRect();
@@ -75,16 +82,14 @@ export default function CustomScrollbar() {
       window.scrollTo(0, scrollPercent * scrollHeight);
     };
 
-    thumb.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mouseup", handleMouseUp);
     window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      thumb.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
+  }, [isDragging]);
 
   return (
     <div
