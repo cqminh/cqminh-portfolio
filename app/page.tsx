@@ -4,7 +4,14 @@ import Contact from '@/sections/Contact';
 import Footer from '@/sections/Footer';
 import Navbar from '@/components/layout/Navbar';
 import FloatingSettingsButton from '@/components/ui/FloatingSettingsButton';
-import { getAboutContent, getHeroContent, getProjectsContent, getResumeContent, getTechnologiesContent } from '@/lib/site-content';
+import {
+  getAboutContent,
+  getExperienceContent,
+  getHeroContent,
+  getProjectsContent,
+  getResumeContent,
+  getTechnologiesContent,
+} from '@/lib/site-content';
 
 export default async function Home() {
   const [
@@ -13,14 +20,28 @@ export default async function Home() {
     { intro: aboutIntro, phoneApps: aboutApps },
     { items: projectItems },
     { items: technologies },
-  ] = await Promise.all([getResumeContent(), getHeroContent(), getAboutContent(), getProjectsContent(), getTechnologiesContent()]);
+    { items: experienceItems },
+  ] = await Promise.all([
+    getResumeContent(),
+    getHeroContent(),
+    getAboutContent(),
+    getProjectsContent(),
+    getTechnologiesContent(),
+    getExperienceContent(),
+  ]);
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
       <Navbar resumeUrl={resumeUrl} />
       <FloatingSettingsButton />
       <Hero titles={titles} sliderImages={sliderImages} />
-      <MainSections aboutIntro={aboutIntro} aboutApps={aboutApps} projectItems={projectItems} technologies={technologies} />
+      <MainSections
+        aboutIntro={aboutIntro}
+        aboutApps={aboutApps}
+        projectItems={projectItems}
+        technologies={technologies}
+        experienceItems={experienceItems}
+      />
       <Contact phoneApps={aboutApps} />
       <Footer />
     </div>

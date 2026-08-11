@@ -2,7 +2,7 @@
 
 import { siteContent } from '@/content/site-content';
 import { useLanguage } from '@/components/providers/LanguageProvider';
-import type { ExperienceCardColor } from '@/types/content';
+import type { ExperienceCardColor, ExperienceItem } from '@/types/content';
 
 // Maps each closed-set preset (see ExperienceCardColor) to the light/dark
 // CSS var trio defined in globals.css — the card itself only ever reaches
@@ -27,12 +27,14 @@ interface ExperienceProps {
   // from the left as this section's pin engages (handoff from Projects),
   // separate from `progress`'s job of driving the entry-to-entry crossfade.
   entryProgress: number;
+  // Admin-managed via the DB (see lib/site-content.ts) — not part of the
+  // static content object below.
+  items: ExperienceItem[];
 }
 
-export default function Experience({ progress, entryProgress }: ExperienceProps) {
+export default function Experience({ progress, entryProgress, items }: ExperienceProps) {
   const { language } = useLanguage();
   const content = siteContent.experience;
-  const items = content.items;
   const itemCount = items.length;
 
   // 0 at the first item, itemCount - 1 at the last — the whole-number position

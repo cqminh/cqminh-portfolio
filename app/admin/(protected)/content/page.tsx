@@ -1,5 +1,6 @@
 import {
   getAboutContent,
+  getExperienceContent,
   getHeroContent,
   getLoadingScreenContent,
   getProjectsContent,
@@ -8,6 +9,7 @@ import {
 } from "@/lib/site-content";
 import { AboutForm } from "./AboutForm";
 import { ContentNav } from "./ContentNav";
+import { ExperienceForm } from "./ExperienceForm";
 import { HeroForm } from "./HeroForm";
 import { LoadingScreenForm } from "./LoadingScreenForm";
 import { ProjectsForm } from "./ProjectsForm";
@@ -19,20 +21,29 @@ const NAV_ITEMS = [
   { id: "about", label: "About" },
   { id: "technologies", label: "Technologies" },
   { id: "projects", label: "Projects" },
+  { id: "experience", label: "Experience" },
   { id: "loading-screen", label: "Loading screen" },
   { id: "resume", label: "Resume" },
 ];
 
 export default async function AdminContentPage() {
-  const [{ messages }, { url: resumeUrl }, { titles, sliderImages }, { intro, phoneApps }, { items: projectItems }, { items: technologies }] =
-    await Promise.all([
-      getLoadingScreenContent(),
-      getResumeContent(),
-      getHeroContent(),
-      getAboutContent(),
-      getProjectsContent(),
-      getTechnologiesContent(),
-    ]);
+  const [
+    { messages },
+    { url: resumeUrl },
+    { titles, sliderImages },
+    { intro, phoneApps },
+    { items: projectItems },
+    { items: technologies },
+    { items: experienceItems },
+  ] = await Promise.all([
+    getLoadingScreenContent(),
+    getResumeContent(),
+    getHeroContent(),
+    getAboutContent(),
+    getProjectsContent(),
+    getTechnologiesContent(),
+    getExperienceContent(),
+  ]);
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-10 sm:px-6">
@@ -75,6 +86,15 @@ export default async function AdminContentPage() {
         </p>
 
         <ProjectsForm items={projectItems} technologies={technologies} />
+      </section>
+
+      <section id="experience" className="scroll-mt-20 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">
+        <h2 className="mb-1 text-sm font-medium text-[var(--text-secondary)]">Experience</h2>
+        <p className="mb-4 text-xs text-[var(--text-muted)]">
+          Entries shown in the timeline, newest-looking first isn&apos;t enforced — order here is the order they appear in.
+        </p>
+
+        <ExperienceForm items={experienceItems} />
       </section>
 
       <section id="loading-screen" className="scroll-mt-20 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">

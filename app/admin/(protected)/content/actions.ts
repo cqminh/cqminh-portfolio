@@ -3,13 +3,15 @@
 import { verifySession } from "@/lib/dal";
 import {
   saveAboutContent,
+  saveExperienceContent,
   saveHeroContent,
   saveLoadingScreenContent,
   saveProjectsContent,
   saveResumeContent,
   saveTechnologiesContent,
 } from "@/lib/site-content";
-import type { Localized, PhoneAppChild, PhoneAppItem, ProjectItem, Technology } from "@/types/content";
+import { EXPERIENCE_CARD_COLORS } from "@/types/content";
+import type { ExperienceCardColor, ExperienceItem, Localized, PhoneAppChild, PhoneAppItem, ProjectItem, Technology } from "@/types/content";
 
 export interface SaveLoadingScreenState {
   ok: boolean;
@@ -229,5 +231,53 @@ export async function saveTechnologiesAction(
   }
 
   await saveTechnologiesContent({ items });
+  return { ok: true };
+}
+
+export interface SaveExperienceState {
+  ok: boolean;
+  error?: string;
+}
+
+function parseExperienceItem(value: unknown): ExperienceItem | null {
+  const v = (value ?? {}) as Record<string, unknown>;
+  const title = parseLocalized(v.title);
+  if (!title.en || !title.vi) return null;
+
+  const startYear = Number(v.startYear);
+  if (!Number.isFinite(startYear)) return null;
+
+  const endYearNum = Number(v.endYear);
+  const endYear = v.endYear === null || v.endYear === "" || v.endYear === undefined || !Number.isFinite(endYearNum) ? null : endYearNum;
+
+  const color: ExperienceCardColor = EXPERIENCE_CARD_COLORS.includes(v.color as ExperienceCardColor)
+    ? (v.color as ExperienceCardColor)
+    : "blue";
+
+  return {
+    id: str(v.id) || crypto.randomUUID(),
+    title,
+    company: str(v.company),
+    startYear,
+    endYear,
+    description: parseLocalized(v.description),
+    image: str(v.image),
+    color,
+  };
+}
+
+export async function saveExperienceAction(_prevState: SaveExperienceState, formData: FormData): Promise<SaveExperienceState> {
+  await verifySession();
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(String(formData.get("experience-data") ?? ""));
+  } catch {
+    return { ok: false, error: "invalid" };
+  }
+
+  const items = Array.isArray(parsed) ? parsed.map(parseExperienceItem).filter((item): item is ExperienceItem => item !== null) : [];
+
+  await saveExperienceContent({ items });
   return { ok: true };
 }

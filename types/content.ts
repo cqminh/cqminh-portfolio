@@ -118,7 +118,6 @@ export interface ExperienceItem {
 export interface ExperienceContent {
   heading: Localized;
   presentLabel: Localized;
-  items: ExperienceItem[];
 }
 
 export interface ContactContent {
@@ -180,6 +179,12 @@ export interface ProjectsEditableContent {
 // (uncolored) tag showing the raw id, no cascade delete needed.
 export interface TechnologiesContent {
   items: Technology[];
+}
+
+// The Experience timeline's entries — admin-managed via the DB. Same
+// `image: ''` -> lettered placeholder convention as ProjectItem.contactImage.
+export interface ExperienceEditableContent {
+  items: ExperienceItem[];
 }
 
 // External link to the CV/resume file (e.g. a Google Drive share link) —

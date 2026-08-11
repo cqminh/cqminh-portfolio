@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import SectionTag from '@/components/ui/SectionTag';
-import { Localized, PhoneAppItem, ProjectItem, Technology } from '@/types/content';
+import { ExperienceItem, Localized, PhoneAppItem, ProjectItem, Technology } from '@/types/content';
 import About from '@/sections/About';
 import Projects from '@/sections/Projects';
 import Experience from '@/sections/Experience';
@@ -78,9 +78,10 @@ interface MainSectionsProps {
   aboutApps: PhoneAppItem[];
   projectItems: ProjectItem[];
   technologies: Technology[];
+  experienceItems: ExperienceItem[];
 }
 
-export default function MainSections({ aboutIntro, aboutApps, projectItems, technologies }: MainSectionsProps) {
+export default function MainSections({ aboutIntro, aboutApps, projectItems, technologies, experienceItems }: MainSectionsProps) {
   const aboutPinRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const [exitProgress, setExitProgress] = useState(0);
@@ -301,7 +302,7 @@ export default function MainSections({ aboutIntro, aboutApps, projectItems, tech
           style={{ height: `calc(100dvh + ${EXPERIENCE_ENTRY_HOLD_PX + EXPERIENCE_REVEAL_PX + EXPERIENCE_PIN_HOLD_PX}px)` }}
         >
           <div className="sticky top-0 pt-40 pb-20 px-6 max-w-6xl 2xl:max-w-7xl mx-auto">
-            <Experience progress={experienceProgress} entryProgress={experienceEntryProgress} />
+            <Experience progress={experienceProgress} entryProgress={experienceEntryProgress} items={experienceItems} />
           </div>
         </div>
       </section>
