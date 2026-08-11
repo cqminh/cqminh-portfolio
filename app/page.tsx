@@ -3,6 +3,7 @@
 import Hero from '@/sections/Hero';
 import MainSections from '@/sections/MainSections';
 import Contact from '@/sections/Contact';
+import Footer from '@/sections/Footer';
 import Navbar from '@/components/layout/Navbar';
 import FloatingSettingsButton from '@/components/ui/FloatingSettingsButton';
 
@@ -14,6 +15,7 @@ export default function Home() {
       <Hero />
       <MainSections />
       <Contact />
+      <Footer />
     </div>
   );
 }

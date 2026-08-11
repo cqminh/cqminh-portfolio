@@ -499,3 +499,28 @@ html.dark {
   }
 }
 
+/* Footer logo/name marquee — track holds two identical copies of its
+   content side by side; sliding exactly -50% loops seamlessly. */
+@keyframes footerMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.footer-marquee-track {
+  animation: footerMarquee 32s linear infinite;
+}
+
+.footer-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-marquee-track {
+    animation: none;
+  }
+}
+

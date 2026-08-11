@@ -286,4 +286,10 @@ export const siteContent: SiteContent = {
     email: 'cqminh.it@gmail.com',
     socialLabel: { en: 'Find me on', vi: 'Tìm tôi trên' },
   },
+
+  footer: {
+    // Not localized — copyright line always renders in English regardless
+    // of the active language.
+    copyright: `© ${new Date().getFullYear()} Châu Quang Minh. All rights reserved.`,
+  },
 };

@@ -159,6 +159,11 @@ export interface LoadingScreenContent {
   messages: Localized[];
 }
 
+export interface FooterContent {
+  // Not localized — always shown in English.
+  copyright: string;
+}
+
 export interface SiteContent {
   navbar: NavbarContent;
   hero: HeroContent;
@@ -168,4 +173,5 @@ export interface SiteContent {
   experience: ExperienceContent;
   contact: ContactContent;
   loadingScreen: LoadingScreenContent;
+  footer: FooterContent;
 }
