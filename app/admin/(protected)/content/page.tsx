@@ -1,13 +1,15 @@
-import { getHeroContent, getLoadingScreenContent, getResumeContent } from "@/lib/site-content";
+import { getAboutContent, getHeroContent, getLoadingScreenContent, getResumeContent } from "@/lib/site-content";
+import { AboutForm } from "./AboutForm";
 import { HeroForm } from "./HeroForm";
 import { LoadingScreenForm } from "./LoadingScreenForm";
 import { ResumeUrlForm } from "./ResumeUrlForm";
 
 export default async function AdminContentPage() {
-  const [{ messages }, { url: resumeUrl }, { titles, sliderImages }] = await Promise.all([
+  const [{ messages }, { url: resumeUrl }, { titles, sliderImages }, { intro, phoneApps }] = await Promise.all([
     getLoadingScreenContent(),
     getResumeContent(),
     getHeroContent(),
+    getAboutContent(),
   ]);
 
   return (
@@ -21,6 +23,15 @@ export default async function AdminContentPage() {
         </p>
 
         <HeroForm titles={titles} images={sliderImages} />
+      </section>
+
+      <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">
+        <h2 className="mb-1 text-sm font-medium text-[var(--text-secondary)]">About</h2>
+        <p className="mb-4 text-xs text-[var(--text-muted)]">
+          Intro text next to the phone, plus the apps and groups shown on the phone screen.
+        </p>
+
+        <AboutForm intro={intro} phoneApps={phoneApps} />
       </section>
 
       <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">

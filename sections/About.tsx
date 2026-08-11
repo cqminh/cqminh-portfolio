@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { siteContent } from '@/content/site-content';
 import { useLanguage } from '@/components/providers/LanguageProvider';
 import PhoneVisual from '@/components/ui/PhoneVisual';
+import type { Localized, PhoneAppItem } from '@/types/content';
 
 // arrow.png's natural size is 856x488 — keep that ratio so the swoosh isn't stretched.
 const ARROW_WIDTH = 150;
@@ -16,9 +17,13 @@ interface AboutProps {
   // About/Projects/Experience) and just passed down here.
   progress: number;
   eraseProgress: number;
+  // Admin-managed via the DB (see lib/site-content.ts) — not part of the
+  // static content object below.
+  intro: Localized[];
+  phoneApps: PhoneAppItem[];
 }
 
-export default function About({ progress, eraseProgress }: AboutProps) {
+export default function About({ progress, eraseProgress, intro: introContent, phoneApps }: AboutProps) {
   const { language } = useLanguage();
   const content = siteContent.about;
 
@@ -37,7 +42,7 @@ export default function About({ progress, eraseProgress }: AboutProps) {
 
   const intro = (
     <div className="space-y-2" style={revealStyle}>
-      {content.intro.map((sentence, index) => (
+      {introContent.map((sentence, index) => (
         <p key={index} className="text-lg leading-relaxed text-[var(--text-secondary)]">
           {sentence[language]}
         </p>
@@ -56,7 +61,7 @@ export default function About({ progress, eraseProgress }: AboutProps) {
             height={378}
             inset={10}
             radius={26}
-            apps={content.phoneApps}
+            apps={phoneApps}
             language={language}
             phoneNumberCopiedLabel={content.phoneNumberCopiedLabel}
           />
@@ -72,7 +77,7 @@ export default function About({ progress, eraseProgress }: AboutProps) {
             height={640}
             inset={16}
             radius={44}
-            apps={content.phoneApps}
+            apps={phoneApps}
             language={language}
             phoneNumberCopiedLabel={content.phoneNumberCopiedLabel}
           />

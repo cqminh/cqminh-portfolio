@@ -43,15 +43,11 @@ export type PhoneAppItem = PhoneAppLink | PhoneAppGroup;
 
 export interface AboutContent {
   heading: Localized;
-  // Each entry is one sentence, rendered on its own line.
-  intro: Localized[];
   phoneCaption: {
     before: Localized;
     highlight: Localized;
     after: Localized;
   };
-  // Rendered as a 4-per-row app grid on the phone mockup's screen.
-  phoneApps: PhoneAppItem[];
   // Shown briefly on the phone app tile when tapped on a non-touch device —
   // there's no dialer to hand a `tel:` link to, so it copies the number to
   // the clipboard instead and confirms with this label.
@@ -139,7 +135,7 @@ export interface ContactContent {
   emailLabel: Localized;
   email: string;
   // Social icons shown on the card's back are not listed here — they're
-  // filtered straight out of `AboutContent.phoneApps` (see
+  // filtered straight out of `AboutEditableContent.phoneApps` (see
   // CONTACT_SOCIAL_IDS in sections/Contact.tsx) so the two sections never
   // drift out of sync with two separately edited link lists.
   socialLabel: Localized;
@@ -159,6 +155,17 @@ export interface LoadingScreenContent {
 export interface HeroContent {
   titles: string[];
   sliderImages: string[];
+}
+
+// About's intro paragraphs and phone app grid — admin-managed via the DB,
+// icons are plain URLs (admin pastes Cloudinary links) with `icon: ''`
+// falling back to a lettered placeholder tile, same convention as
+// PhoneAppChild. Neither list has a fixed length.
+export interface AboutEditableContent {
+  // Each entry is one sentence, rendered on its own line beside the phone.
+  intro: Localized[];
+  // Rendered as a 4-per-row app grid on the phone mockup's screen.
+  phoneApps: PhoneAppItem[];
 }
 
 // External link to the CV/resume file (e.g. a Google Drive share link) —

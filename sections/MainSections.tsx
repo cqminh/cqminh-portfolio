@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import SectionTag from '@/components/ui/SectionTag';
-import { Localized } from '@/types/content';
+import { Localized, PhoneAppItem } from '@/types/content';
 import About from '@/sections/About';
 import Projects from '@/sections/Projects';
 import Experience from '@/sections/Experience';
@@ -71,7 +71,14 @@ const ABOUT_TAG: Localized = { en: 'About', vi: 'GioiThieu' };
 const PROJECTS_TAG: Localized = { en: 'Projects', vi: 'DuAn' };
 const EXPERIENCE_TAG: Localized = { en: 'Experience', vi: 'KinhNghiem' };
 
-export default function MainSections() {
+// Admin-managed via the DB (see lib/site-content.ts) — passed down from
+// app/page.tsx, then handed straight to About.
+interface MainSectionsProps {
+  aboutIntro: Localized[];
+  aboutApps: PhoneAppItem[];
+}
+
+export default function MainSections({ aboutIntro, aboutApps }: MainSectionsProps) {
   const aboutPinRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const [exitProgress, setExitProgress] = useState(0);
@@ -265,7 +272,7 @@ export default function MainSections() {
       <section id="about" className="relative z-10">
         <div ref={aboutPinRef} style={{ height: `calc(100dvh + ${REVEAL_SCROLL_PX + PIN_HOLD_PX + EXIT_SCROLL_PX}px)` }}>
           <div className="sticky top-0 pt-40 pb-20 px-6 max-w-6xl 2xl:max-w-7xl mx-auto">
-            <About progress={progress} eraseProgress={eraseProgress} />
+            <About progress={progress} eraseProgress={eraseProgress} intro={aboutIntro} phoneApps={aboutApps} />
           </div>
         </div>
       </section>

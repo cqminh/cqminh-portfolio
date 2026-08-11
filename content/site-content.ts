@@ -7,89 +7,11 @@ export const siteContent: SiteContent = {
 
   about: {
     heading: { en: 'About Me', vi: 'Giới thiệu' },
-    intro: [
-      {
-        en: 'Mobile developer focused on building smooth, native-feeling apps with Flutter and React Native — from first line of code to App Store release.',
-        vi: 'Lập trình viên mobile, tập trung xây dựng ứng dụng mượt mà, cảm giác native với Flutter và React Native — từ dòng code đầu tiên đến khi lên App Store.',
-      },
-    ],
     phoneCaption: {
       before: { en: 'This is my ', vi: 'Đây là ' },
       highlight: { en: 'phone', vi: 'điện thoại' },
       after: { en: '', vi: ' của tôi' },
     },
-    // `icon: ''` renders a lettered placeholder tile until real artwork is
-    // swapped in — still true for the group children below.
-    phoneApps: [
-      { type: 'app', id: 'phone', label: { en: 'Phone', vi: 'Điện thoại' }, icon: '/phone_icon.webp', href: 'tel:+84869934393' },
-      { type: 'app', id: 'map', label: { en: 'Map', vi: 'Bản đồ' }, icon: '/map_icon.webp', href: 'https://maps.app.goo.gl/eKWkurCACrFLq9P96' },
-      { type: 'app', id: 'linkedin', label: { en: 'LinkedIn', vi: 'LinkedIn' }, icon: '/linkedin_icon.webp', href: 'https://www.linkedin.com/in/cqminh/' },
-      { type: 'app', id: 'github', label: { en: 'GitHub', vi: 'GitHub' }, icon: '/github_icon.webp', href: 'https://github.com/cqminh' },
-      { type: 'app', id: 'gmail', label: { en: 'Gmail', vi: 'Gmail' }, icon: '/gmail_icon.webp', href: 'mailto:cqminh.it@gmail.com' },
-      { type: 'app', id: 'facebook', label: { en: 'Facebook', vi: 'Facebook' }, icon: '/facebook_icon.webp', href: 'https://www.facebook.com/chau.quang.minh.963855/' },
-      { type: 'app', id: 'tiktok', label: { en: 'TikTok', vi: 'TikTok' }, icon: '/tiktok_icon.webp', href: 'https://www.tiktok.com/@markydayoi' },
-      {
-        type: 'group',
-        id: 'languages',
-        label: { en: 'Languages', vi: 'Ngôn ngữ' },
-        children: [
-          { id: 'javascript', label: { en: 'JavaScript', vi: 'JavaScript' }, icon: '/javascript_icon.webp' },
-          { id: 'typescript', label: { en: 'TypeScript', vi: 'TypeScript' }, icon: '' },
-          { id: 'python', label: { en: 'Python', vi: 'Python' }, icon: '' },
-          { id: 'dart', label: { en: 'Dart', vi: 'Dart' }, icon: '' },
-        ],
-      },
-      {
-        type: 'group',
-        id: 'frameworks',
-        label: { en: 'Frameworks', vi: 'Framework' },
-        children: [
-          { id: 'react-native', label: { en: 'React Native', vi: 'React Native' }, icon: '' },
-          { id: 'expo', label: { en: 'Expo', vi: 'Expo' }, icon: '' },
-          { id: 'flutter', label: { en: 'Flutter', vi: 'Flutter' }, icon: '' },
-          { id: 'nextjs', label: { en: 'Next.js', vi: 'Next.js' }, icon: '' },
-          { id: 'nodejs', label: { en: 'Node.js', vi: 'Node.js' }, icon: '' },
-          { id: 'react', label: { en: 'React', vi: 'React' }, icon: '' },
-        ],
-      },
-      {
-        type: 'group',
-        id: 'database',
-        label: { en: 'Database', vi: 'Cơ sở dữ liệu' },
-        children: [
-          { id: 'postgresql', label: { en: 'PostgreSQL', vi: 'PostgreSQL' }, icon: '' },
-          { id: 'mongodb', label: { en: 'MongoDB', vi: 'MongoDB' }, icon: '' },
-        ],
-      },
-      {
-        type: 'group',
-        id: 'tools',
-        label: { en: 'Tools & DevOps', vi: 'Công cụ & DevOps' },
-        children: [
-          { id: 'git', label: { en: 'Git', vi: 'Git' }, icon: '' },
-          { id: 'docker', label: { en: 'Docker', vi: 'Docker' }, icon: '' },
-          { id: 'postman', label: { en: 'Postman', vi: 'Postman' }, icon: '' },
-          { id: 'figma', label: { en: 'Figma', vi: 'Figma' }, icon: '' },
-          { id: 'vscode', label: { en: 'VS Code', vi: 'VS Code' }, icon: '' },
-          { id: 'github-actions', label: { en: 'GitHub Actions', vi: 'GitHub Actions' }, icon: '' },
-        ],
-      },
-      {
-        type: 'group',
-        id: 'state-management',
-        label: { en: 'State Management', vi: 'Quản lý State' },
-        children: [
-          { id: 'redux', label: { en: 'Redux', vi: 'Redux' }, icon: '' },
-          { id: 'getx', label: { en: 'GetX', vi: 'GetX' }, icon: '' },
-        ],
-      },
-      {
-        type: 'group',
-        id: 'backend-cloud',
-        label: { en: 'Backend & Cloud', vi: 'Backend & Cloud' },
-        children: [{ id: 'rest-api', label: { en: 'REST API', vi: 'REST API' }, icon: '' }],
-      },
-    ],
     phoneNumberCopiedLabel: { en: 'Number copied!', vi: 'Đã sao chép số!' },
   },
 

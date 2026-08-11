@@ -6,15 +6,16 @@ import { Mail, RefreshCw } from 'lucide-react';
 import { useStaggeredAnimation } from '@/hooks/useStaggeredAnimation';
 import { siteContent } from '@/content/site-content';
 import { useLanguage } from '@/components/providers/LanguageProvider';
-import type { Language, PhoneAppLink } from '@/types/content';
+import type { Language, PhoneAppItem, PhoneAppLink } from '@/types/content';
 
 // How far the card tilts toward the cursor, in degrees, at the very edge of
 // the card — scaled down from that at the center to 0.
 const MAX_TILT_DEG = 10;
 
 // The only social platforms the back-of-card row is allowed to show — the
-// links themselves are pulled from `about.phoneApps` (the one place they're
-// maintained) so both sections stay in sync, but the icon marks below are
+// links themselves are pulled from the same `phoneApps` prop About renders
+// (the one place they're maintained) so both sections stay in sync, but the
+// icon marks below are
 // drawn locally rather than reused from About's raster icons, since this
 // row renders them as plain currentColor glyphs. Whichever of these ids
 // isn't present in that list simply doesn't render.
@@ -76,10 +77,16 @@ function SocialIconLink({ social, language }: { social: PhoneAppLink; language: 
   );
 }
 
-export default function Contact() {
+// Admin-managed via the DB (see lib/site-content.ts) — passed down from
+// app/page.tsx rather than read from the static content object below.
+interface ContactProps {
+  phoneApps: PhoneAppItem[];
+}
+
+export default function Contact({ phoneApps }: ContactProps) {
   const { language } = useLanguage();
   const content = siteContent.contact;
-  const socialLinks = siteContent.about.phoneApps.filter(
+  const socialLinks = phoneApps.filter(
     (app): app is PhoneAppLink => app.type === 'app' && CONTACT_SOCIAL_IDS.has(app.id)
   );
   const { ref, isVisible, getItemStyle } = useStaggeredAnimation();
