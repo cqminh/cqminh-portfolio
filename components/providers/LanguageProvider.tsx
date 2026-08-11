@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 import { Language } from '@/types/content';
+import { useIsClient } from '@/hooks/useIsClient';
 
 interface LanguageContextType {
   language: Language;
@@ -12,17 +13,18 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>('en');
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const isInitialMount = useRef(true);
 
   // Initialize language from localStorage on mount
   useEffect(() => {
-    setMounted(true);
+    if (!mounted) return;
     const savedLanguage = localStorage.getItem('language') as Language | null;
     if (savedLanguage) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- one-off read from localStorage on mount
       setLanguage(savedLanguage);
     }
-  }, []);
+  }, [mounted]);
 
   // Keep <html lang="..."> in sync
   useEffect(() => {

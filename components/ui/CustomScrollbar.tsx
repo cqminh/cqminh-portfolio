@@ -7,7 +7,9 @@ export default function CustomScrollbar() {
   const thumbRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(
+    () => typeof window !== 'undefined' && window.scrollY !== 0
+  );
   const [isAnimatingIn, setIsAnimatingIn] = useState(false);
 
   const handleScroll = useCallback(() => {
@@ -39,7 +41,6 @@ export default function CustomScrollbar() {
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);

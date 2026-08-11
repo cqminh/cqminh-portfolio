@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-export const useStaggeredAnimation = (itemCount: number = 1) => {
+export const useStaggeredAnimation = () => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 

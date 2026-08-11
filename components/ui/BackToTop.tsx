@@ -5,8 +5,9 @@ import { ArrowUp } from 'lucide-react';
 import GlassButton from './GlassButton';
 
 export default function BackToTop() {
-  const [shouldRender, setShouldRender] = useState(false);
-  const [isAnimatingIn, setIsAnimatingIn] = useState(false);
+  const isInitiallyAtTop = typeof window === 'undefined' || window.scrollY === 0;
+  const [shouldRender, setShouldRender] = useState(!isInitiallyAtTop);
+  const [isAnimatingIn, setIsAnimatingIn] = useState(!isInitiallyAtTop);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
 
   const handleScroll = useCallback(() => {
@@ -24,7 +25,6 @@ export default function BackToTop() {
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);

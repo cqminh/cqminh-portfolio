@@ -82,7 +82,7 @@ export default function Contact() {
   const socialLinks = siteContent.about.phoneApps.filter(
     (app): app is PhoneAppLink => app.type === 'app' && CONTACT_SOCIAL_IDS.has(app.id)
   );
-  const { ref, isVisible, getItemStyle } = useStaggeredAnimation(1);
+  const { ref, isVisible, getItemStyle } = useStaggeredAnimation();
 
   const [flipped, setFlipped] = useState(false);
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0, mx: 50, my: 50 });

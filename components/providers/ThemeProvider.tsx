@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef } from 'react';
+import { useIsClient } from '@/hooks/useIsClient';
 
 type Theme = 'auto' | 'light' | 'dark';
 
@@ -13,17 +14,18 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>('auto');
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const isInitialMount = useRef(true);
 
   // Initialize theme from localStorage on mount
   useEffect(() => {
-    setMounted(true);
+    if (!mounted) return;
     const savedTheme = localStorage.getItem('theme') as Theme | null;
     if (savedTheme) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- one-off read from localStorage on mount
       setTheme(savedTheme);
     }
-  }, []);
+  }, [mounted]);
 
   const applyTheme = useCallback((currentTheme: Theme) => {
     const root = document.documentElement;
