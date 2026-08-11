@@ -155,8 +155,17 @@ export interface ContactContent {
   socialLabel: Localized;
 }
 
+// Admin-managed via the DB (see lib/site-content.ts), not part of the static
+// content layer below — there's no hardcoded fallback copy for these.
 export interface LoadingScreenContent {
   messages: Localized[];
+}
+
+// External link to the CV/resume file (e.g. a Google Drive share link) —
+// not localized, and not stored in the repo. Empty string means unset: the
+// navbar Resume button stays inert until an admin sets this.
+export interface ResumeContent {
+  url: string;
 }
 
 export interface FooterContent {
@@ -172,6 +181,5 @@ export interface SiteContent {
   projects: ProjectsContent;
   experience: ExperienceContent;
   contact: ContactContent;
-  loadingScreen: LoadingScreenContent;
   footer: FooterContent;
 }

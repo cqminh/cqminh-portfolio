@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, LogOut } from "lucide-react";
+import { LayoutDashboard, FileText, LogOut } from "lucide-react";
 
-const NAV_ITEMS = [{ href: "/admin/stats", label: "Stats", icon: LayoutDashboard }];
+const NAV_ITEMS = [
+  { href: "/admin/stats", label: "Stats", icon: LayoutDashboard },
+  { href: "/admin/content", label: "Site content", icon: FileText },
+];
 
 interface AdminSidebarProps {
   logoutAction: () => void;

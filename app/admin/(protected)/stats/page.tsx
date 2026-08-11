@@ -41,7 +41,10 @@ export default async function AdminStatsPage() {
     <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10 sm:px-6">
       <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Visit stats</h1>
 
-      <StatTile label="Total views (last 30 days)" value={stats.totalViews} />
+      <div className="grid gap-6 sm:grid-cols-2">
+        <StatTile label="Total views (last 30 days)" value={stats.totalViews} />
+        <StatTile label="Resume clicks (last 30 days)" value={stats.resumeClicks} />
+      </div>
 
       <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">
         <h2 className="mb-4 text-sm font-medium text-[var(--text-secondary)]">Views by day</h2>

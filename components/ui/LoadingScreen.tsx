@@ -4,12 +4,15 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/components/providers/LanguageProvider';
 import { useLoading } from '@/components/providers/LoadingProvider';
-import { siteContent } from '@/content/site-content';
+import type { Localized } from '@/types/content';
 
-export default function LoadingScreen() {
+interface LoadingScreenProps {
+  messages: Localized[];
+}
+
+export default function LoadingScreen({ messages }: LoadingScreenProps) {
   const { language } = useLanguage();
   const { finishLoading: notifyLoadingComplete } = useLoading();
-  const messages = siteContent.loadingScreen.messages;
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);

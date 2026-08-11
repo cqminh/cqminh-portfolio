@@ -4,13 +4,28 @@ import Logo from './Logo';
 import { siteContent } from '@/content/site-content';
 import { useLanguage } from '../providers/LanguageProvider';
 import { useScrollPast } from '@/hooks/useScrollPast';
+import { RESUME_CLICK_EVENT_PATH } from '@/lib/analytics-events';
 
 const SCROLL_THRESHOLD_PX = 50;
 
-export default function Navbar() {
+interface NavbarProps {
+  resumeUrl: string;
+}
+
+export default function Navbar({ resumeUrl }: NavbarProps) {
   const { language } = useLanguage();
   const content = siteContent.navbar;
   const isScrolled = useScrollPast(SCROLL_THRESHOLD_PX);
+
+  const handleResumeClick = () => {
+    if (!resumeUrl) return;
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: RESUME_CLICK_EVENT_PATH, language }),
+      keepalive: true,
+    }).catch(() => {});
+  };
 
   return (
     <nav
@@ -37,7 +52,10 @@ export default function Navbar() {
       {/* Resume Button - Right */}
       <div className="flex-shrink-0">
         <a
-          href="#"
+          href={resumeUrl || '#'}
+          target={resumeUrl ? '_blank' : undefined}
+          rel={resumeUrl ? 'noopener noreferrer' : undefined}
+          onClick={handleResumeClick}
           style={{
             padding: isScrolled ? '0.375rem 1.25rem' : '0.5rem 1.5rem',
             fontSize: isScrolled ? '0.875rem' : '1rem',

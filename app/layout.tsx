@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { LoadingProvider } from "@/components/providers/LoadingProvider";
 import { VisitTracker } from "@/components/analytics/VisitTracker";
+import { getLoadingScreenContent } from "@/lib/site-content";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,11 +50,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const loadingScreenContent = await getLoadingScreenContent();
+
   return (
     <html
       lang="en"
@@ -97,7 +100,7 @@ export default function RootLayout({
         <ThemeProvider>
           <LanguageProvider>
             <LoadingProvider>
-              <LoadingScreen />
+              <LoadingScreen messages={loadingScreenContent.messages} />
               <CustomScrollbar />
               <BackToTop />
               <VisitTracker />
