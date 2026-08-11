@@ -103,16 +103,36 @@ export interface ProjectsContent {
   items: ProjectItem[];
 }
 
+// Fixed set of card accent presets for the Experience stack — deliberately
+// not a free color picker. Each name maps to a light/dark pair of CSS vars
+// defined in globals.css (--exp-<name>-bg / -border / -glow-rgb), chosen to
+// already fit the site's palette and both themes, so a future admin form
+// only ever offers this closed list as a <select> rather than raw color
+// input.
+export type ExperienceCardColor = 'blue' | 'purple' | 'green' | 'amber' | 'rose';
+
+export const EXPERIENCE_CARD_COLORS: ExperienceCardColor[] = ['blue', 'purple', 'green', 'amber', 'rose'];
+
+// This shape may end up sourced from the backend later — keep fields flat
+// and easy to map from an API record rather than UI-shaped.
 export interface ExperienceItem {
   id: string;
   title: Localized;
   company: string;
-  period: Localized;
+  startYear: number;
+  // null means still ongoing — rendered with `presentLabel` instead of a year.
+  endYear: number | null;
   description: Localized;
+  // Same convention as ProjectItem.contactImage / PhoneAppChild.icon — empty
+  // string renders a lettered placeholder tile instead of a broken <img>.
+  image: string;
+  // Card accent preset — see ExperienceCardColor.
+  color: ExperienceCardColor;
 }
 
 export interface ExperienceContent {
   heading: Localized;
+  presentLabel: Localized;
   items: ExperienceItem[];
 }
 

@@ -13,9 +13,12 @@ import Experience from '@/sections/Experience';
 // types "Projects" in as About hands off (screen stays put throughout —
 // only opacity changes), then Projects gets its own pin where the grid
 // fades/rises into place in one frame (no scrolling past it), then erases
-// again before releasing into Experience. Experience still types its own
-// tag in on arrival exactly as it always has (see Experience.tsx) — that
-// leg isn't unified into the shared tag/crossfade yet.
+// again and types "Experience" back in across the trailing spacer before
+// releasing into Experience's own pin — a vertical timeline on the left
+// with a crossfading company info/image panel on the right, screen and tag
+// held still throughout while scroll drives which entry is active (see
+// Experience.tsx). Contact, right after, is unaffected — it keeps its own
+// independent local tag exactly as before.
 
 // About's pinned reveal (phone rising, everything fading in) plays out over
 // this many pixels of scroll once the pin engages.
@@ -39,13 +42,33 @@ const PROJECTS_REVEAL_PX = 500;
 // Same idea as PIN_HOLD_PX — holds the fully-revealed grid on screen for a
 // bit of extra scroll before releasing into the exit spacer below.
 const PROJECTS_PIN_HOLD_PX = 200;
-// Trailing pin before Experience: screen holds while the shared tag erases
-// "Projects", but Experience currently types its own tag in independently
-// rather than being driven by this progress value.
+// Trailing spacer before Experience: screen holds while the shared tag
+// erases "Projects" then types "Experience" back in, before releasing into
+// Experience's own pin below. Unlike the pin wrappers above, this spacer
+// isn't sticky — it's pure scroll budget for the tag animation, not a
+// viewport to hold in place — so its height is just this value, with no
+// extra 100dvh. (An earlier version padded it by 100dvh, which left a
+// content-less, tag-less dead zone between the tag finishing "Experience"
+// and Experience's own pin engaging.)
 const PROJECTS_EXIT_SCROLL_PX = 500;
+// Experience's pin engages right as its tag finishes typing in. Unlike
+// PROJECTS_ENTRY_HOLD_PX (a plain pause), this window doubles as the rail's
+// slide-in-from-left scroll budget (see Experience's entryProgress), so it
+// needs to be wide enough to actually read as scroll-linked motion rather
+// than a snap — a couple hundred pixels, not a handful.
+const EXPERIENCE_ENTRY_HOLD_PX = 400;
+// The timeline crossfades through every entry over this many pixels once
+// the entry hold is done — a fixed total budget regardless of item count
+// (more entries just means a faster crossfade per entry), same convention
+// as PROJECTS_REVEAL_PX.
+const EXPERIENCE_REVEAL_PX = 900;
+// Holds the fully-traversed (last entry) state on screen for a bit of extra
+// scroll before releasing into Contact — same idea as PROJECTS_PIN_HOLD_PX.
+const EXPERIENCE_PIN_HOLD_PX = 200;
 
 const ABOUT_TAG: Localized = { en: 'About', vi: 'GioiThieu' };
 const PROJECTS_TAG: Localized = { en: 'Projects', vi: 'DuAn' };
+const EXPERIENCE_TAG: Localized = { en: 'Experience', vi: 'KinhNghiem' };
 
 export default function MainSections() {
   const aboutPinRef = useRef<HTMLDivElement>(null);
@@ -57,6 +80,18 @@ export default function MainSections() {
 
   const projectsExitPinRef = useRef<HTMLDivElement>(null);
   const [projectsExitProgress, setProjectsExitProgress] = useState(0);
+
+  const experiencePinRef = useRef<HTMLDivElement>(null);
+  const [experienceProgress, setExperienceProgress] = useState(0);
+  // 0 -> 1 over just the EXPERIENCE_ENTRY_HOLD_PX stretch (before
+  // experienceProgress itself starts climbing) — drives the timeline rail's
+  // one-shot slide-in from the left as Experience's pin engages, separately
+  // from experienceProgress's job of driving the entry-to-entry crossfade.
+  const [experienceEntryProgress, setExperienceEntryProgress] = useState(0);
+  // True for exactly as long as the Experience pin is engaged (its wrapper
+  // covers the viewport) — used to keep the shared tag shown at full
+  // "Experience" for the whole pin, then hide it once Contact takes over.
+  const [experienceActive, setExperienceActive] = useState(false);
 
   // The pin's default extra-scroll budget only leaves PROJECTS_PIN_HOLD_PX
   // of slack for `position: sticky` to keep the grid pinned once revealed.
@@ -111,6 +146,15 @@ export default function MainSections() {
         const scrollPx = -projectsExitEl.getBoundingClientRect().top;
         setProjectsExitProgress(Math.max(0, Math.min(1, scrollPx / PROJECTS_EXIT_SCROLL_PX)));
       }
+
+      const experienceEl = experiencePinRef.current;
+      if (experienceEl) {
+        const rect = experienceEl.getBoundingClientRect();
+        const scrollPx = -rect.top;
+        setExperienceEntryProgress(Math.max(0, Math.min(1, scrollPx / EXPERIENCE_ENTRY_HOLD_PX)));
+        setExperienceProgress(Math.max(0, Math.min(1, (scrollPx - EXPERIENCE_ENTRY_HOLD_PX) / EXPERIENCE_REVEAL_PX)));
+        setExperienceActive(rect.top <= 0 && rect.bottom > 0);
+      }
     };
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -123,6 +167,14 @@ export default function MainSections() {
   // whole thing reverses cleanly on scroll-up.
   const eraseProgress = Math.max(0, Math.min(1, exitProgress / 0.5));
   const typeInProgress = Math.max(0, Math.min(1, (exitProgress - 0.5) / 0.5));
+
+  // Same erase-then-type split as above, but for the trailing Projects ->
+  // Experience handoff: "Projects" erases across the first half of the
+  // exit spacer, then "Experience" types back in across the second half —
+  // Experience no longer types its own tag in independently, it just
+  // renders the already-fully-typed result once this crossfade lands it.
+  const projectsEraseProgress = Math.max(0, Math.min(1, projectsExitProgress / 0.5));
+  const experienceTypeInProgress = Math.max(0, Math.min(1, (projectsExitProgress - 0.5) / 0.5));
 
   // Background tint: fades in across the whole About->Projects crossfade
   // (tracking exitProgress), holds through the Projects pin, then fades
@@ -142,9 +194,19 @@ export default function MainSections() {
   } else if (exitProgress >= 0.5 && projectsExitProgress === 0) {
     tagName = PROJECTS_TAG;
     tagProps = { progressOverride: typeInProgress };
-  } else if (projectsExitProgress > 0 && projectsExitProgress < 1) {
+  } else if (projectsExitProgress > 0 && projectsExitProgress < 0.5) {
     tagName = PROJECTS_TAG;
-    tagProps = { progressOverride: 1 - projectsExitProgress };
+    tagProps = { progressOverride: 1 - projectsEraseProgress };
+  } else if (projectsExitProgress >= 0.5 && projectsExitProgress < 1) {
+    tagName = EXPERIENCE_TAG;
+    tagProps = { progressOverride: experienceTypeInProgress };
+  } else if (experienceActive && experienceProgress < 1) {
+    // Stops short of the trailing PIN_HOLD_PX stretch — once the last entry
+    // is fully reached, the tag drops instead of staying anchored while the
+    // hold plays out, so it doesn't feel glued to the screen while nothing
+    // about the tag itself is still transitioning.
+    tagName = EXPERIENCE_TAG;
+    tagProps = { progressOverride: 1 };
   }
 
   return (
@@ -213,10 +275,20 @@ export default function MainSections() {
       </section>
 
       {/* Blank spacer: holds scroll while the shared fixed tag erases
-          "Projects" above, before releasing into Experience. */}
-      <div ref={projectsExitPinRef} style={{ height: `calc(100dvh + ${PROJECTS_EXIT_SCROLL_PX}px)` }} />
+          "Projects" and types "Experience" back in, before releasing into
+          Experience's own pin below. */}
+      <div ref={projectsExitPinRef} style={{ height: `${PROJECTS_EXIT_SCROLL_PX}px` }} />
 
-      <Experience />
+      <section id="experience" className="relative z-10">
+        <div
+          ref={experiencePinRef}
+          style={{ height: `calc(100dvh + ${EXPERIENCE_ENTRY_HOLD_PX + EXPERIENCE_REVEAL_PX + EXPERIENCE_PIN_HOLD_PX}px)` }}
+        >
+          <div className="sticky top-0 pt-40 pb-20 px-6 max-w-6xl mx-auto">
+            <Experience progress={experienceProgress} entryProgress={experienceEntryProgress} />
+          </div>
+        </div>
+      </section>
     </>
   );
 }

@@ -58,6 +58,26 @@
   --scrollbar-thumb: rgba(100, 100, 100, 0.6);
   --scrollbar-thumb-hover: rgba(100, 100, 100, 0.9);
 
+  /* Experience card color presets (ExperienceCardColor in types/content.ts).
+     Closed set, not a free picker — each is a tonal pair tuned to sit
+     comfortably next to --card-bg and stay readable with the neutral
+     --text-* vars, the same way --tag-bg/--tag-text already do for blue. */
+  --exp-blue-bg: #eff6ff;
+  --exp-blue-border: #93c5fd;
+  --exp-blue-glow-rgb: 37, 99, 235;
+  --exp-purple-bg: #f5f3ff;
+  --exp-purple-border: #c4b5fd;
+  --exp-purple-glow-rgb: 124, 58, 237;
+  --exp-green-bg: #f0fdf4;
+  --exp-green-border: #86efac;
+  --exp-green-glow-rgb: 22, 163, 74;
+  --exp-amber-bg: #fffbeb;
+  --exp-amber-border: #fcd34d;
+  --exp-amber-glow-rgb: 217, 119, 6;
+  --exp-rose-bg: #fff1f2;
+  --exp-rose-border: #fda4af;
+  --exp-rose-glow-rgb: 225, 29, 72;
+
   color-scheme: light;
 }
 
@@ -127,6 +147,25 @@ html.dark {
 
   --error: #ef4444;
   --success: #22c55e;
+
+  /* Dark counterparts of the light-mode presets above — same idea as
+     --background-projects' navy tint: hue-shifted but kept close to
+     --card-bg's luminance so cards still read as "dark UI", not neon. */
+  --exp-blue-bg: #16213b;
+  --exp-blue-border: #3b82f6;
+  --exp-blue-glow-rgb: 59, 130, 246;
+  --exp-purple-bg: #1e1b3a;
+  --exp-purple-border: #8b5cf6;
+  --exp-purple-glow-rgb: 139, 92, 246;
+  --exp-green-bg: #10231a;
+  --exp-green-border: #22c55e;
+  --exp-green-glow-rgb: 34, 197, 94;
+  --exp-amber-bg: #241a0d;
+  --exp-amber-border: #f59e0b;
+  --exp-amber-glow-rgb: 245, 158, 11;
+  --exp-rose-bg: #2a1420;
+  --exp-rose-border: #f43f5e;
+  --exp-rose-glow-rgb: 244, 63, 94;
 
   color-scheme: dark;
 }
