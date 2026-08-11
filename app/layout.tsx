@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono, Courier_Prime, Nunito, Fuzzy_Bubbles } from "next/font/google";
 import "./globals.css";
 import LoadingScreen from "@/components/ui/LoadingScreen";
@@ -64,7 +65,9 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${courierPrime.variable} ${nunito.variable} ${fuzzyBubbles.variable} h-full antialiased`}
     >
       <head>
-        <script
+        <Script
+          id="theme-language-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
