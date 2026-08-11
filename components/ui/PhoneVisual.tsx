@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import PhoneAppGrid, { IconTile } from './PhoneAppGrid';
+import MarqueeText from './MarqueeText';
 import { Language, Localized, PhoneAppChild, PhoneAppGroup, PhoneAppItem } from '@/types/content';
 
 interface PhoneVisualProps {
@@ -230,12 +231,11 @@ function FolderPanel({
             {pageChildren.map((child) => (
               <div key={child.id} className="flex flex-col items-center" style={{ gap: panelIconSize * 0.08 }}>
                 <IconTile id={child.id} icon={child.icon} size={panelIconSize} />
-                <span
-                  className="max-w-full truncate text-center font-medium text-white"
+                <MarqueeText
+                  text={child.label[language]}
+                  className="max-w-full text-center font-medium text-white"
                   style={{ fontSize: panelIconSize * PANEL_LABEL_FONT_SIZE_FRACTION, textShadow: '0 1px 2px rgba(0,0,0,0.6)' }}
-                >
-                  {child.label[language]}
-                </span>
+                />
               </div>
             ))}
           </div>

@@ -518,6 +518,24 @@ html.dark {
   animation-play-state: paused;
 }
 
+/* Bounces an overflowing label left/right to reveal the clipped part.
+   Distance comes from --marquee-shift, set inline per label from its
+   actual measured overflow (see components/ui/MarqueeText.tsx). */
+@keyframes labelMarquee {
+  0%,
+  8% {
+    transform: translateX(0);
+  }
+  42%,
+  58% {
+    transform: translateX(var(--marquee-shift));
+  }
+  92%,
+  100% {
+    transform: translateX(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .footer-marquee-track {
     animation: none;
