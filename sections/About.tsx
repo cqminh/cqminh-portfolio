@@ -25,7 +25,7 @@ export default function About({ progress, eraseProgress }: AboutProps) {
   const revealStyle = { opacity: Math.min(progress, 1 - eraseProgress) };
 
   const caption = (
-    <p className="font-fuzzy-bubbles text-3xl font-bold text-yellow-500" style={revealStyle}>
+    <p className="font-fuzzy-bubbles text-3xl 2xl:text-4xl font-bold text-yellow-500" style={revealStyle}>
       {content.phoneCaption.before[language]}
       <span className="relative isolate inline-block px-1">
         <Image src="/painting_color.png" alt="" fill sizes="150px" className="-z-10 object-fill" />
@@ -94,7 +94,7 @@ export default function About({ progress, eraseProgress }: AboutProps) {
           }}
         />
 
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col 2xl:max-w-xl">
           {caption}
           <div className="mt-16">{intro}</div>
         </div>

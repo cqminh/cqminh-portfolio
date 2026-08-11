@@ -112,7 +112,7 @@ export default function Contact() {
   };
 
   return (
-    <section ref={ref} id="contact" className="relative py-24 px-6 max-w-6xl mx-auto">
+    <section ref={ref} id="contact" className="relative py-24 px-6 max-w-6xl 2xl:max-w-7xl mx-auto">
       <div
         style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(40px)', transition: 'all 0.6s ease-out' }}
         className="flex flex-col items-center text-center gap-3"
@@ -124,7 +124,7 @@ export default function Contact() {
           {content.heading[language]}
         </p>
         <h2
-          className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent"
+          className="text-4xl md:text-5xl 2xl:text-6xl font-bold bg-clip-text text-transparent"
           style={{
             backgroundImage: 'linear-gradient(90deg, var(--btn-resume-grad-1), var(--btn-resume-grad-2), var(--btn-resume-grad-3))',
           }}

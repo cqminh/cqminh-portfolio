@@ -30,7 +30,7 @@ export default function Navbar() {
       }`}
       style={{
         top: isScrolled ? '1rem' : '0',
-        width: isScrolled ? '80%' : '100%',
+        width: isScrolled ? 'min(80%, 56rem)' : '100%',
         left: isScrolled ? '50%' : '0',
         transform: isScrolled ? 'translateX(-50%)' : 'translateX(0)',
         borderRadius: isScrolled ? '9999px' : '0',

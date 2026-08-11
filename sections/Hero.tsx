@@ -334,7 +334,7 @@ export default function Hero() {
         <div className="absolute top-1/2 left-1/2 w-96 h-96 rounded-full filter blur-3xl opacity-30 animate-pulse" style={{ animation: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite', backgroundColor: 'var(--hero-glow-3)' }}></div>
       </div>
 
-      <div className="relative z-10 w-full min-h-dvh flex flex-col items-start px-6 sm:px-10 md:px-16 pt-24 sm:pt-28 md:pt-32">
+      <div className="relative z-10 w-full min-h-dvh flex flex-col items-start px-6 sm:px-10 md:px-16 xl:px-24 2xl:px-32 pt-24 sm:pt-28 md:pt-32">
         <h1
           className="leading-tight font-bold"
           style={{

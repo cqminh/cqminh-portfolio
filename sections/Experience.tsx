@@ -191,7 +191,7 @@ export default function Experience({ progress, entryProgress }: ExperienceProps)
             space (STACK_RESERVE_PX) is reserved so settled cards have room
             to peek out above the active one instead of getting clipped by
             the overflow-hidden frame. */}
-        <div className="relative overflow-hidden" style={{ height: `${CARD_HEIGHT_PX + STACK_RESERVE_PX}px` }}>
+        <div className="relative overflow-hidden 2xl:max-w-3xl" style={{ height: `${CARD_HEIGHT_PX + STACK_RESERVE_PX}px` }}>
           {items.map((exp, index) => {
             const diff = index - activeFloat;
             const isFront = diff >= 0;
@@ -246,7 +246,7 @@ export default function Experience({ progress, entryProgress }: ExperienceProps)
                 </div>
 
                 <div className="flex-1 md:flex md:flex-col md:justify-center min-w-0">
-                  <h3 className="text-2xl font-semibold text-[var(--text-primary)]">{exp.title[language]}</h3>
+                  <h3 className="text-2xl 2xl:text-3xl font-semibold text-[var(--text-primary)]">{exp.title[language]}</h3>
                   <p className="text-[var(--accent)] font-medium mb-3">{exp.company}</p>
                   <p className="text-[var(--text-secondary)]">{exp.description[language]}</p>
                 </div>

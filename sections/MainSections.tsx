@@ -249,7 +249,7 @@ export default function MainSections() {
           underneath it. */}
       {tagName && (
         <div className="fixed inset-0 z-30 pointer-events-none">
-          <div className="relative h-full max-w-6xl mx-auto px-6">
+          <div className="relative h-full max-w-6xl 2xl:max-w-7xl mx-auto px-6">
             <SectionTag name={tagName} topClassName="top-24" {...tagProps} />
           </div>
         </div>
@@ -257,7 +257,7 @@ export default function MainSections() {
 
       <section id="about" className="relative z-10">
         <div ref={aboutPinRef} style={{ height: `calc(100dvh + ${REVEAL_SCROLL_PX + PIN_HOLD_PX + EXIT_SCROLL_PX}px)` }}>
-          <div className="sticky top-0 pt-40 pb-20 px-6 max-w-6xl mx-auto">
+          <div className="sticky top-0 pt-40 pb-20 px-6 max-w-6xl 2xl:max-w-7xl mx-auto">
             <About progress={progress} eraseProgress={eraseProgress} />
           </div>
         </div>
@@ -268,7 +268,7 @@ export default function MainSections() {
           {/* pt-[25vh] (not a fixed px value like About's pt-40) so the
               first row lands at a fixed fraction of the viewport regardless
               of screen height, matching where the reveal animation settles. */}
-          <div ref={projectsContentRef} className="sticky top-0 pt-[25vh] pb-20 px-6 max-w-6xl mx-auto">
+          <div ref={projectsContentRef} className="sticky top-0 pt-[25vh] pb-20 px-6 max-w-6xl 2xl:max-w-7xl mx-auto">
             <Projects progress={projectsProgress} />
           </div>
         </div>
@@ -284,7 +284,7 @@ export default function MainSections() {
           ref={experiencePinRef}
           style={{ height: `calc(100dvh + ${EXPERIENCE_ENTRY_HOLD_PX + EXPERIENCE_REVEAL_PX + EXPERIENCE_PIN_HOLD_PX}px)` }}
         >
-          <div className="sticky top-0 pt-40 pb-20 px-6 max-w-6xl mx-auto">
+          <div className="sticky top-0 pt-40 pb-20 px-6 max-w-6xl 2xl:max-w-7xl mx-auto">
             <Experience progress={experienceProgress} entryProgress={experienceEntryProgress} />
           </div>
         </div>

@@ -52,7 +52,7 @@ export default function Projects({ progress }: ProjectsProps) {
   };
 
   return (
-    <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+    <div className="grid md:grid-cols-2 2xl:grid-cols-3 gap-8 max-w-6xl 2xl:max-w-7xl mx-auto">
       {content.items.map((project, index) => (
         <div
           key={project.id}
@@ -96,7 +96,7 @@ export default function Projects({ progress }: ProjectsProps) {
           )}
 
           <div className="relative">
-            <h3 className="text-xl font-semibold mb-1 group-hover:text-[var(--accent)] transition-colors text-[var(--text-primary)]">
+            <h3 className="text-xl 2xl:text-2xl font-semibold mb-1 group-hover:text-[var(--accent)] transition-colors text-[var(--text-primary)]">
               {project.name[language]}
             </h3>
 
