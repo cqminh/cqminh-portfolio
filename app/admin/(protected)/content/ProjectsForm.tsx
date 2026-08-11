@@ -6,8 +6,7 @@ import { saveProjectsAction, type SaveProjectsState } from "./actions";
 import { SaveButton } from "@/components/admin/SaveButton";
 import { UrlPreviewButton, UrlPreviewImage } from "@/components/admin/UrlPreview";
 import { useJustSaved } from "@/hooks/useJustSaved";
-import { siteContent } from "@/content/site-content";
-import type { ProjectItem } from "@/types/content";
+import type { ProjectItem, Technology } from "@/types/content";
 
 const initialState: SaveProjectsState = { ok: false };
 
@@ -86,7 +85,7 @@ const smallLabelClass = "text-xs text-[var(--text-muted)]";
 const removeBtnClass = "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-[var(--card-bg-hover)] hover:text-red-500";
 const addBtnClass = "flex w-fit items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-[var(--accent-text)] transition-colors hover:bg-[var(--card-bg-hover)]";
 
-export function ProjectsForm({ items }: { items: ProjectItem[] }) {
+export function ProjectsForm({ items, technologies }: { items: ProjectItem[]; technologies: Technology[] }) {
   const [state, formAction, pending] = useActionState(saveProjectsAction, initialState);
   const justSaved = useJustSaved(state);
 
@@ -192,7 +191,7 @@ export function ProjectsForm({ items }: { items: ProjectItem[] }) {
             <div className="flex flex-col gap-1">
               <span className={smallLabelClass}>Technologies</span>
               <div className="flex flex-wrap gap-1.5">
-                {siteContent.technologies.map((tech) => {
+                {technologies.map((tech) => {
                   const active = row.language.includes(tech.id);
                   return (
                     <button

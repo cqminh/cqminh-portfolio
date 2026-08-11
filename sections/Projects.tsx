@@ -3,9 +3,7 @@
 import { ExternalLink } from 'lucide-react';
 import { siteContent } from '@/content/site-content';
 import { useLanguage } from '@/components/providers/LanguageProvider';
-import type { ProjectItem } from '@/types/content';
-
-const technologyById = new Map(siteContent.technologies.map((tech) => [tech.id, tech]));
+import type { ProjectItem, Technology } from '@/types/content';
 
 // Cards share one reveal window (rather than each getting a fixed slice)
 // so the whole grid always finishes revealing by progress 1, no matter how
@@ -39,11 +37,13 @@ interface ProjectsProps {
   // Admin-managed via the DB (see lib/site-content.ts) — not part of the
   // static content object below.
   items: ProjectItem[];
+  technologies: Technology[];
 }
 
-export default function Projects({ progress, items }: ProjectsProps) {
+export default function Projects({ progress, items, technologies }: ProjectsProps) {
   const { language } = useLanguage();
   const content = siteContent.projects;
+  const technologyById = new Map(technologies.map((tech) => [tech.id, tech]));
   const itemCount = items.length;
   const step = itemCount > 1 ? (1 - STAGGER_WINDOW) / (itemCount - 1) : 0;
 

@@ -1,6 +1,13 @@
 import { unstable_cache, updateTag } from "next/cache";
 import { sql } from "@/lib/db";
-import type { AboutEditableContent, HeroContent, LoadingScreenContent, ProjectsEditableContent, ResumeContent } from "@/types/content";
+import type {
+  AboutEditableContent,
+  HeroContent,
+  LoadingScreenContent,
+  ProjectsEditableContent,
+  ResumeContent,
+  TechnologiesContent,
+} from "@/types/content";
 
 function createContentSection<T>(section: string, fallback: T) {
   const tag = `site-content:${section}`;
@@ -241,3 +248,30 @@ const DEFAULT_PROJECTS: ProjectsEditableContent = {
 const projectsSection = createContentSection<ProjectsEditableContent>("projects", DEFAULT_PROJECTS);
 export const getProjectsContent = projectsSection.get;
 export const saveProjectsContent = projectsSection.save;
+
+// Used only before an admin ever saves anything (empty DB row) — the same
+// badge catalog technologies previously shipped with as static content.
+const DEFAULT_TECHNOLOGIES: TechnologiesContent = {
+  items: [
+    { id: "nextjs", name: "Next.js", color: "#000000" },
+    { id: "react", name: "React", color: "#61DAFB" },
+    { id: "react-native", name: "React Native", color: "#61DAFB" },
+    { id: "flutter", name: "Flutter", color: "#02569B" },
+    { id: "typescript", name: "TypeScript", color: "#3178C6" },
+    { id: "javascript", name: "JavaScript", color: "#F7DF1E" },
+    { id: "nodejs", name: "Node.js", color: "#339933" },
+    { id: "express", name: "Express", color: "#000000" },
+    { id: "postgresql", name: "PostgreSQL", color: "#4169E1" },
+    { id: "mysql", name: "MySQL", color: "#4479A1" },
+    { id: "mongodb", name: "MongoDB", color: "#47A248" },
+    { id: "websocket", name: "WebSocket", color: "#FF6B6B" },
+    { id: "chartjs", name: "Chart.js", color: "#FF6384" },
+    { id: "tailwind", name: "Tailwind CSS", color: "#06B6D4" },
+    { id: "stripe", name: "Stripe", color: "#635BFF" },
+    { id: "rest-api", name: "REST API", color: "#8B5CF6" },
+  ],
+};
+
+const technologiesSection = createContentSection<TechnologiesContent>("technologies", DEFAULT_TECHNOLOGIES);
+export const getTechnologiesContent = technologiesSection.get;
+export const saveTechnologiesContent = technologiesSection.save;

@@ -1,8 +1,15 @@
 "use server";
 
 import { verifySession } from "@/lib/dal";
-import { saveAboutContent, saveHeroContent, saveLoadingScreenContent, saveProjectsContent, saveResumeContent } from "@/lib/site-content";
-import type { Localized, PhoneAppChild, PhoneAppItem, ProjectItem } from "@/types/content";
+import {
+  saveAboutContent,
+  saveHeroContent,
+  saveLoadingScreenContent,
+  saveProjectsContent,
+  saveResumeContent,
+  saveTechnologiesContent,
+} from "@/lib/site-content";
+import type { Localized, PhoneAppChild, PhoneAppItem, ProjectItem, Technology } from "@/types/content";
 
 export interface SaveLoadingScreenState {
   ok: boolean;
@@ -189,5 +196,38 @@ export async function saveProjectsAction(_prevState: SaveProjectsState, formData
   const items = Array.isArray(parsed) ? parsed.map(parseProjectItem).filter((item): item is ProjectItem => item !== null) : [];
 
   await saveProjectsContent({ items });
+  return { ok: true };
+}
+
+export interface SaveTechnologiesState {
+  ok: boolean;
+  error?: string;
+}
+
+const HEX_COLOR_RE = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+
+export async function saveTechnologiesAction(
+  _prevState: SaveTechnologiesState,
+  formData: FormData
+): Promise<SaveTechnologiesState> {
+  await verifySession();
+
+  const ids = formData.getAll("tech-id").map((v) => String(v).trim());
+  const names = formData.getAll("tech-name").map((v) => String(v).trim());
+  const colors = formData.getAll("tech-color").map((v) => String(v).trim());
+
+  const items: Technology[] = [];
+  for (let i = 0; i < ids.length; i++) {
+    const id = ids[i];
+    const name = names[i] ?? "";
+    const color = colors[i] ?? "";
+    if (!id && !name) continue;
+    if (!id || !name || !HEX_COLOR_RE.test(color)) {
+      return { ok: false, error: "invalid" };
+    }
+    items.push({ id, name, color });
+  }
+
+  await saveTechnologiesContent({ items });
   return { ok: true };
 }

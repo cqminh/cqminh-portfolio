@@ -1,27 +1,38 @@
-import { getAboutContent, getHeroContent, getLoadingScreenContent, getProjectsContent, getResumeContent } from "@/lib/site-content";
+import {
+  getAboutContent,
+  getHeroContent,
+  getLoadingScreenContent,
+  getProjectsContent,
+  getResumeContent,
+  getTechnologiesContent,
+} from "@/lib/site-content";
 import { AboutForm } from "./AboutForm";
 import { ContentNav } from "./ContentNav";
 import { HeroForm } from "./HeroForm";
 import { LoadingScreenForm } from "./LoadingScreenForm";
 import { ProjectsForm } from "./ProjectsForm";
 import { ResumeUrlForm } from "./ResumeUrlForm";
+import { TechnologiesForm } from "./TechnologiesForm";
 
 const NAV_ITEMS = [
   { id: "hero", label: "Hero" },
   { id: "about", label: "About" },
+  { id: "technologies", label: "Technologies" },
   { id: "projects", label: "Projects" },
   { id: "loading-screen", label: "Loading screen" },
   { id: "resume", label: "Resume" },
 ];
 
 export default async function AdminContentPage() {
-  const [{ messages }, { url: resumeUrl }, { titles, sliderImages }, { intro, phoneApps }, { items: projectItems }] = await Promise.all([
-    getLoadingScreenContent(),
-    getResumeContent(),
-    getHeroContent(),
-    getAboutContent(),
-    getProjectsContent(),
-  ]);
+  const [{ messages }, { url: resumeUrl }, { titles, sliderImages }, { intro, phoneApps }, { items: projectItems }, { items: technologies }] =
+    await Promise.all([
+      getLoadingScreenContent(),
+      getResumeContent(),
+      getHeroContent(),
+      getAboutContent(),
+      getProjectsContent(),
+      getTechnologiesContent(),
+    ]);
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-10 sm:px-6">
@@ -47,13 +58,23 @@ export default async function AdminContentPage() {
         <AboutForm intro={intro} phoneApps={phoneApps} />
       </section>
 
+      <section id="technologies" className="scroll-mt-20 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">
+        <h2 className="mb-1 text-sm font-medium text-[var(--text-secondary)]">Technologies</h2>
+        <p className="mb-4 text-xs text-[var(--text-muted)]">
+          The shared badge catalog projects pick from below. The key is what a project&apos;s tech list references — renaming one here
+          just changes how that badge looks everywhere it&apos;s already used.
+        </p>
+
+        <TechnologiesForm items={technologies} />
+      </section>
+
       <section id="projects" className="scroll-mt-20 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">
         <h2 className="mb-1 text-sm font-medium text-[var(--text-secondary)]">Projects</h2>
         <p className="mb-4 text-xs text-[var(--text-muted)]">
-          Cards shown in the project grid. Any number of projects is fine — technologies are picked from the shared badge catalog.
+          Cards shown in the project grid. Any number of projects is fine — technologies are picked from the shared badge catalog above.
         </p>
 
-        <ProjectsForm items={projectItems} />
+        <ProjectsForm items={projectItems} technologies={technologies} />
       </section>
 
       <section id="loading-screen" className="scroll-mt-20 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">

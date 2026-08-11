@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import SectionTag from '@/components/ui/SectionTag';
-import { Localized, PhoneAppItem, ProjectItem } from '@/types/content';
+import { Localized, PhoneAppItem, ProjectItem, Technology } from '@/types/content';
 import About from '@/sections/About';
 import Projects from '@/sections/Projects';
 import Experience from '@/sections/Experience';
@@ -77,9 +77,10 @@ interface MainSectionsProps {
   aboutIntro: Localized[];
   aboutApps: PhoneAppItem[];
   projectItems: ProjectItem[];
+  technologies: Technology[];
 }
 
-export default function MainSections({ aboutIntro, aboutApps, projectItems }: MainSectionsProps) {
+export default function MainSections({ aboutIntro, aboutApps, projectItems, technologies }: MainSectionsProps) {
   const aboutPinRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const [exitProgress, setExitProgress] = useState(0);
@@ -284,7 +285,7 @@ export default function MainSections({ aboutIntro, aboutApps, projectItems }: Ma
               first row lands at a fixed fraction of the viewport regardless
               of screen height, matching where the reveal animation settles. */}
           <div ref={projectsContentRef} className="sticky top-0 pt-[25vh] pb-20 px-6 max-w-6xl 2xl:max-w-7xl mx-auto">
-            <Projects progress={projectsProgress} items={projectItems} />
+            <Projects progress={projectsProgress} items={projectItems} technologies={technologies} />
           </div>
         </div>
       </section>

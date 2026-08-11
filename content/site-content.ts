@@ -15,27 +15,6 @@ export const siteContent: SiteContent = {
     phoneNumberCopiedLabel: { en: 'Number copied!', vi: 'Đã sao chép số!' },
   },
 
-  // Shared badge catalog — projects reference these by id in `language`
-  // instead of typing tech names/colors by hand per project.
-  technologies: [
-    { id: 'nextjs', name: 'Next.js', color: '#000000' },
-    { id: 'react', name: 'React', color: '#61DAFB' },
-    { id: 'react-native', name: 'React Native', color: '#61DAFB' },
-    { id: 'flutter', name: 'Flutter', color: '#02569B' },
-    { id: 'typescript', name: 'TypeScript', color: '#3178C6' },
-    { id: 'javascript', name: 'JavaScript', color: '#F7DF1E' },
-    { id: 'nodejs', name: 'Node.js', color: '#339933' },
-    { id: 'express', name: 'Express', color: '#000000' },
-    { id: 'postgresql', name: 'PostgreSQL', color: '#4169E1' },
-    { id: 'mysql', name: 'MySQL', color: '#4479A1' },
-    { id: 'mongodb', name: 'MongoDB', color: '#47A248' },
-    { id: 'websocket', name: 'WebSocket', color: '#FF6B6B' },
-    { id: 'chartjs', name: 'Chart.js', color: '#FF6384' },
-    { id: 'tailwind', name: 'Tailwind CSS', color: '#06B6D4' },
-    { id: 'stripe', name: 'Stripe', color: '#635BFF' },
-    { id: 'rest-api', name: 'REST API', color: '#8B5CF6' },
-  ],
-
   projects: {
     viewProjectLabel: { en: 'View project', vi: 'Xem dự án' },
   },

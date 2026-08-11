@@ -54,9 +54,9 @@ export interface AboutContent {
   phoneNumberCopiedLabel: Localized;
 }
 
-// A tech-stack badge, picked from `SiteContent.technologies` rather than
-// typed by hand per project — keeps badge color/label consistent everywhere
-// the same tech shows up.
+// A tech-stack badge, picked from the technologies catalog (see
+// TechnologiesContent below) rather than typed by hand per project — keeps
+// badge color/label consistent everywhere the same tech shows up.
 export interface Technology {
   id: string;
   name: string;
@@ -174,6 +174,14 @@ export interface ProjectsEditableContent {
   items: ProjectItem[];
 }
 
+// The shared tech-badge catalog — admin-managed via the DB. `Technology.id`
+// here is what `ProjectItem.language` entries reference; renaming or
+// removing one just makes the matching project badge fall back to a plain
+// (uncolored) tag showing the raw id, no cascade delete needed.
+export interface TechnologiesContent {
+  items: Technology[];
+}
+
 // External link to the CV/resume file (e.g. a Google Drive share link) —
 // not localized, and not stored in the repo. Empty string means unset: the
 // navbar Resume button stays inert until an admin sets this.
@@ -189,7 +197,6 @@ export interface FooterContent {
 export interface SiteContent {
   navbar: NavbarContent;
   about: AboutContent;
-  technologies: Technology[];
   projects: ProjectsContent;
   experience: ExperienceContent;
   contact: ContactContent;
