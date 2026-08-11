@@ -5,11 +5,6 @@ export const siteContent: SiteContent = {
     resumeLabel: { en: 'Resume', vi: 'CV' },
   },
 
-  hero: {
-    titles: ['Mobile Developer', 'Flutter Developer', 'React Native Developer'],
-    sliderImages: ['/picture_1.png', '/picture_2.png', '/picture_3.jpg', '/picture_4.jpg', '/picture_5.jpg'],
-  },
-
   about: {
     heading: { en: 'About Me', vi: 'Giới thiệu' },
     intro: [

@@ -1,13 +1,27 @@
-import { getLoadingScreenContent, getResumeContent } from "@/lib/site-content";
+import { getHeroContent, getLoadingScreenContent, getResumeContent } from "@/lib/site-content";
+import { HeroForm } from "./HeroForm";
 import { LoadingScreenForm } from "./LoadingScreenForm";
 import { ResumeUrlForm } from "./ResumeUrlForm";
 
 export default async function AdminContentPage() {
-  const [{ messages }, { url: resumeUrl }] = await Promise.all([getLoadingScreenContent(), getResumeContent()]);
+  const [{ messages }, { url: resumeUrl }, { titles, sliderImages }] = await Promise.all([
+    getLoadingScreenContent(),
+    getResumeContent(),
+    getHeroContent(),
+  ]);
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-10 sm:px-6">
       <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Site content</h1>
+
+      <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">
+        <h2 className="mb-1 text-sm font-medium text-[var(--text-secondary)]">Hero</h2>
+        <p className="mb-4 text-xs text-[var(--text-muted)]">
+          Job titles rotate in the hero heading. Slider images show as the portrait carousel — any number of each is fine.
+        </p>
+
+        <HeroForm titles={titles} images={sliderImages} />
+      </section>
 
       <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">
         <h2 className="mb-1 text-sm font-medium text-[var(--text-secondary)]">Loading screen</h2>

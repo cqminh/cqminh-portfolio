@@ -1,7 +1,7 @@
 "use server";
 
 import { verifySession } from "@/lib/dal";
-import { saveLoadingScreenContent, saveResumeContent } from "@/lib/site-content";
+import { saveHeroContent, saveLoadingScreenContent, saveResumeContent } from "@/lib/site-content";
 
 export interface SaveLoadingScreenState {
   ok: boolean;
@@ -49,5 +49,35 @@ export async function saveResumeAction(
   }
 
   await saveResumeContent({ url });
+  return { ok: true };
+}
+
+export interface SaveHeroState {
+  ok: boolean;
+  error?: string;
+}
+
+export async function saveHeroAction(_prevState: SaveHeroState, formData: FormData): Promise<SaveHeroState> {
+  await verifySession();
+
+  const titles = formData
+    .getAll("title")
+    .map((v) => String(v).trim())
+    .filter(Boolean);
+
+  const images = formData
+    .getAll("image")
+    .map((v) => String(v).trim())
+    .filter(Boolean);
+
+  for (const image of images) {
+    try {
+      new URL(image);
+    } catch {
+      return { ok: false, error: "invalid" };
+    }
+  }
+
+  await saveHeroContent({ titles, sliderImages: images });
   return { ok: true };
 }

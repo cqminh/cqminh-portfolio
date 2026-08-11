@@ -9,16 +9,6 @@ export interface NavbarContent {
   resumeLabel: Localized;
 }
 
-export interface HeroContent {
-  // Job titles come from the backend as plain strings with no translation;
-  // 2+ entries rotate in the UI instead of being localized per-language.
-  titles: string[];
-  // Backend field: hero_slider_image. Plain image URLs, no translation.
-  // Count is not fixed — the slider adapts to however many come back
-  // (including 0 or 1).
-  sliderImages: string[];
-}
-
 // A group's preview icon — decorative only, never individually clickable.
 // `icon: ''` renders a lettered placeholder tile until a real image is set.
 export interface PhoneAppChild {
@@ -161,6 +151,16 @@ export interface LoadingScreenContent {
   messages: Localized[];
 }
 
+// Job titles come from the backend as plain strings with no translation;
+// 2+ entries rotate in the UI instead of being localized per-language.
+// Slider images are plain URLs (admin pastes Cloudinary links), also not
+// localized. Neither list has a fixed length — the hero adapts to however
+// many come back (including 0).
+export interface HeroContent {
+  titles: string[];
+  sliderImages: string[];
+}
+
 // External link to the CV/resume file (e.g. a Google Drive share link) —
 // not localized, and not stored in the repo. Empty string means unset: the
 // navbar Resume button stays inert until an admin sets this.
@@ -175,7 +175,6 @@ export interface FooterContent {
 
 export interface SiteContent {
   navbar: NavbarContent;
-  hero: HeroContent;
   about: AboutContent;
   technologies: Technology[];
   projects: ProjectsContent;

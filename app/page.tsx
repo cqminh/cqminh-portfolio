@@ -4,16 +4,16 @@ import Contact from '@/sections/Contact';
 import Footer from '@/sections/Footer';
 import Navbar from '@/components/layout/Navbar';
 import FloatingSettingsButton from '@/components/ui/FloatingSettingsButton';
-import { getResumeContent } from '@/lib/site-content';
+import { getHeroContent, getResumeContent } from '@/lib/site-content';
 
 export default async function Home() {
-  const { url: resumeUrl } = await getResumeContent();
+  const [{ url: resumeUrl }, { titles, sliderImages }] = await Promise.all([getResumeContent(), getHeroContent()]);
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
       <Navbar resumeUrl={resumeUrl} />
       <FloatingSettingsButton />
-      <Hero />
+      <Hero titles={titles} sliderImages={sliderImages} />
       <MainSections />
       <Contact />
       <Footer />

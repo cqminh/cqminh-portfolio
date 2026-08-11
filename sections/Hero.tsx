@@ -7,7 +7,6 @@ import { loadSlim } from '@tsparticles/slim';
 import { Engine } from '@tsparticles/engine';
 import { Imperial_Script, Noto_Serif } from 'next/font/google';
 import { particlesConfig } from '@/config/particles';
-import { siteContent } from '@/content/site-content';
 import { useLoading } from '@/components/providers/LoadingProvider';
 import { useOnScroll } from '@/hooks/useOnScroll';
 
@@ -240,7 +239,7 @@ const MINH_SCROLL_MAX_PX = 300;
 // reversible-with-scroll approach as the name's position).
 const CONTENT_FADE_SCROLL_PX = 400;
 
-export default function Hero() {
+export default function Hero({ titles, sliderImages }: { titles: string[]; sliderImages: string[] }) {
   const particlesInit = async (engine: Engine) => {
     await loadSlim(engine);
   };
@@ -275,7 +274,6 @@ export default function Hero() {
     }, [])
   );
 
-  const titles = siteContent.hero.titles;
   const [titleIndex, setTitleIndex] = useState(0);
   const [exitingTitleIndex, setExitingTitleIndex] = useState<number | null>(null);
   const titleIndexRef = useRef(titleIndex);
@@ -400,7 +398,7 @@ export default function Hero() {
       </div>
 
       <PortraitSlider
-        images={siteContent.hero.sliderImages}
+        images={sliderImages}
         hasEntered={nameHasEntered}
         fadeOpacity={contentFadeOpacity}
       />

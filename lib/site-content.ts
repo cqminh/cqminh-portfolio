@@ -1,6 +1,6 @@
 import { unstable_cache, updateTag } from "next/cache";
 import { sql } from "@/lib/db";
-import type { LoadingScreenContent, ResumeContent } from "@/types/content";
+import type { HeroContent, LoadingScreenContent, ResumeContent } from "@/types/content";
 
 function createContentSection<T>(section: string, fallback: T) {
   const tag = `site-content:${section}`;
@@ -34,6 +34,13 @@ const DEFAULT_LOADING_SCREEN: LoadingScreenContent = {
 };
 const DEFAULT_RESUME: ResumeContent = { url: "" };
 
+// Used only before an admin ever saves anything (empty DB row) — the same
+// placeholder titles/photos the hero previously shipped with as static content.
+const DEFAULT_HERO: HeroContent = {
+  titles: ["Mobile Developer", "Flutter Developer", "React Native Developer"],
+  sliderImages: ["/picture_1.png", "/picture_2.png", "/picture_3.jpg", "/picture_4.jpg", "/picture_5.jpg"],
+};
+
 const loadingScreenSection = createContentSection<LoadingScreenContent>("loadingScreen", DEFAULT_LOADING_SCREEN);
 export const getLoadingScreenContent = loadingScreenSection.get;
 export const saveLoadingScreenContent = loadingScreenSection.save;
@@ -41,3 +48,7 @@ export const saveLoadingScreenContent = loadingScreenSection.save;
 const resumeSection = createContentSection<ResumeContent>("resume", DEFAULT_RESUME);
 export const getResumeContent = resumeSection.get;
 export const saveResumeContent = resumeSection.save;
+
+const heroSection = createContentSection<HeroContent>("hero", DEFAULT_HERO);
+export const getHeroContent = heroSection.get;
+export const saveHeroContent = heroSection.save;
