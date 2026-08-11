@@ -54,6 +54,14 @@
   --error: #ef4444;
   --success: #22c55e;
 
+  /* Chart categorical colors (admin dashboard). --accent doubles as series 1
+     (blue); these two are slots 2/3 of the dataviz skill's validated default
+     palette — picked to clear the CVD-separation checks against --accent and
+     against each other without re-running the validator against this site's
+     exact hexes. */
+  --chart-series-2: #eb6834;
+  --chart-series-3: #1baf7a;
+
   --scrollbar-track: rgba(200, 200, 200, 0.2);
   --scrollbar-thumb: rgba(100, 100, 100, 0.6);
   --scrollbar-thumb-hover: rgba(100, 100, 100, 0.9);
@@ -147,6 +155,9 @@ html.dark {
 
   --error: #ef4444;
   --success: #22c55e;
+
+  --chart-series-2: #d95926;
+  --chart-series-3: #199e70;
 
   /* Dark counterparts of the light-mode presets above — same idea as
      --background-projects' navy tint: hue-shifted but kept close to

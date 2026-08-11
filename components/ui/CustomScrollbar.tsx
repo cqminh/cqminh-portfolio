@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import { useOnScroll } from "@/hooks/useOnScroll";
 
 export default function CustomScrollbar() {
+  const pathname = usePathname();
   const scrollbarRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -99,6 +101,10 @@ export default function CustomScrollbar() {
       window.removeEventListener("mousemove", handleMouseMove);
     };
   }, [isDragging]);
+
+  // Admin scrolls inside its own content pane, not the window — this
+  // thumb tracks window.scrollY, so it has nothing to show there.
+  if (pathname.startsWith("/admin")) return null;
 
   return (
     <div

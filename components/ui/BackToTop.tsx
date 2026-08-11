@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { ArrowUp } from 'lucide-react';
 import GlassButton from './GlassButton';
 import { useOnScroll } from '@/hooks/useOnScroll';
@@ -11,6 +12,7 @@ import { useOnScroll } from '@/hooks/useOnScroll';
 const HIDE_DELAY_MS = 2000;
 
 export default function BackToTop() {
+  const pathname = usePathname();
   const isInitiallyAtTop = typeof window === 'undefined' || window.scrollY === 0;
   const [shouldRender, setShouldRender] = useState(!isInitiallyAtTop);
   const [isAnimatingIn, setIsAnimatingIn] = useState(!isInitiallyAtTop);
@@ -41,7 +43,9 @@ export default function BackToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (!shouldRender) return null;
+  // Admin scrolls inside its own content pane, not the window — scrolling
+  // it "to top" here would target the wrong element.
+  if (pathname.startsWith('/admin') || !shouldRender) return null;
 
   return (
     <GlassButton

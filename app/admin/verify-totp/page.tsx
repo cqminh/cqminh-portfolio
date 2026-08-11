@@ -16,11 +16,11 @@ export default async function VerifyTotpPage({
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 px-4 text-center">
-      <h1 className="text-2xl font-semibold">Nhập mã xác thực</h1>
+      <h1 className="text-2xl font-semibold">Enter verification code</h1>
       <p className="max-w-sm text-sm text-neutral-500">
-        Mở app authenticator (Google Authenticator/Authy) và nhập mã 6 số hiện tại.
+        Open your authenticator app (Google Authenticator/Authy) and enter the current 6-digit code.
       </p>
-      {error && <p className="text-sm text-red-500">Mã không đúng, thử lại.</p>}
+      {error && <p className="text-sm text-red-500">Incorrect code, please try again.</p>}
       <form action={verifyTotpAction} className="flex flex-col items-center gap-4">
         <input
           name="code"
@@ -36,7 +36,7 @@ export default async function VerifyTotpPage({
           type="submit"
           className="rounded-full bg-black px-6 py-3 text-sm font-medium text-white dark:bg-white dark:text-black"
         >
-          Xác nhận
+          Verify
         </button>
       </form>
     </main>

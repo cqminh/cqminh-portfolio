@@ -7,6 +7,7 @@ import BackToTop from "@/components/ui/BackToTop";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { LoadingProvider } from "@/components/providers/LoadingProvider";
+import { VisitTracker } from "@/components/analytics/VisitTracker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -99,6 +100,7 @@ export default function RootLayout({
               <LoadingScreen />
               <CustomScrollbar />
               <BackToTop />
+              <VisitTracker />
               {children}
             </LoadingProvider>
           </LanguageProvider>
