@@ -9,7 +9,7 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { LoadingProvider } from "@/components/providers/LoadingProvider";
 import { VisitTracker } from "@/components/analytics/VisitTracker";
-import { getLoadingScreenContent } from "@/lib/site-content";
+import { getAboutContent, getHeroContent, getLoadingScreenContent } from "@/lib/site-content";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,18 +38,51 @@ const fuzzyBubbles = Fuzzy_Bubbles({
   subsets: ["latin", "vietnamese"],
 });
 
-export const metadata: Metadata = {
-  title: "Châu Quang Minh - Portfolio",
-  description: "Full Stack Developer Portfolio",
-  icons: {
-    icon: [
-      { url: "/favicon_io/favicon.ico" },
-      { url: "/favicon_io/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon_io/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-    ],
-    apple: "/favicon_io/apple-touch-icon.png",
-  },
-};
+const SITE_NAME = "Châu Quang Minh";
+
+// No manual setup needed: VERCEL_PROJECT_PRODUCTION_URL is injected
+// automatically by Vercel at build time and tracks whatever domain
+// (default or custom) is assigned to the production deployment.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
+
+// Dynamic rather than a static object so the link-preview title/description
+// stay in sync with whatever the admin has actually configured for Hero/
+// About, instead of drifting from a hardcoded string over time.
+export async function generateMetadata(): Promise<Metadata> {
+  const [hero, about] = await Promise.all([getHeroContent(), getAboutContent()]);
+
+  const role = hero.titles[0];
+  const title = role ? `${SITE_NAME} - ${role}` : `${SITE_NAME} - Portfolio`;
+  const description = about.intro[0]?.en || `Portfolio of ${SITE_NAME}.`;
+
+  return {
+    metadataBase: new URL(siteUrl),
+    title,
+    description,
+    icons: {
+      icon: [
+        { url: "/favicon_io/favicon.ico" },
+        { url: "/favicon_io/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+        { url: "/favicon_io/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      ],
+      apple: "/favicon_io/apple-touch-icon.png",
+    },
+    openGraph: {
+      title,
+      description,
+      url: "/",
+      siteName: SITE_NAME,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
 
 export default async function RootLayout({
   children,
