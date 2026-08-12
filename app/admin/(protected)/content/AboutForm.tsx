@@ -4,10 +4,12 @@ import { useActionState, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { saveAboutAction, type SaveAboutState } from "./actions";
 import { addBtnClass, inputClass, keyInputClass, removeBtnClass } from "./formStyles";
+import { ReorderButtons } from "@/components/admin/ReorderButtons";
 import { SaveButton } from "@/components/admin/SaveButton";
 import { UrlPreviewButton, UrlPreviewImage } from "@/components/admin/UrlPreview";
 import { useJustSaved } from "@/hooks/useJustSaved";
 import { useToggleSet } from "@/hooks/useToggleSet";
+import { moveItem } from "@/lib/array";
 import type { Localized, PhoneAppItem } from "@/types/content";
 
 const initialState: SaveAboutState = { ok: false };
@@ -107,6 +109,7 @@ export function AboutForm({ intro, phoneApps }: { intro: Localized[]; phoneApps:
     setItemRows((rows) => rows.map((r) => (r.key === key ? ({ ...r, ...patch } as ItemRow) : r)));
   };
   const removeItem = (key: number) => setItemRows((rows) => rows.filter((r) => r.key !== key));
+  const moveItemRow = (index: number, offset: -1 | 1) => setItemRows((rows) => moveItem(rows, index, offset));
   const addApp = () => setItemRows((rows) => [...rows, { key: uid(), type: "app", id: "", labelEn: "", labelVi: "", icon: "", href: "" }]);
   const addGroup = () => setItemRows((rows) => [...rows, { key: uid(), type: "group", id: "", labelEn: "", labelVi: "", children: [] }]);
 
@@ -127,6 +130,11 @@ export function AboutForm({ intro, phoneApps }: { intro: Localized[]; phoneApps:
   const removeChild = (itemKey: number, childKey: number) => {
     setItemRows((rows) =>
       rows.map((r) => (r.key === itemKey && r.type === "group" ? { ...r, children: r.children.filter((c) => c.key !== childKey) } : r))
+    );
+  };
+  const moveChild = (itemKey: number, childIndex: number, offset: -1 | 1) => {
+    setItemRows((rows) =>
+      rows.map((r) => (r.key === itemKey && r.type === "group" ? { ...r, children: moveItem(r.children, childIndex, offset) } : r))
     );
   };
 
@@ -176,7 +184,7 @@ export function AboutForm({ intro, phoneApps }: { intro: Localized[]; phoneApps:
         </p>
 
         <div className="flex flex-col gap-3">
-          {itemRows.map((row) =>
+          {itemRows.map((row, index) =>
             row.type === "app" ? (
               <div key={row.key} className="rounded-lg border border-[var(--card-border)] p-3">
                 <div className="flex items-start gap-2">
@@ -192,6 +200,12 @@ export function AboutForm({ intro, phoneApps }: { intro: Localized[]; phoneApps:
                     onChange={(e) => updateItem(row.key, { labelVi: e.target.value })}
                     placeholder="Label (VI)"
                     className={inputClass}
+                  />
+                  <ReorderButtons
+                    onMoveUp={() => moveItemRow(index, -1)}
+                    onMoveDown={() => moveItemRow(index, 1)}
+                    canMoveUp={index > 0}
+                    canMoveDown={index < itemRows.length - 1}
                   />
                   <button type="button" onClick={() => removeItem(row.key)} className={removeBtnClass} aria-label="Remove app">
                     <X className="h-4 w-4" />
@@ -234,6 +248,12 @@ export function AboutForm({ intro, phoneApps }: { intro: Localized[]; phoneApps:
                     placeholder="Label (VI)"
                     className={inputClass}
                   />
+                  <ReorderButtons
+                    onMoveUp={() => moveItemRow(index, -1)}
+                    onMoveDown={() => moveItemRow(index, 1)}
+                    canMoveUp={index > 0}
+                    canMoveDown={index < itemRows.length - 1}
+                  />
                   <button type="button" onClick={() => removeItem(row.key)} className={removeBtnClass} aria-label="Remove group">
                     <X className="h-4 w-4" />
                   </button>
@@ -241,7 +261,7 @@ export function AboutForm({ intro, phoneApps }: { intro: Localized[]; phoneApps:
 
                 <div className="mt-3 flex flex-col gap-2 border-l-2 border-[var(--card-border)] pl-3">
                   <span className="text-xs font-medium text-[var(--text-muted)]">Group items</span>
-                  {row.children.map((child) => (
+                  {row.children.map((child, childIndex) => (
                     <div key={child.key} className="flex flex-col gap-2 rounded-lg bg-[var(--card-bg-hover)] p-2">
                       <div className="flex items-center gap-2">
                         <input
@@ -261,6 +281,12 @@ export function AboutForm({ intro, phoneApps }: { intro: Localized[]; phoneApps:
                           onChange={(e) => updateChild(row.key, child.key, { labelVi: e.target.value })}
                           placeholder="Label (VI)"
                           className={inputClass}
+                        />
+                        <ReorderButtons
+                          onMoveUp={() => moveChild(row.key, childIndex, -1)}
+                          onMoveDown={() => moveChild(row.key, childIndex, 1)}
+                          canMoveUp={childIndex > 0}
+                          canMoveDown={childIndex < row.children.length - 1}
                         />
                         <button
                           type="button"

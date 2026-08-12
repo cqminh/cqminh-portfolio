@@ -4,10 +4,12 @@ import { useActionState, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { saveProjectsAction, type SaveProjectsState } from "./actions";
 import { addBtnClass, inputClass, labelClass, removeBtnClass, smallLabelClass } from "./formStyles";
+import { ReorderButtons } from "@/components/admin/ReorderButtons";
 import { SaveButton } from "@/components/admin/SaveButton";
 import { UrlPreviewButton, UrlPreviewImage } from "@/components/admin/UrlPreview";
 import { useJustSaved } from "@/hooks/useJustSaved";
 import { useToggleSet } from "@/hooks/useToggleSet";
+import { moveItem } from "@/lib/array";
 import type { ProjectItem, Technology } from "@/types/content";
 
 const initialState: SaveProjectsState = { ok: false };
@@ -93,6 +95,7 @@ export function ProjectsForm({ items, technologies }: { items: ProjectItem[]; te
   };
   const removeRow = (key: string) => setRows((rs) => rs.filter((r) => r.key !== key));
   const addRow = () => setRows((rs) => [...rs, newRow()]);
+  const moveRow = (index: number, offset: -1 | 1) => setRows((rs) => moveItem(rs, index, offset));
 
   const toggleLanguage = (key: string, techId: string) => {
     setRows((rs) =>
@@ -107,7 +110,7 @@ export function ProjectsForm({ items, technologies }: { items: ProjectItem[]; te
   return (
     <form action={formAction} className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
-        {rows.map((row) => (
+        {rows.map((row, index) => (
           <div key={row.key} className="flex flex-col gap-3 rounded-lg border border-[var(--card-border)] p-4">
             <div className="flex items-start justify-between gap-2">
               <div className="grid flex-1 gap-2 sm:grid-cols-2">
@@ -120,9 +123,17 @@ export function ProjectsForm({ items, technologies }: { items: ProjectItem[]; te
                   <input value={row.nameVi} onChange={(e) => updateRow(row.key, { nameVi: e.target.value })} className={inputClass} />
                 </label>
               </div>
-              <button type="button" onClick={() => removeRow(row.key)} className={removeBtnClass} aria-label="Remove project">
-                <X className="h-4 w-4" />
-              </button>
+              <div className="flex items-start gap-1">
+                <ReorderButtons
+                  onMoveUp={() => moveRow(index, -1)}
+                  onMoveDown={() => moveRow(index, 1)}
+                  canMoveUp={index > 0}
+                  canMoveDown={index < rows.length - 1}
+                />
+                <button type="button" onClick={() => removeRow(row.key)} className={removeBtnClass} aria-label="Remove project">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
             </div>
 
             <div className="grid gap-2 sm:grid-cols-2">
