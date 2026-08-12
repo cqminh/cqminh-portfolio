@@ -38,7 +38,7 @@ export default async function AdminContentPage() {
     { items: projectItems },
     { items: technologies },
     { items: experienceItems },
-    { intro: contactIntro },
+    { intro: contactIntro, avatar: contactAvatar },
   ] = await Promise.all([
     getLoadingScreenContent(),
     getResumeContent(),
@@ -108,7 +108,7 @@ export default async function AdminContentPage() {
           Blurb shown on the front of the flip card. Everything else on that card (email, socials) is pulled from About above.
         </p>
 
-        <ContactForm intro={contactIntro} />
+        <ContactForm intro={contactIntro} avatar={contactAvatar} />
       </section>
 
       <section id="loading-screen" className="scroll-mt-20 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5">

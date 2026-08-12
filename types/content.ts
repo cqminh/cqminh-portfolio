@@ -123,10 +123,6 @@ export interface ExperienceContent {
 export interface ContactContent {
   heading: Localized;
   connectHeading: Localized;
-  // Same convention as ProjectItem.contactImage / ExperienceItem.image —
-  // empty string falls back to the local /logo.png instead of a broken
-  // <img>, so the card still has an avatar before the backend supplies one.
-  avatar: string;
   flipHint: Localized;
   backHint: Localized;
   emailLabel: Localized;
@@ -185,12 +181,13 @@ export interface ExperienceEditableContent {
   items: ExperienceItem[];
 }
 
-// The Contact card's intro blurb — admin-managed via the DB. Everything
-// else on the card (heading, avatar, hints, email, social links) is either
-// static copy or pulled from About, so this is the only Contact field with
-// its own DB section.
+// The Contact card's intro blurb and avatar image — admin-managed via the
+// DB. Everything else on the card (heading, hints, email, social links) is
+// either static copy or pulled from About. Same `avatar: ''` -> local
+// /logo.png fallback convention as ProjectItem.contactImage / ExperienceItem.image.
 export interface ContactEditableContent {
   intro: Localized;
+  avatar: string;
 }
 
 // External link to the CV/resume file (e.g. a Google Drive share link) —

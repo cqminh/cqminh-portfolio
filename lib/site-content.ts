@@ -72,6 +72,6 @@ const experienceSection = createContentSection<ExperienceEditableContent>("exper
 export const getExperienceContent = experienceSection.get;
 export const saveExperienceContent = experienceSection.save;
 
-const contactSection = createContentSection<ContactEditableContent>("contact", { intro: { en: "", vi: "" } });
+const contactSection = createContentSection<ContactEditableContent>("contact", { intro: { en: "", vi: "" }, avatar: "" });
 export const getContactContent = contactSection.get;
 export const saveContactContent = contactSection.save;

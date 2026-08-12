@@ -283,6 +283,15 @@ export async function saveContactAction(_prevState: SaveContactState, formData: 
     return { ok: false, error: "empty" };
   }
 
-  await saveContactContent({ intro });
+  const avatar = String(formData.get("contact-avatar") ?? "").trim();
+  if (avatar) {
+    try {
+      new URL(avatar);
+    } catch {
+      return { ok: false, error: "invalid" };
+    }
+  }
+
+  await saveContactContent({ intro, avatar });
   return { ok: true };
 }

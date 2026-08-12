@@ -27,7 +27,6 @@ export const siteContent: SiteContent = {
   contact: {
     heading: { en: 'Get In Touch', vi: 'Liên hệ' },
     connectHeading: { en: "Let's Connect", vi: 'Kết nối với tôi' },
-    avatar: '',
     flipHint: { en: 'Tap the card to flip', vi: 'Chạm vào thẻ để lật' },
     backHint: { en: 'Back to front', vi: 'Lật lại mặt trước' },
     emailLabel: { en: 'Email', vi: 'Email' },

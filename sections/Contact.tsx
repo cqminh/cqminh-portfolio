@@ -81,9 +81,12 @@ function SocialIconLink({ social, language }: { social: PhoneAppLink; language: 
 interface ContactProps {
   intro: Localized;
   phoneApps: PhoneAppItem[];
+  // Admin-pasted image URL — empty string falls back to the local
+  // /logo.png, same convention as ProjectItem.contactImage / ExperienceItem.image.
+  avatar: string;
 }
 
-export default function Contact({ intro, phoneApps }: ContactProps) {
+export default function Contact({ intro, phoneApps, avatar }: ContactProps) {
   const { language } = useLanguage();
   const content = siteContent.contact;
   const socialLinks = phoneApps.filter(
@@ -181,7 +184,12 @@ export default function Contact({ intro, phoneApps }: ContactProps) {
                 }}
               />
               <div className="relative h-11 w-11 flex-shrink-0 sm:h-16 sm:w-16">
-                <Image src={content.avatar || '/logo.png'} alt="Logo" fill className="object-contain" sizes="64px" />
+                {avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- arbitrary external URL, admin-provided
+                  <img src={avatar} alt="Logo" className="h-full w-full object-contain" />
+                ) : (
+                  <Image src="/logo.png" alt="Logo" fill className="object-contain" sizes="64px" />
+                )}
               </div>
               <h3 className="text-base font-semibold text-[var(--text-primary)] sm:text-2xl">Châu Quang Minh</h3>
               <p className="line-clamp-3 max-w-[240px] text-xs text-[var(--text-secondary)] sm:line-clamp-none sm:max-w-sm sm:text-sm">

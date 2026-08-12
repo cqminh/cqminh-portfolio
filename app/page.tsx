@@ -22,7 +22,7 @@ export default async function Home() {
     { items: projectItems },
     { items: technologies },
     { items: experienceItems },
-    { intro: contactIntro },
+    { intro: contactIntro, avatar: contactAvatar },
   ] = await Promise.all([
     getResumeContent(),
     getHeroContent(),
@@ -45,7 +45,7 @@ export default async function Home() {
         technologies={technologies}
         experienceItems={experienceItems}
       />
-      <Contact intro={contactIntro} phoneApps={aboutApps} />
+      <Contact intro={contactIntro} phoneApps={aboutApps} avatar={contactAvatar} />
       <Footer />
     </div>
   );
