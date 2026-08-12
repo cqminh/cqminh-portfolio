@@ -11,6 +11,9 @@ import type {
   TechnologiesContent,
 } from "@/types/content";
 
+// The `fallback` below is only ever read before an admin has saved that
+// section once (empty DB row) — every section already has real data in
+// production, so these stay as minimal, type-safe placeholders.
 function createContentSection<T>(section: string, fallback: T) {
   const tag = `site-content:${section}`;
 
@@ -33,310 +36,42 @@ function createContentSection<T>(section: string, fallback: T) {
   return { get, save };
 }
 
-// Used only before an admin ever saves anything (empty DB row).
-const DEFAULT_LOADING_SCREEN: LoadingScreenContent = {
+// LoadingScreen.tsx picks messages[0/1/2] by hardcoded index, so this needs
+// exactly 3 entries — everything else below is safe empty.
+const loadingScreenSection = createContentSection<LoadingScreenContent>("loadingScreen", {
   messages: [
     { en: "Loading...", vi: "Đang tải..." },
     { en: "Loading...", vi: "Đang tải..." },
     { en: "Loading...", vi: "Đang tải..." },
   ],
-};
-const DEFAULT_RESUME: ResumeContent = { url: "" };
-
-// Used only before an admin ever saves anything (empty DB row) — the same
-// placeholder titles/photos the hero previously shipped with as static content.
-const DEFAULT_HERO: HeroContent = {
-  titles: ["Mobile Developer", "Flutter Developer", "React Native Developer"],
-  sliderImages: ["/picture_1.png", "/picture_2.png", "/picture_3.jpg", "/picture_4.jpg", "/picture_5.jpg"],
-};
-
-const loadingScreenSection = createContentSection<LoadingScreenContent>("loadingScreen", DEFAULT_LOADING_SCREEN);
+});
 export const getLoadingScreenContent = loadingScreenSection.get;
 export const saveLoadingScreenContent = loadingScreenSection.save;
 
-const resumeSection = createContentSection<ResumeContent>("resume", DEFAULT_RESUME);
+const resumeSection = createContentSection<ResumeContent>("resume", { url: "" });
 export const getResumeContent = resumeSection.get;
 export const saveResumeContent = resumeSection.save;
 
-const heroSection = createContentSection<HeroContent>("hero", DEFAULT_HERO);
+const heroSection = createContentSection<HeroContent>("hero", { titles: [], sliderImages: [] });
 export const getHeroContent = heroSection.get;
 export const saveHeroContent = heroSection.save;
 
-// Used only before an admin ever saves anything (empty DB row) — the same
-// intro sentence and phone app grid the About section previously shipped
-// with as static content.
-const DEFAULT_ABOUT: AboutEditableContent = {
-  intro: [
-    {
-      en: "Mobile developer focused on building smooth, native-feeling apps with Flutter and React Native — from first line of code to App Store release.",
-      vi: "Lập trình viên mobile, tập trung xây dựng ứng dụng mượt mà, cảm giác native với Flutter và React Native — từ dòng code đầu tiên đến khi lên App Store.",
-    },
-  ],
-  phoneApps: [
-    { type: "app", id: "phone", label: { en: "Phone", vi: "Điện thoại" }, icon: "", href: "tel:+84869934393" },
-    { type: "app", id: "map", label: { en: "Map", vi: "Bản đồ" }, icon: "", href: "https://maps.app.goo.gl/eKWkurCACrFLq9P96" },
-    { type: "app", id: "linkedin", label: { en: "LinkedIn", vi: "LinkedIn" }, icon: "", href: "https://www.linkedin.com/in/cqminh/" },
-    { type: "app", id: "github", label: { en: "GitHub", vi: "GitHub" }, icon: "", href: "https://github.com/cqminh" },
-    { type: "app", id: "gmail", label: { en: "Gmail", vi: "Gmail" }, icon: "", href: "mailto:cqminh.it@gmail.com" },
-    { type: "app", id: "facebook", label: { en: "Facebook", vi: "Facebook" }, icon: "", href: "https://www.facebook.com/chau.quang.minh.963855/" },
-    { type: "app", id: "tiktok", label: { en: "TikTok", vi: "TikTok" }, icon: "", href: "https://www.tiktok.com/@markydayoi" },
-    {
-      type: "group",
-      id: "languages",
-      label: { en: "Languages", vi: "Ngôn ngữ" },
-      children: [
-        { id: "javascript", label: { en: "JavaScript", vi: "JavaScript" }, icon: "" },
-        { id: "typescript", label: { en: "TypeScript", vi: "TypeScript" }, icon: "" },
-        { id: "python", label: { en: "Python", vi: "Python" }, icon: "" },
-        { id: "dart", label: { en: "Dart", vi: "Dart" }, icon: "" },
-      ],
-    },
-    {
-      type: "group",
-      id: "frameworks",
-      label: { en: "Frameworks", vi: "Framework" },
-      children: [
-        { id: "react-native", label: { en: "React Native", vi: "React Native" }, icon: "" },
-        { id: "expo", label: { en: "Expo", vi: "Expo" }, icon: "" },
-        { id: "flutter", label: { en: "Flutter", vi: "Flutter" }, icon: "" },
-        { id: "nextjs", label: { en: "Next.js", vi: "Next.js" }, icon: "" },
-        { id: "nodejs", label: { en: "Node.js", vi: "Node.js" }, icon: "" },
-        { id: "react", label: { en: "React", vi: "React" }, icon: "" },
-      ],
-    },
-    {
-      type: "group",
-      id: "database",
-      label: { en: "Database", vi: "Cơ sở dữ liệu" },
-      children: [
-        { id: "postgresql", label: { en: "PostgreSQL", vi: "PostgreSQL" }, icon: "" },
-        { id: "mongodb", label: { en: "MongoDB", vi: "MongoDB" }, icon: "" },
-      ],
-    },
-    {
-      type: "group",
-      id: "tools",
-      label: { en: "Tools & DevOps", vi: "Công cụ & DevOps" },
-      children: [
-        { id: "git", label: { en: "Git", vi: "Git" }, icon: "" },
-        { id: "docker", label: { en: "Docker", vi: "Docker" }, icon: "" },
-        { id: "postman", label: { en: "Postman", vi: "Postman" }, icon: "" },
-        { id: "figma", label: { en: "Figma", vi: "Figma" }, icon: "" },
-        { id: "vscode", label: { en: "VS Code", vi: "VS Code" }, icon: "" },
-        { id: "github-actions", label: { en: "GitHub Actions", vi: "GitHub Actions" }, icon: "" },
-      ],
-    },
-    {
-      type: "group",
-      id: "state-management",
-      label: { en: "State Management", vi: "Quản lý State" },
-      children: [
-        { id: "redux", label: { en: "Redux", vi: "Redux" }, icon: "" },
-        { id: "getx", label: { en: "GetX", vi: "GetX" }, icon: "" },
-      ],
-    },
-    {
-      type: "group",
-      id: "backend-cloud",
-      label: { en: "Backend & Cloud", vi: "Backend & Cloud" },
-      children: [{ id: "rest-api", label: { en: "REST API", vi: "REST API" }, icon: "" }],
-    },
-  ],
-};
-
-const aboutSection = createContentSection<AboutEditableContent>("about", DEFAULT_ABOUT);
+const aboutSection = createContentSection<AboutEditableContent>("about", { intro: [], phoneApps: [] });
 export const getAboutContent = aboutSection.get;
 export const saveAboutContent = aboutSection.save;
 
-// Used only before an admin ever saves anything (empty DB row) — the same
-// seven placeholder projects Projects previously shipped with as static content.
-const DEFAULT_PROJECTS: ProjectsEditableContent = {
-  items: [
-    {
-      id: "project-one",
-      name: { en: "Project One", vi: "Dự án Một" },
-      time: { en: "2023 - Present", vi: "2023 - Hiện tại" },
-      description: {
-        en: "A full-stack web application built with Next.js and PostgreSQL",
-        vi: "Ứng dụng web full-stack được xây dựng với Next.js và PostgreSQL",
-      },
-      position: { en: "Full Stack Developer", vi: "Lập trình viên Full Stack" },
-      language: ["nextjs", "react", "typescript", "postgresql"],
-      contactImage: "/picture_1.png",
-      githubLink: "#",
-      projectLink: "#",
-    },
-    {
-      id: "project-two",
-      name: { en: "Project Two", vi: "Dự án Hai" },
-      time: { en: "2022 - 2023", vi: "2022 - 2023" },
-      description: {
-        en: "Real-time collaboration tool with WebSocket integration",
-        vi: "Công cụ cộng tác thời gian thực tích hợp WebSocket",
-      },
-      position: { en: "Backend Developer", vi: "Lập trình viên Backend" },
-      language: ["nodejs", "websocket", "react", "mongodb"],
-      contactImage: "",
-      githubLink: "#",
-    },
-    {
-      id: "project-three",
-      name: { en: "Project Three", vi: "Dự án Ba" },
-      time: { en: "2022", vi: "2022" },
-      description: {
-        en: "Mobile-responsive dashboard for data visualization",
-        vi: "Dashboard trực quan hóa dữ liệu, tối ưu cho di động",
-      },
-      position: { en: "Frontend Developer", vi: "Lập trình viên Frontend" },
-      language: ["react", "chartjs", "tailwind", "rest-api"],
-      contactImage: "/picture_3.jpg",
-      projectLink: "#",
-    },
-    {
-      id: "project-four",
-      name: { en: "Project Four", vi: "Dự án Bốn" },
-      time: { en: "2021 - 2022", vi: "2021 - 2022" },
-      description: {
-        en: "E-commerce platform with payment integration",
-        vi: "Nền tảng thương mại điện tử tích hợp thanh toán",
-      },
-      position: { en: "Full Stack Developer", vi: "Lập trình viên Full Stack" },
-      language: ["nextjs", "stripe", "express", "mysql"],
-      contactImage: "/picture_5.jpg",
-    },
-    {
-      id: "project-five",
-      name: { en: "Project Five", vi: "Dự án Năm" },
-      time: { en: "2021", vi: "2021" },
-      description: {
-        en: "Cross-platform mobile app for habit tracking",
-        vi: "Ứng dụng di động đa nền tảng theo dõi thói quen",
-      },
-      position: { en: "Mobile Developer", vi: "Lập trình viên Mobile" },
-      language: ["flutter", "rest-api"],
-      contactImage: "/picture_2.png",
-      githubLink: "#",
-    },
-    {
-      id: "project-six",
-      name: { en: "Project Six", vi: "Dự án Sáu" },
-      time: { en: "2020 - 2021", vi: "2020 - 2021" },
-      description: {
-        en: "Internal admin dashboard for inventory management",
-        vi: "Dashboard quản trị nội bộ cho quản lý kho hàng",
-      },
-      position: { en: "Frontend Developer", vi: "Lập trình viên Frontend" },
-      language: ["react", "typescript", "tailwind"],
-      contactImage: "",
-      projectLink: "#",
-    },
-    {
-      id: "project-seven",
-      name: { en: "Project Seven", vi: "Dự án Bảy" },
-      time: { en: "2020", vi: "2020" },
-      description: {
-        en: "Portfolio site generator with markdown-based content",
-        vi: "Công cụ tạo trang portfolio với nội dung dạng markdown",
-      },
-      position: { en: "Full Stack Developer", vi: "Lập trình viên Full Stack" },
-      language: ["nextjs", "javascript"],
-      contactImage: "/picture_4.jpg",
-      githubLink: "#",
-      projectLink: "#",
-    },
-  ],
-};
-
-const projectsSection = createContentSection<ProjectsEditableContent>("projects", DEFAULT_PROJECTS);
+const projectsSection = createContentSection<ProjectsEditableContent>("projects", { items: [] });
 export const getProjectsContent = projectsSection.get;
 export const saveProjectsContent = projectsSection.save;
 
-// Used only before an admin ever saves anything (empty DB row) — the same
-// badge catalog technologies previously shipped with as static content.
-const DEFAULT_TECHNOLOGIES: TechnologiesContent = {
-  items: [
-    { id: "nextjs", name: "Next.js", color: "#000000" },
-    { id: "react", name: "React", color: "#61DAFB" },
-    { id: "react-native", name: "React Native", color: "#61DAFB" },
-    { id: "flutter", name: "Flutter", color: "#02569B" },
-    { id: "typescript", name: "TypeScript", color: "#3178C6" },
-    { id: "javascript", name: "JavaScript", color: "#F7DF1E" },
-    { id: "nodejs", name: "Node.js", color: "#339933" },
-    { id: "express", name: "Express", color: "#000000" },
-    { id: "postgresql", name: "PostgreSQL", color: "#4169E1" },
-    { id: "mysql", name: "MySQL", color: "#4479A1" },
-    { id: "mongodb", name: "MongoDB", color: "#47A248" },
-    { id: "websocket", name: "WebSocket", color: "#FF6B6B" },
-    { id: "chartjs", name: "Chart.js", color: "#FF6384" },
-    { id: "tailwind", name: "Tailwind CSS", color: "#06B6D4" },
-    { id: "stripe", name: "Stripe", color: "#635BFF" },
-    { id: "rest-api", name: "REST API", color: "#8B5CF6" },
-  ],
-};
-
-const technologiesSection = createContentSection<TechnologiesContent>("technologies", DEFAULT_TECHNOLOGIES);
+const technologiesSection = createContentSection<TechnologiesContent>("technologies", { items: [] });
 export const getTechnologiesContent = technologiesSection.get;
 export const saveTechnologiesContent = technologiesSection.save;
 
-// Used only before an admin ever saves anything (empty DB row) — the same
-// three placeholder roles Experience previously shipped with as static content.
-const DEFAULT_EXPERIENCE: ExperienceEditableContent = {
-  items: [
-    {
-      id: "exp-senior-developer",
-      title: { en: "Senior Developer", vi: "Lập trình viên Cấp cao" },
-      company: "Tech Company Inc.",
-      startYear: 2023,
-      endYear: null,
-      description: {
-        en: "Led development of customer-facing applications, mentored junior developers, and improved system performance.",
-        vi: "Dẫn dắt phát triển các ứng dụng hướng tới khách hàng, hướng dẫn lập trình viên junior, và cải thiện hiệu năng hệ thống.",
-      },
-      image: "/picture_5.jpg",
-      color: "blue",
-    },
-    {
-      id: "exp-fullstack-developer",
-      title: { en: "Full Stack Developer", vi: "Lập trình viên Full Stack" },
-      company: "Digital Solutions Ltd.",
-      startYear: 2021,
-      endYear: 2023,
-      description: {
-        en: "Developed and maintained multiple web applications using React and Node.js, implemented CI/CD pipelines.",
-        vi: "Phát triển và bảo trì nhiều ứng dụng web bằng React và Node.js, triển khai CI/CD pipeline.",
-      },
-      image: "/picture_4.jpg",
-      color: "purple",
-    },
-    {
-      id: "exp-junior-developer",
-      title: { en: "Junior Developer", vi: "Lập trình viên Junior" },
-      company: "StartUp Studio",
-      startYear: 2020,
-      endYear: 2021,
-      description: {
-        en: "Built responsive web interfaces, fixed bugs, and contributed to backend services development.",
-        vi: "Xây dựng giao diện web responsive, sửa lỗi, và đóng góp phát triển các dịch vụ backend.",
-      },
-      image: "/picture_3.jpg",
-      color: "green",
-    },
-  ],
-};
-
-const experienceSection = createContentSection<ExperienceEditableContent>("experience", DEFAULT_EXPERIENCE);
+const experienceSection = createContentSection<ExperienceEditableContent>("experience", { items: [] });
 export const getExperienceContent = experienceSection.get;
 export const saveExperienceContent = experienceSection.save;
 
-// Used only before an admin ever saves anything (empty DB row) — the same
-// intro blurb the Contact card previously shipped with as static content.
-const DEFAULT_CONTACT: ContactEditableContent = {
-  intro: {
-    en: "I'm always interested in hearing about new projects and opportunities. Feel free to reach out if you have any questions or just want to say hello!",
-    vi: "Tôi luôn hào hứng lắng nghe về các dự án và cơ hội mới. Đừng ngần ngại liên hệ nếu bạn có câu hỏi hoặc chỉ đơn giản muốn chào hỏi!",
-  },
-};
-
-const contactSection = createContentSection<ContactEditableContent>("contact", DEFAULT_CONTACT);
+const contactSection = createContentSection<ContactEditableContent>("contact", { intro: { en: "", vi: "" } });
 export const getContactContent = contactSection.get;
 export const saveContactContent = contactSection.save;

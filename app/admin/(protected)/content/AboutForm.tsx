@@ -3,9 +3,11 @@
 import { useActionState, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { saveAboutAction, type SaveAboutState } from "./actions";
+import { addBtnClass, inputClass, keyInputClass, removeBtnClass } from "./formStyles";
 import { SaveButton } from "@/components/admin/SaveButton";
 import { UrlPreviewButton, UrlPreviewImage } from "@/components/admin/UrlPreview";
 import { useJustSaved } from "@/hooks/useJustSaved";
+import { useToggleSet } from "@/hooks/useToggleSet";
 import type { Localized, PhoneAppItem } from "@/types/content";
 
 const initialState: SaveAboutState = { ok: false };
@@ -87,27 +89,13 @@ function rowsToItems(rows: ItemRow[]): PhoneAppItem[] {
   );
 }
 
-const inputClass = "min-w-0 flex-1 rounded-lg border border-[var(--card-border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--text-primary)]";
-const keyInputClass = "w-32 shrink-0 rounded-lg border border-[var(--card-border)] bg-[var(--background)] px-2 py-2 text-xs font-mono text-[var(--text-primary)]";
-const removeBtnClass = "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-[var(--card-bg-hover)] hover:text-red-500";
-const addBtnClass = "flex w-fit items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-[var(--accent-text)] transition-colors hover:bg-[var(--card-bg-hover)]";
-
 export function AboutForm({ intro, phoneApps }: { intro: Localized[]; phoneApps: PhoneAppItem[] }) {
   const [state, formAction, pending] = useActionState(saveAboutAction, initialState);
   const justSaved = useJustSaved(state);
 
   const [introRows, setIntroRows] = useState<IntroRow[]>(() => introToRows(intro));
   const [itemRows, setItemRows] = useState<ItemRow[]>(() => itemsToRows(phoneApps));
-  const [previewKeys, setPreviewKeys] = useState<Set<number>>(new Set());
-
-  const togglePreview = (key: number) => {
-    setPreviewKeys((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
-  };
+  const [previewKeys, togglePreview] = useToggleSet<number>();
 
   const updateIntro = (key: number, patch: Partial<IntroRow>) => {
     setIntroRows((rows) => rows.map((r) => (r.key === key ? { ...r, ...patch } : r)));

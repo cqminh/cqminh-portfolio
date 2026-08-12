@@ -3,9 +3,11 @@
 import { useActionState, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { saveProjectsAction, type SaveProjectsState } from "./actions";
+import { addBtnClass, inputClass, labelClass, removeBtnClass, smallLabelClass } from "./formStyles";
 import { SaveButton } from "@/components/admin/SaveButton";
 import { UrlPreviewButton, UrlPreviewImage } from "@/components/admin/UrlPreview";
 import { useJustSaved } from "@/hooks/useJustSaved";
+import { useToggleSet } from "@/hooks/useToggleSet";
 import type { ProjectItem, Technology } from "@/types/content";
 
 const initialState: SaveProjectsState = { ok: false };
@@ -79,27 +81,12 @@ function rowsToItems(rows: ProjectRow[]): ProjectItem[] {
   }));
 }
 
-const inputClass = "min-w-0 flex-1 rounded-lg border border-[var(--card-border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--text-primary)]";
-const labelClass = "flex flex-col gap-1";
-const smallLabelClass = "text-xs text-[var(--text-muted)]";
-const removeBtnClass = "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-[var(--card-bg-hover)] hover:text-red-500";
-const addBtnClass = "flex w-fit items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-[var(--accent-text)] transition-colors hover:bg-[var(--card-bg-hover)]";
-
 export function ProjectsForm({ items, technologies }: { items: ProjectItem[]; technologies: Technology[] }) {
   const [state, formAction, pending] = useActionState(saveProjectsAction, initialState);
   const justSaved = useJustSaved(state);
 
   const [rows, setRows] = useState<ProjectRow[]>(() => (items.length ? itemsToRows(items) : [newRow()]));
-  const [previewKeys, setPreviewKeys] = useState<Set<string>>(new Set());
-
-  const togglePreview = (key: string) => {
-    setPreviewKeys((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
-  };
+  const [previewKeys, togglePreview] = useToggleSet<string>();
 
   const updateRow = (key: string, patch: Partial<ProjectRow>) => {
     setRows((rs) => rs.map((r) => (r.key === key ? { ...r, ...patch } : r)));

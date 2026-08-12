@@ -3,9 +3,11 @@
 import { useActionState, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { saveHeroAction, type SaveHeroState } from "./actions";
+import { addBtnClass, removeBtnClass } from "./formStyles";
 import { SaveButton } from "@/components/admin/SaveButton";
 import { UrlPreviewButton, UrlPreviewImage } from "@/components/admin/UrlPreview";
 import { useJustSaved } from "@/hooks/useJustSaved";
+import { useToggleSet } from "@/hooks/useToggleSet";
 
 const initialState: SaveHeroState = { ok: false };
 
@@ -21,16 +23,7 @@ export function HeroForm({ titles, images }: { titles: string[]; images: string[
 
   const [titleRows, setTitleRows] = useState(() => (titles.length ? titles.map(makeRow) : [makeRow("")]));
   const [imageRows, setImageRows] = useState(() => (images.length ? images.map(makeRow) : [makeRow("")]));
-  const [previewIds, setPreviewIds] = useState<Set<number>>(new Set());
-
-  const togglePreview = (id: number) => {
-    setPreviewIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
+  const [previewIds, togglePreview] = useToggleSet<number>();
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
@@ -51,7 +44,7 @@ export function HeroForm({ titles, images }: { titles: string[]; images: string[
               <button
                 type="button"
                 onClick={() => setTitleRows((rows) => rows.filter((r) => r.id !== row.id))}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-[var(--card-bg-hover)] hover:text-red-500"
+                className={removeBtnClass}
                 aria-label="Remove title"
               >
                 <X className="h-4 w-4" />
@@ -62,7 +55,7 @@ export function HeroForm({ titles, images }: { titles: string[]; images: string[
         <button
           type="button"
           onClick={() => setTitleRows((rows) => [...rows, makeRow("")])}
-          className="flex w-fit items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-[var(--accent-text)] transition-colors hover:bg-[var(--card-bg-hover)]"
+          className={addBtnClass}
         >
           <Plus className="h-3.5 w-3.5" />
           Add title
@@ -92,7 +85,7 @@ export function HeroForm({ titles, images }: { titles: string[]; images: string[
                   <button
                     type="button"
                     onClick={() => setImageRows((rows) => rows.filter((r) => r.id !== row.id))}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-[var(--card-bg-hover)] hover:text-red-500"
+                    className={removeBtnClass}
                     aria-label="Remove image"
                   >
                     <X className="h-4 w-4" />
@@ -106,7 +99,7 @@ export function HeroForm({ titles, images }: { titles: string[]; images: string[
         <button
           type="button"
           onClick={() => setImageRows((rows) => [...rows, makeRow("")])}
-          className="flex w-fit items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-[var(--accent-text)] transition-colors hover:bg-[var(--card-bg-hover)]"
+          className={addBtnClass}
         >
           <Plus className="h-3.5 w-3.5" />
           Add image

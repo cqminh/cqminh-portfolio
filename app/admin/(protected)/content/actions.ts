@@ -14,10 +14,14 @@ import {
 import { EXPERIENCE_CARD_COLORS } from "@/types/content";
 import type { ExperienceCardColor, ExperienceItem, Localized, PhoneAppChild, PhoneAppItem, ProjectItem, Technology } from "@/types/content";
 
-export interface SaveLoadingScreenState {
+// Every save action reports the same shape — one useActionState result type
+// per section below, so each form's import stays self-descriptive.
+export interface ActionState {
   ok: boolean;
   error?: string;
 }
+
+export type SaveLoadingScreenState = ActionState;
 
 export async function saveLoadingScreenAction(
   _prevState: SaveLoadingScreenState,
@@ -38,10 +42,7 @@ export async function saveLoadingScreenAction(
   return { ok: true };
 }
 
-export interface SaveResumeState {
-  ok: boolean;
-  error?: string;
-}
+export type SaveResumeState = ActionState;
 
 export async function saveResumeAction(
   _prevState: SaveResumeState,
@@ -63,10 +64,7 @@ export async function saveResumeAction(
   return { ok: true };
 }
 
-export interface SaveHeroState {
-  ok: boolean;
-  error?: string;
-}
+export type SaveHeroState = ActionState;
 
 export async function saveHeroAction(_prevState: SaveHeroState, formData: FormData): Promise<SaveHeroState> {
   await verifySession();
@@ -93,10 +91,7 @@ export async function saveHeroAction(_prevState: SaveHeroState, formData: FormDa
   return { ok: true };
 }
 
-export interface SaveAboutState {
-  ok: boolean;
-  error?: string;
-}
+export type SaveAboutState = ActionState;
 
 function str(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
@@ -159,10 +154,7 @@ export async function saveAboutAction(_prevState: SaveAboutState, formData: Form
   return { ok: true };
 }
 
-export interface SaveProjectsState {
-  ok: boolean;
-  error?: string;
-}
+export type SaveProjectsState = ActionState;
 
 function parseProjectItem(value: unknown): ProjectItem | null {
   const v = (value ?? {}) as Record<string, unknown>;
@@ -202,10 +194,7 @@ export async function saveProjectsAction(_prevState: SaveProjectsState, formData
   return { ok: true };
 }
 
-export interface SaveTechnologiesState {
-  ok: boolean;
-  error?: string;
-}
+export type SaveTechnologiesState = ActionState;
 
 const HEX_COLOR_RE = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 
@@ -235,10 +224,7 @@ export async function saveTechnologiesAction(
   return { ok: true };
 }
 
-export interface SaveExperienceState {
-  ok: boolean;
-  error?: string;
-}
+export type SaveExperienceState = ActionState;
 
 function parseExperienceItem(value: unknown): ExperienceItem | null {
   const v = (value ?? {}) as Record<string, unknown>;
@@ -283,10 +269,7 @@ export async function saveExperienceAction(_prevState: SaveExperienceState, form
   return { ok: true };
 }
 
-export interface SaveContactState {
-  ok: boolean;
-  error?: string;
-}
+export type SaveContactState = ActionState;
 
 export async function saveContactAction(_prevState: SaveContactState, formData: FormData): Promise<SaveContactState> {
   await verifySession();
