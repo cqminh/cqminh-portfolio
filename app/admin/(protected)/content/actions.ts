@@ -11,8 +11,17 @@ import {
   saveResumeContent,
   saveTechnologiesContent,
 } from "@/lib/site-content";
-import { EXPERIENCE_CARD_COLORS } from "@/types/content";
-import type { ExperienceCardColor, ExperienceItem, Localized, PhoneAppChild, PhoneAppItem, ProjectItem, Technology } from "@/types/content";
+import { EXPERIENCE_CARD_COLORS, PROJECT_LINK_TYPES } from "@/types/content";
+import type {
+  ExperienceCardColor,
+  ExperienceItem,
+  Localized,
+  PhoneAppChild,
+  PhoneAppItem,
+  ProjectItem,
+  ProjectLink,
+  Technology,
+} from "@/types/content";
 
 // Every save action reports the same shape — one useActionState result type
 // per section below, so each form's import stays self-descriptive.
@@ -156,14 +165,23 @@ export async function saveAboutAction(_prevState: SaveAboutState, formData: Form
 
 export type SaveProjectsState = ActionState;
 
+function parseProjectLink(value: unknown): ProjectLink | null {
+  const v = (value ?? {}) as Record<string, unknown>;
+  const url = str(v.url);
+  if (!url) return null;
+  const type = PROJECT_LINK_TYPES.includes(v.type as (typeof PROJECT_LINK_TYPES)[number])
+    ? (v.type as (typeof PROJECT_LINK_TYPES)[number])
+    : "general";
+  return { url, type };
+}
+
 function parseProjectItem(value: unknown): ProjectItem | null {
   const v = (value ?? {}) as Record<string, unknown>;
   const name = parseLocalized(v.name);
   if (!name.en || !name.vi) return null;
 
   const language = Array.isArray(v.language) ? v.language.map(str).filter(Boolean) : [];
-  const githubLink = str(v.githubLink);
-  const projectLink = str(v.projectLink);
+  const links = Array.isArray(v.links) ? v.links.map(parseProjectLink).filter((l): l is ProjectLink => l !== null) : [];
 
   return {
     id: str(v.id) || crypto.randomUUID(),
@@ -173,8 +191,7 @@ function parseProjectItem(value: unknown): ProjectItem | null {
     position: parseLocalized(v.position),
     language,
     contactImage: str(v.contactImage),
-    ...(githubLink && { githubLink }),
-    ...(projectLink && { projectLink }),
+    links,
   };
 }
 

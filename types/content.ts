@@ -65,6 +65,17 @@ export interface Technology {
   color: string;
 }
 
+// Closed set of link buttons a project card can show — each maps to a
+// fixed icon (see components/ui/ProjectLinkIcon.tsx). 'general' is the
+// catch-all (plain external-link arrow) and what every link defaults to.
+export const PROJECT_LINK_TYPES = ['general', 'web', 'github', 'appstore', 'googleplay'] as const;
+export type ProjectLinkType = (typeof PROJECT_LINK_TYPES)[number];
+
+export interface ProjectLink {
+  url: string;
+  type: ProjectLinkType;
+}
+
 export interface ProjectItem {
   id: string;
   name: Localized;
@@ -79,9 +90,7 @@ export interface ProjectItem {
   // The project's standout image (hero shot or partner/client photo) —
   // used as the card's featured thumbnail.
   contactImage: string;
-  // Both optional — the UI only shows a link button for whichever is set.
-  githubLink?: string;
-  projectLink?: string;
+  links: ProjectLink[];
 }
 
 export interface ProjectsContent {

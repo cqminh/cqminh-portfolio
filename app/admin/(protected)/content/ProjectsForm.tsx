@@ -7,12 +7,25 @@ import { addBtnClass, inputClass, labelClass, removeBtnClass, smallLabelClass } 
 import { ReorderButtons } from "@/components/admin/ReorderButtons";
 import { SaveButton } from "@/components/admin/SaveButton";
 import { UrlPreviewButton, UrlPreviewImage } from "@/components/admin/UrlPreview";
+import { PROJECT_LINK_LABELS, ProjectLinkIcon } from "@/components/ui/ProjectLinkIcon";
 import { useJustSaved } from "@/hooks/useJustSaved";
 import { useToggleSet } from "@/hooks/useToggleSet";
 import { moveItem } from "@/lib/array";
-import type { ProjectItem, Technology } from "@/types/content";
+import { PROJECT_LINK_TYPES } from "@/types/content";
+import type { ProjectItem, ProjectLinkType, Technology } from "@/types/content";
 
 const initialState: SaveProjectsState = { ok: false };
+
+// Chip labels for the link-type picker — 'general' has no fixed public
+// label (it shows the localized "View project" copy instead) but still
+// needs a name here for the admin picker itself.
+const LINK_TYPE_PICKER_LABELS: Record<ProjectLinkType, string> = { general: "General", ...PROJECT_LINK_LABELS };
+
+interface ProjectLinkRow {
+  key: string;
+  url: string;
+  type: ProjectLinkType;
+}
 
 interface ProjectRow {
   key: string;
@@ -27,8 +40,7 @@ interface ProjectRow {
   descriptionVi: string;
   language: string[];
   contactImage: string;
-  githubLink: string;
-  projectLink: string;
+  links: ProjectLinkRow[];
 }
 
 function newRow(): ProjectRow {
@@ -45,8 +57,7 @@ function newRow(): ProjectRow {
     descriptionVi: "",
     language: [],
     contactImage: "",
-    githubLink: "",
-    projectLink: "",
+    links: [],
   };
 }
 
@@ -64,8 +75,7 @@ function itemsToRows(items: ProjectItem[]): ProjectRow[] {
     descriptionVi: item.description.vi,
     language: item.language,
     contactImage: item.contactImage,
-    githubLink: item.githubLink ?? "",
-    projectLink: item.projectLink ?? "",
+    links: item.links.map((link) => ({ key: crypto.randomUUID(), url: link.url, type: link.type })),
   }));
 }
 
@@ -78,8 +88,7 @@ function rowsToItems(rows: ProjectRow[]): ProjectItem[] {
     position: { en: r.positionEn, vi: r.positionVi },
     language: r.language,
     contactImage: r.contactImage,
-    ...(r.githubLink && { githubLink: r.githubLink }),
-    ...(r.projectLink && { projectLink: r.projectLink }),
+    links: r.links.filter((link) => link.url.trim()).map((link) => ({ url: link.url, type: link.type })),
   }));
 }
 
@@ -104,6 +113,15 @@ export function ProjectsForm({ items, technologies }: { items: ProjectItem[]; te
       )
     );
   };
+
+  const addLink = (rowKey: string) =>
+    setRows((rs) => rs.map((r) => (r.key === rowKey ? { ...r, links: [...r.links, { key: crypto.randomUUID(), url: "", type: "general" }] } : r)));
+  const removeLink = (rowKey: string, linkKey: string) =>
+    setRows((rs) => rs.map((r) => (r.key === rowKey ? { ...r, links: r.links.filter((l) => l.key !== linkKey) } : r)));
+  const updateLink = (rowKey: string, linkKey: string, patch: Partial<ProjectLinkRow>) =>
+    setRows((rs) =>
+      rs.map((r) => (r.key === rowKey ? { ...r, links: r.links.map((l) => (l.key === linkKey ? { ...l, ...patch } : l)) } : r))
+    );
 
   const projectsData = JSON.stringify(rowsToItems(rows));
 
@@ -226,15 +244,49 @@ export function ProjectsForm({ items, technologies }: { items: ProjectItem[]; te
               <UrlPreviewImage url={row.contactImage} className="h-24 w-40 rounded-lg border border-[var(--card-border)] object-cover" />
             )}
 
-            <div className="grid gap-2 sm:grid-cols-2">
-              <label className={labelClass}>
-                <span className={smallLabelClass}>GitHub link (optional)</span>
-                <input value={row.githubLink} onChange={(e) => updateRow(row.key, { githubLink: e.target.value })} className={inputClass} />
-              </label>
-              <label className={labelClass}>
-                <span className={smallLabelClass}>Live project link (optional)</span>
-                <input value={row.projectLink} onChange={(e) => updateRow(row.key, { projectLink: e.target.value })} className={inputClass} />
-              </label>
+            <div className="flex flex-col gap-2">
+              <span className={smallLabelClass}>Links</span>
+              {row.links.map((link) => (
+                <div key={link.key} className="flex flex-wrap items-center gap-2">
+                  <input
+                    value={link.url}
+                    onChange={(e) => updateLink(row.key, link.key, { url: e.target.value })}
+                    placeholder="https://..."
+                    className={inputClass}
+                  />
+                  <div className="flex flex-wrap gap-1">
+                    {PROJECT_LINK_TYPES.map((type) => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => updateLink(row.key, link.key, { type })}
+                        aria-pressed={link.type === type}
+                        title={LINK_TYPE_PICKER_LABELS[type]}
+                        className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors ${
+                          link.type === type
+                            ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent-text)]"
+                            : "border-[var(--card-border)] text-[var(--text-secondary)] hover:bg-[var(--card-bg-hover)]"
+                        }`}
+                      >
+                        <ProjectLinkIcon type={type} className="h-3.5 w-3.5" />
+                        {LINK_TYPE_PICKER_LABELS[type]}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeLink(row.key, link.key)}
+                    className={removeBtnClass}
+                    aria-label="Remove link"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+              <button type="button" onClick={() => addLink(row.key)} className={addBtnClass}>
+                <Plus className="h-3.5 w-3.5" />
+                Add link
+              </button>
             </div>
           </div>
         ))}

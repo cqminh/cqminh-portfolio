@@ -1,10 +1,9 @@
 'use client';
 
-import { ExternalLink } from 'lucide-react';
 import { siteContent } from '@/content/site-content';
 import { useLanguage } from '@/components/providers/LanguageProvider';
-import { GithubIcon } from '@/components/ui/GithubIcon';
-import type { ProjectItem, Technology } from '@/types/content';
+import { PROJECT_LINK_LABELS, ProjectLinkIcon } from '@/components/ui/ProjectLinkIcon';
+import type { Language, ProjectItem, ProjectsContent, Technology } from '@/types/content';
 
 // Cards share one reveal window (rather than each getting a fixed slice)
 // so the whole grid always finishes revealing by progress 1, no matter how
@@ -14,6 +13,12 @@ const STAGGER_WINDOW = 0.6;
 // unit About's phone reveal uses) — a couple pixels barely reads as a
 // rise, so this needs to be a real fraction of viewport height.
 const RISE_DISTANCE_VH = 25;
+
+// 'general' has no fixed label — it's whatever viewProjectLabel says in the
+// current language, same copy the old single "View project" link used.
+function linkLabel(type: ProjectItem['links'][number]['type'], language: Language, content: ProjectsContent): string {
+  return type === 'general' ? content.viewProjectLabel[language] : PROJECT_LINK_LABELS[type];
+}
 
 interface ProjectsProps {
   // Scroll-scrubbed 0 -> 1 driving each card's fade/rise-in. Owned by
@@ -118,30 +123,20 @@ export default function Projects({ progress, items, technologies }: ProjectsProp
               })}
             </div>
 
-            {(project.githubLink || project.projectLink) && (
-              <div className="flex gap-4 mt-4 pt-4 border-t border-[var(--card-border)]">
-                {project.githubLink && (
+            {project.links.length > 0 && (
+              <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-[var(--card-border)]">
+                {project.links.map((link, linkIndex) => (
                   <a
-                    href={project.githubLink}
+                    key={`${link.type}-${linkIndex}`}
+                    href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
                   >
-                    <GithubIcon className="w-4 h-4" />
-                    GitHub
+                    <ProjectLinkIcon type={link.type} className="w-4 h-4" />
+                    {linkLabel(link.type, language, content)}
                   </a>
-                )}
-                {project.projectLink && (
-                  <a
-                    href={project.projectLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
-                  >
-                    <ExternalLink size={16} />
-                    {content.viewProjectLabel[language]}
-                  </a>
-                )}
+                ))}
               </div>
             )}
           </div>

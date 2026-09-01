@@ -6,6 +6,8 @@ import type {
   ExperienceEditableContent,
   HeroContent,
   LoadingScreenContent,
+  ProjectItem,
+  ProjectLink,
   ProjectsEditableContent,
   ResumeContent,
   TechnologiesContent,
@@ -60,8 +62,24 @@ const aboutSection = createContentSection<AboutEditableContent>("about", { intro
 export const getAboutContent = aboutSection.get;
 export const saveAboutContent = aboutSection.save;
 
+// Rows saved before ProjectItem.links existed still carry the old
+// githubLink/projectLink strings instead — upgrade them to `links` (as type
+// 'general', per the migration the admin asked for) on the way out, so old
+// data keeps rendering until it's next re-saved through ProjectsForm.
+function normalizeProjectLinks(item: ProjectItem): ProjectItem {
+  if (item.links) return item;
+  const legacy = item as ProjectItem & { githubLink?: string; projectLink?: string };
+  const links: ProjectLink[] = [];
+  if (legacy.githubLink) links.push({ url: legacy.githubLink, type: "general" });
+  if (legacy.projectLink) links.push({ url: legacy.projectLink, type: "general" });
+  return { ...item, links };
+}
+
 const projectsSection = createContentSection<ProjectsEditableContent>("projects", { items: [] });
-export const getProjectsContent = projectsSection.get;
+export async function getProjectsContent(): Promise<ProjectsEditableContent> {
+  const content = await projectsSection.get();
+  return { items: content.items.map(normalizeProjectLinks) };
+}
 export const saveProjectsContent = projectsSection.save;
 
 const technologiesSection = createContentSection<TechnologiesContent>("technologies", { items: [] });
